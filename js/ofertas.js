@@ -48,7 +48,7 @@
   function personaliza(p, op) {
     if (!p) return '';
     const [dl, ul, mo] = p.detalhes;
-    const tile = (ico, r, v) => `<div class="pz-tile"><img src="${img('icones/' + ico)}" alt=""><span>${r}</span><b>${v}</b></div>`;
+    const tile = (ico, r, v) => `<div class="pz-tile"><img src="${img('icones/' + ico.replace('premium-', ''))}" alt=""><span>${r}</span><b>${v}</b></div>`;
     let tiles = tile(dl[0], 'Download', dl[2]) + tile(ul[0], 'Upload', ul[2]) + tile(mo[0], 'Modem', mo[2].replace(' incluso', ''));
     const yt = p.opcoes.length === 1 && p.opcoes[0].logo === 'youtube-premium';
     if (yt) tiles += `<div class="pz-tile pz-tile--app"><img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium"><span>Assinatura</span><b>Já inclusa</b></div>`;

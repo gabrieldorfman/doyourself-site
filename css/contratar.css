@@ -379,3 +379,10 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 .disp-item .disp-selo { align-self: flex-start; }
 .linhas[hidden] { display: none; }
 .linhas { border-color: var(--celular-primario); box-shadow: var(--sombra-2); animation: persEntra .35s var(--ease) both; }
+
+/* Rodapé enxuto da contratação: só confiança e links legais */
+.ct-rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 18px; padding: 28px var(--gutter) 32px; margin-top: 40px; border-top: 1px solid var(--borda-padrao); font-size: 13px; color: var(--texto-terciario); text-align: center; }
+.ct-rodape nav { display: flex; gap: 16px; }
+.ct-rodape a { color: var(--texto-terciario); text-decoration: underline; text-underline-offset: 3px; }
+.ct-rodape a:hover { color: var(--texto-titulo); }
+@media (max-width: 767px) { .com-dock .ct-rodape { padding-bottom: 120px; } }
