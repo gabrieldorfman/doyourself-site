@@ -430,3 +430,24 @@
 .disp-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .disp-item { padding: 14px 16px; }
 .disp-selo--talvez { max-width: none; white-space: nowrap; }
+
+/* Disponível no endereço v2 — cards maiores com botão por produto */
+.disp-item { flex-direction: column; align-items: stretch; gap: 14px; padding: 20px; border-width: 2px; }
+.disp-linha { display: flex; align-items: center; gap: 14px; }
+.disp-item .item-combo__ico { width: 56px; height: 56px; border-radius: 16px; }
+.disp-item .item-combo__ico img { width: 30px; height: 30px; }
+.disp-item .item-combo__txt b { font-size: 18px; }
+.disp-item .item-combo__txt span { font-size: 15px; }
+.disp-item.i-internet:not(.disp-item--nao) { border-color: var(--internet-tint); }
+.disp-item.i-celular:not(.disp-item--nao) { border-color: var(--celular-tint); }
+.disp-item.i-energia:not(.disp-item--nao) { border-color: var(--energia-tint); }
+.disp-item { width: 100%; text-align: left; font: inherit; color: inherit; }
+button.disp-item { cursor: pointer; transition: transform var(--rapido, .15s) var(--ease), box-shadow var(--rapido, .15s) var(--ease), border-color .15s; }
+button.disp-item:hover { transform: translateY(-2px); box-shadow: var(--sombra-2, 0 6px 18px rgba(0,0,0,.08)); }
+button.disp-item:active { transform: scale(.98); }
+button.disp-item:focus-visible { outline: 3px solid var(--marca-outline); outline-offset: 2px; }
+.disp-ver { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; border-radius: 99px; border: 1.5px solid var(--marca-outline); color: var(--marca-titulo); font-weight: 800; font-size: 15px; }
+button.disp-item:hover .disp-ver { background: var(--marca-tint); }
+[data-disp] { gap: 14px; }
+.disp-item .disp-topo { flex-direction: column; align-items: flex-start; gap: 6px; }
+.disp-item .disp-selo { align-self: flex-start; }

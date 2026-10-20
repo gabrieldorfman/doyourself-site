@@ -286,8 +286,11 @@
       const [nome, ico, cb] = info[p]; const d = st.disp[p];
       const selo = d === 'nao' ? '<span class="disp-selo disp-selo--nao">Indisponível</span>' : d === 'talvez' ? '<span class="disp-selo disp-selo--talvez">Disponível*</span>' : '<span class="disp-selo">Disponível</span>';
       const txt = d === 'nao' ? (p === 'internet' ? 'Ainda não temos fibra no seu endereço.' : 'Ainda não atende a sua região.') : cb;
-      return `<div class="item-combo disp-item${d === 'nao' ? ' disp-item--nao' : ''}" style="animation-delay:${k * 0.12}s"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico)}" alt=""></span>
+      const rotBtn = p === 'energia' ? 'Ver desconto' : 'Ver planos';
+      const corpo = `<div class="disp-linha"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico)}" alt=""></span>
         <span class="item-combo__txt"><span class="disp-topo"><b>${nome}</b>${selo}</span><span>${txt}</span></span></div>`;
+      if (d === 'nao') return `<div class="item-combo disp-item i-${p} disp-item--nao" style="animation-delay:${k * 0.12}s">${corpo}</div>`;
+      return `<button class="item-combo disp-item i-${p}" type="button" data-ver="${p}" style="animation-delay:${k * 0.12}s">${corpo}<span class="disp-ver">${rotBtn} <span class="seta-dir" aria-hidden="true">→</span></span></button>`;
     }).join('');
     if (st.disp.internet === 'talvez') $('[data-disp]').insertAdjacentHTML('beforeend', '<p class="dy-apoio" style="text-align:center">* A fibra no seu endereço é confirmada no WhatsApp.</p>');
     const algum = st.ordem.length > 0;
@@ -296,6 +299,13 @@
   }
   $('[data-montar]').addEventListener('click', () => {
     if (!st.ordem.length) { location.href = DY.linkWhatsApp('Olá! Consultei meu endereço no site da Do Yourself e quero falar sobre as opções.'); return; }
+    st.idx = 0; renderProduto(); mostrar('combo');
+  });
+  /* "Ver planos" / "Ver desconto": começa o combo por esse produto, os outros vêm depois */
+  $('[data-disp]').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-ver]'); if (!b) return;
+    const p = b.dataset.ver;
+    st.ordem = ORDENS[p].filter((x) => st.disp[x] !== 'nao');
     st.idx = 0; renderProduto(); mostrar('combo');
   });
 

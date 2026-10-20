@@ -105,12 +105,11 @@ const detalhesCel = (gb, premium) => {
 };
 DY.planosCelular = [
   { id: '6', variante: 'branco', selo: 'ENTRADA', num: '6', unidade: 'GB', preco: 39.99, detalhes: detalhesCel(6).map((d, i) => i === 0 ? ['dados-moveis.svg', d[1], d[2]] : d), apps: ['whatsapp', 'messenger', 'waze'] },
-  { id: '12', variante: 'branco', selo: 'BÁSICO', num: '12', unidade: 'GB', preco: 44.99, detalhes: detalhesCel(12).map((d, i) => i === 0 ? ['dados-moveis.svg', d[1], d[2]] : d), apps: ['whatsapp', 'messenger', 'waze'] },
-  { id: '30', variante: 'tint', selo: 'ESSENCIAL', num: '30', unidade: 'GB', preco: 52.99, detalhes: detalhesCel(30).map((d, i) => i === 0 ? ['dados-moveis.svg', d[1], d[2]] : d), apps: ['whatsapp', 'messenger', 'waze', 'facebook', 'instagram'] },
-  { id: '50', variante: 'soft', selo: 'OFERTA DO MÊS', num: '50', unidade: 'GB', preco: 69.99, detalhes: detalhesCel(50).map((d, i) => i === 0 ? ['dados-moveis.svg', d[1], d[2]] : d), apps: ['whatsapp', 'messenger', 'waze', 'facebook', 'instagram'] },
-  { id: '100', variante: 'premium', selo: 'PREMIUM', num: '100', unidade: 'GB', preco: 99.99, detalhes: detalhesCel(100, true), apps: ['whatsapp', 'messenger', 'waze-premium', 'facebook', 'instagram'] },
+  { id: '12', variante: 'tint', selo: 'BÁSICO', num: '12', unidade: 'GB', preco: 44.99, detalhes: detalhesCel(12).map((d, i) => i === 0 ? ['dados-moveis.svg', d[1], d[2]] : d), apps: ['whatsapp', 'messenger', 'waze'] },
+  { id: '30', variante: 'soft', selo: 'OFERTA DO MÊS', num: '30', unidade: 'GB', preco: 52.99, detalhes: detalhesCel(30).map((d, i) => i === 0 ? ['dados-moveis.svg', d[1], d[2]] : d), apps: ['whatsapp', 'messenger', 'waze', 'facebook', 'instagram'] },
+  { id: '50', variante: 'premium', selo: 'PREMIUM', num: '50', unidade: 'GB', preco: 69.99, detalhes: detalhesCel(50, true), apps: ['whatsapp', 'messenger', 'waze-premium', 'facebook', 'instagram'] },
 ];
-DY.celularPadrao = 3; // 50 GB — Oferta do Mês abre em repouso (desktop)
+DY.celularPadrao = 2; // 30 GB — Oferta do Mês abre em repouso (desktop)
 
 /* Logos de aplicativo (pasta img/apps) */
 DY.logos = {
