@@ -141,7 +141,7 @@
 
 /* ---------- Cartões de plano (versão compacta para a contratação) ---------- */
 .ofertas { display: grid; grid-template-columns: repeat(var(--colunas, 4), minmax(0, 1fr)); gap: 16px; align-items: stretch; }
-.ofertas--cel { --colunas: 5; }
+.ofertas--cel { --colunas: 4; }
 @media (max-width: 1100px) {
   .ofertas, .ofertas--cel {
     display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; padding: 18px var(--gutter) 22px;
