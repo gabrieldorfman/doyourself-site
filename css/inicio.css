@@ -207,3 +207,13 @@
 .btn-tema .ico-sol { font-size: 18px; line-height: 1; }
 .btn-tema .ico-lua { display: block; }
 [data-tema="escuro"] .btn-tema .ico-lua { display: none; }
+
+/* v2.1 · topo no celular: botão "Consultar endereço" na 1ª tela e WhatsApp sem cobrir nada */
+@media (max-width: 767px) {
+  .hero2 { padding-top: 20px; }
+  .hero2 .dy-display { font-size: 30px; }
+  .hero2__copy { gap: 14px; }
+  .consulta-cep { margin-top: 0; }
+  .zap-flutuante { opacity: 0; pointer-events: none; transform: translateY(20px); }
+  .zap-flutuante.subir { opacity: 1; pointer-events: auto; transform: translateY(-76px); }
+}

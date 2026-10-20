@@ -60,8 +60,8 @@
     <!-- ========== TELA 1 · ENDEREÇO ========== -->
     <section class="tela" id="t-endereco" data-tela="endereco" data-etapa="1" aria-labelledby="h-endereco">
       <header class="tela__cab">
-        <h1 class="tela__titulo" id="h-endereco" tabindex="-1">Onde você quer usar os serviços?</h1>
-        <p class="tela__sub">Pode ser a sua casa ou a sua empresa. Com o <b>CEP</b> e o <b>número</b>, a gente confere o que chega no seu endereço — a internet fibra depende da rua; o celular e a energia funcionam em quase todo lugar.</p>
+        <h1 class="tela__titulo" id="h-endereco" tabindex="-1">Qual é o seu endereço?</h1>
+        <p class="tela__sub">Para ver o que chega na sua rua.</p>
       </header>
 
       <form class="form" data-form="endereco" novalidate>
@@ -77,7 +77,7 @@
 
         <!-- Busca de CEP pelo endereço -->
         <div class="busca-cep" data-busca-cep hidden>
-          <p class="busca-cep__titulo">Vamos achar o seu CEP pelo endereço</p>
+          <p class="busca-cep__titulo">Ache o CEP pelo endereço</p>
           <div class="form__linha">
             <div class="campo-grupo">
               <div class="campo campo--select">
@@ -101,7 +101,7 @@
               <label for="f-rua">Nome da rua</label>
               <span class="campo__ico" aria-hidden="true"></span>
             </div>
-            <p class="campo__msg dica">Digite pelo menos 3 letras. Toque na rua certa para preencher o CEP.</p>
+            <p class="campo__msg dica">Digite e toque na rua certa.</p>
           </div>
           <div class="sugestoes" data-sugestoes role="listbox" aria-label="Ruas encontradas"></div>
         </div>
@@ -126,32 +126,11 @@
           </div>
           <p class="campo__msg dica" data-bairro></p>
 
-          <div class="pergunta-comp">
-            <p class="pergunta-comp__titulo" id="lbl-comp">O imóvel tem complemento?</p>
-            <p class="dy-apoio">Apartamento, bloco, sala, casa de fundos… Ajuda o técnico a chegar no lugar certo.</p>
-            <div class="segmento" role="radiogroup" aria-labelledby="lbl-comp" data-tem-comp>
-              <button type="button" role="radio" aria-checked="false" data-v="nao">Não tem</button>
-              <button type="button" role="radio" aria-checked="false" data-v="sim">Tem complemento</button>
-            </div>
-          </div>
-          <div class="form__linha revela" data-revela-comp>
-            <div class="campo-grupo" data-grupo="tipoComp">
-              <div class="campo campo--select">
-                <select id="f-tipo-comp" name="tipoComp">
-                  <option value="" disabled selected hidden></option>
-                  <option>Apartamento</option><option>Bloco</option><option>Casa</option><option>Sala</option><option>Loja</option><option>Fundos</option><option>Outro</option>
-                </select>
-                <label for="f-tipo-comp">Tipo</label>
-                <span class="campo__ico" aria-hidden="true"></span>
-              </div>
-            </div>
-            <div class="campo-grupo" data-grupo="comp">
-              <div class="campo">
-                <input id="f-comp" name="comp" maxlength="40" placeholder="Ex.: 302, Bloco B" aria-describedby="m-comp">
-                <label for="f-comp">Número ou detalhe</label>
-                <span class="campo__ico" aria-hidden="true"></span>
-              </div>
-              <p class="campo__msg" id="m-comp" role="alert"></p>
+          <div class="campo-grupo" data-grupo="comp">
+            <div class="campo">
+              <input id="f-comp" name="comp" maxlength="40" placeholder="Ex.: Apto 302, Bloco B" autocomplete="address-line2">
+              <label for="f-comp">Complemento (opcional)</label>
+              <span class="campo__ico" aria-hidden="true"></span>
             </div>
           </div>
         </div>
@@ -162,7 +141,7 @@
           </button>
         </div>
       </form>
-      <p class="tela__seguro"><span aria-hidden="true">🔒</span> Seus dados ficam protegidos e só são usados para montar o seu pedido.</p>
+      <p class="tela__seguro"><span aria-hidden="true">🔒</span> Seus dados ficam protegidos.</p>
     </section>
 
     <!-- ========== TELA 2 · CONSULTANDO ========== -->
@@ -206,8 +185,8 @@
     <section class="tela" id="t-resumo" data-tela="resumo" data-etapa="2" hidden aria-labelledby="h-resumo">
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
-        <h1 class="tela__titulo" id="h-resumo" tabindex="-1">Este é o seu combo Do Yourself</h1>
-        <p class="tela__sub">Confira o que você escolheu. Dá para tirar ou adicionar serviços agora — e tudo isso é contratado em <b>uma conversa só</b> no WhatsApp, em vez de falar com três empresas diferentes.</p>
+        <h1 class="tela__titulo" id="h-resumo" tabindex="-1">Seu combo</h1>
+        <p class="tela__sub">Tudo numa conversa só no WhatsApp.</p>
       </header>
       <div class="resumo" data-resumo></div>
       <div class="form__acoes">
@@ -219,8 +198,8 @@
     <section class="tela" id="t-contato" data-tela="contato" data-etapa="3" hidden aria-labelledby="h-contato">
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
-        <h1 class="tela__titulo" id="h-contato" tabindex="-1">Como podemos falar com você?</h1>
-        <p class="tela__sub">É por esse número que a gente vai finalizar o seu pedido no WhatsApp e te mandar os detalhes.</p>
+        <h1 class="tela__titulo" id="h-contato" tabindex="-1">Seu nome e WhatsApp</h1>
+        <p class="tela__sub">É por lá que a gente finaliza o pedido.</p>
       </header>
       <form class="form" data-form="contato" novalidate>
         <div class="campo-grupo" data-grupo="nome">
@@ -249,8 +228,8 @@
     <section class="tela" id="t-cadastro" data-tela="cadastro" data-etapa="3" hidden aria-labelledby="h-cadastro">
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
-        <h1 class="tela__titulo" id="h-cadastro" tabindex="-1">Agora, os dados do cadastro</h1>
-        <p class="tela__sub">São os dados que a operadora e a empresa de energia pedem para criar o contrato no seu nome. Com eles aqui, você não precisa digitar nada de novo no WhatsApp.</p>
+        <h1 class="tela__titulo" id="h-cadastro" tabindex="-1">Dados do contrato</h1>
+        <p class="tela__sub">Você não vai precisar repetir no WhatsApp.</p>
       </header>
       <form class="form" data-form="cadastro" novalidate>
         <div class="campo-grupo" data-grupo="email">
@@ -275,11 +254,11 @@
             <label for="f-cnpj">CNPJ da empresa</label>
             <span class="campo__ico" aria-hidden="true"></span>
           </div>
-          <p class="campo__msg dica" id="m-cnpj">Os planos de celular para empresa são feitos no CNPJ. O CPF acima é do responsável.</p>
+          <p class="campo__msg dica" id="m-cnpj">Plano de empresa é no CNPJ. O CPF é do responsável.</p>
         </div>
         <button class="escolha consentimento" type="button" role="checkbox" aria-checked="false" data-consentimento>
           <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <span>Autorizo a Do Yourself a usar esses dados para montar o meu pedido e falar comigo pelo WhatsApp, conforme a <a class="dy-link" href="politica-de-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+          <span>Autorizo o uso dos meus dados só para este pedido (<a class="dy-link" href="politica-de-privacidade.html" target="_blank" rel="noopener">Privacidade</a>).</span>
         </button>
         <div class="form__acoes">
           <button class="dy-btn dy-btn--primario dy-btn--g dy-btn--bloco" type="submit" data-continuar disabled>Continuar <span class="seta-dir" aria-hidden="true">→</span></button>
@@ -291,25 +270,25 @@
     <section class="tela" id="t-pagamento" data-tela="pagamento" data-etapa="4" hidden aria-labelledby="h-pagamento">
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
-        <h1 class="tela__titulo" id="h-pagamento" tabindex="-1">Como você prefere pagar?</h1>
-        <p class="tela__sub">Nada é cobrado agora. A primeira fatura só chega depois que o serviço estiver funcionando.</p>
+        <h1 class="tela__titulo" id="h-pagamento" tabindex="-1">Como prefere pagar?</h1>
+        <p class="tela__sub">Nada é cobrado agora.</p>
       </header>
       <div class="form">
         <div class="pagamentos" role="radiogroup" aria-labelledby="h-pagamento" data-pagamentos>
           <button class="escolha escolha--radio pag" type="button" role="radio" aria-checked="false" data-pag="debito">
             <span class="pag__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10h18M5 10V8l7-4 7 4v2M6 10v7M10 10v7M14 10v7M18 10v7M3 20h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span class="pag__txt"><b>Débito automático</b><small>A fatura é paga sozinha na sua conta, no dia do vencimento. Você não esquece e não paga juros.</small><em class="pag__tag">Os preços que você viu são no débito</em></span>
+            <span class="pag__txt"><b>Débito automático</b><small>Paga sozinho no vencimento.</small><em class="pag__tag" data-pag-valor="debito"></em></span>
             <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button class="escolha escolha--radio pag" type="button" role="radio" aria-checked="false" data-pag="boleto">
             <span class="pag__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M16 5v14M20 5v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-            <span class="pag__txt"><b>Boleto ou PIX</b><small>Você recebe a fatura todo mês e paga quando quiser, até o vencimento. No boleto o valor pode ser um pouco maior — a gente confirma no WhatsApp.</small></span>
+            <span class="pag__txt"><b>Boleto ou PIX</b><small>R$ 10 a mais por plano.</small><em class="pag__tag pag__tag--neutra" data-pag-valor="boleto"></em></span>
             <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
         </div>
         <div class="bancos revela" data-revela-bancos>
-          <p class="bancos__titulo" id="lbl-bancos">Em qual banco fica a sua conta?</p>
-          <p class="dy-apoio">Estes são os bancos que aceitam o débito automático. Se o seu não estiver aqui, escolha Boleto ou PIX.</p>
+          <p class="bancos__titulo" id="lbl-bancos">Qual é o seu banco?</p>
+          <p class="dy-apoio">Não achou o seu? Escolha Boleto ou PIX.</p>
           <div class="bancos__grade" role="radiogroup" aria-labelledby="lbl-bancos" data-bancos></div>
         </div>
         <div class="form__acoes">
@@ -323,19 +302,23 @@
       <div class="fim">
         <div class="fim__check" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30"/><path d="M19 33 L28 42 L46 23"/></svg></div>
         <p class="fim__num">Pedido <b data-num-pedido></b></p>
-        <h1 class="fim__titulo" id="h-fim" tabindex="-1">Pedido criado! Falta só um toque.</h1>
-        <p class="fim__sub">Seus dados já chegaram para a gente. Toque no botão abaixo para abrir o WhatsApp com o seu pedido pronto — é só enviar a mensagem. <b>Você não vai precisar repetir nada.</b></p>
+        <h1 class="fim__titulo" id="h-fim" tabindex="-1">Pedido pronto! Falta enviar.</h1>
+        <p class="fim__sub">Envie a mensagem no WhatsApp. <b>Você não vai precisar repetir nada.</b></p>
         <a class="dy-btn dy-btn--whatsapp dy-btn--g dy-btn--bloco fim__zap" data-zap-pedido target="_blank" rel="noopener">
-          <img src="img/icones/whatsapp-branco.svg" alt="" width="24" height="24">Enviar meu pedido no WhatsApp
+          <img src="img/icones/whatsapp-branco.svg" alt="" width="24" height="24">Enviar no WhatsApp
         </a>
+        <div class="fim__alt">
+          <button class="fim__copiar" type="button" data-copiar>Copiar mensagem</button>
+          <p>Não abriu? Mande a mensagem para <b data-whatsapp-numero></b>.</p>
+        </div>
         <div class="fim__cartao">
           <div class="fim__cb"><span>Cashback total que volta para você</span><b data-fim-cb></b></div>
           <ul class="fim__itens" data-fim-itens></ul>
         </div>
         <ol class="fim__passos">
-          <li><b>Em poucos minutos</b>a gente responde no WhatsApp e confirma a oferta do seu endereço.</li>
-          <li><b>Agendamos e ativamos</b>a instalação da internet, as linhas de celular e a energia.</li>
-          <li><b>Contrato fechado, cashback no seu PIX</b>uma única vez, combinado direto com você.</li>
+          <li><b>Em minutos</b>a gente confirma a oferta.</li>
+          <li><b>Instalação e ativação</b>agendadas com você.</li>
+          <li><b>Contrato fechado</b>cashback no seu PIX.</li>
         </ol>
         <a class="dy-link fim__home" href="/">Voltar para a página inicial</a>
       </div>
@@ -347,15 +330,17 @@
     <p><a href="politica-de-privacidade.html">Privacidade</a> · <a data-whatsapp>Atendimento pelo WhatsApp</a></p>
   </footer>
 
-  <!-- Barra do combo (aparece a partir da escolha de produtos) -->
-  <div class="carrinho" data-carrinho hidden>
-    <button class="carrinho__barra" type="button" aria-expanded="false" data-carrinho-toggle>
-      <span class="carrinho__qtd" data-carrinho-qtd>0</span>
-      <span class="carrinho__txt"><small>Seu combo</small><b data-carrinho-resumo>Nenhum serviço ainda</b></span>
-      <span class="carrinho__cb"><small>Cashback</small><b data-carrinho-cb>R$ 0,00</b></span>
-      <span class="carrinho__seta" aria-hidden="true">▴</span>
-    </button>
+  <!-- Barra fixa: resumo do combo + botão de avançar da tela (sempre à mão no celular) -->
+  <div class="dock" data-dock hidden>
     <div class="carrinho__lista" data-carrinho-lista hidden></div>
+    <div class="dock__barra">
+      <button class="dock__resumo" type="button" aria-expanded="false" data-carrinho-toggle data-carrinho hidden>
+        <span class="carrinho__qtd" data-carrinho-qtd>0</span>
+        <span class="carrinho__cb"><small>Cashback</small><b data-carrinho-cb>R$ 0,00</b></span>
+        <span class="carrinho__seta" aria-hidden="true">▴</span>
+      </button>
+      <button class="dy-btn dy-btn--primario dock__ir" type="button" data-dock-ir disabled><span class="spinner" aria-hidden="true"></span><span data-dock-rot>Continuar</span> <span class="seta-dir" aria-hidden="true">→</span></button>
+    </div>
   </div>
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>

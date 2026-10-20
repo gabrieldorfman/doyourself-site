@@ -354,3 +354,63 @@
 /* Toast */
 .toast { position: fixed; left: 50%; top: 76px; z-index: 60; transform: translate(-50%, -20px); opacity: 0; pointer-events: none; padding: 12px 18px; border-radius: 14px; background: var(--texto-ink); color: var(--fundo-pagina); font-weight: 700; font-size: 15px; box-shadow: var(--sombra-3); transition: opacity var(--medio), transform var(--medio) var(--ease); max-width: calc(100% - 32px); text-align: center; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ============================================================
+   v2.1 (20/10) · botão fixo, textos curtos, complemento opcional
+   ============================================================ */
+/* Barra fixa: resumo do combo (esquerda) + botão de avançar (direita) */
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 44; display: flex; flex-direction: column; padding: 10px 12px max(10px, env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--fundo-elevado) 94%, transparent); backdrop-filter: blur(12px); border-top: 1px solid var(--borda-padrao); animation: subirDock var(--medio) var(--ease) both; }
+@keyframes subirDock { from { transform: translateY(100%); } to { transform: none; } }
+.dock__barra { display: flex; gap: 10px; align-items: stretch; width: min(560px, 100%); margin: 0 auto; }
+.dock__resumo { display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 18px; background: var(--texto-ink); color: var(--fundo-pagina); text-align: left; }
+[data-tema="escuro"] .dock__resumo { background: #3a3a3a; color: #fff; }
+.dock__resumo .carrinho__qtd { width: 40px; height: 40px; border-radius: 13px; }
+.dock__resumo .carrinho__cb { display: flex; flex-direction: column; line-height: 1.2; }
+.dock__resumo small { font-size: 11px; opacity: .7; }
+.dock__resumo .carrinho__cb b { font-size: 15px; color: #5dd9a0; white-space: nowrap; }
+.dock__ir { flex: 1; min-height: 56px; font-size: 17px; }
+.dock .carrinho__lista { width: min(560px, 100%); margin: 0 auto 10px; }
+.dock .carrinho__lista li { display: flex; justify-content: space-between; gap: 12px; }
+.dock .carrinho__lista li b { color: var(--texto-titulo); }
+.dock .carrinho__lista li span:last-child { font-weight: 800; color: var(--marca-titulo); white-space: nowrap; }
+.com-dock .ct { padding-bottom: 120px; }
+.com-dock .ct-rodape { padding-bottom: 110px; }
+/* No celular o botão da tela vira o botão fixo: sem botão duplicado */
+@media (max-width: 767px) {
+  .com-dock .tela [data-continuar], .com-dock .tela [data-add], .com-dock .tela [data-ir-dados], .com-dock .tela [data-finalizar] { display: none; }
+  .com-dock .form__acoes { display: none; }
+  .produto__acoes { margin-top: 14px; }
+}
+/* No desktop o botão fica na tela; a barra mostra só o resumo do combo */
+@media (min-width: 768px) {
+  .dock { left: auto; right: 24px; bottom: 24px; padding: 0; background: none; border: 0; backdrop-filter: none; width: 360px; }
+  .dock__ir { display: none; }
+  .dock__barra { justify-content: flex-end; }
+  .dock__resumo { flex: 1; box-shadow: var(--sombra-3); min-height: 56px; }
+  .dock:has(.dock__resumo[hidden]) { display: none; }
+}
+
+/* Consulta avança sozinha */
+.consulta__indo { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; color: var(--texto-terciario); }
+.pt-indo { width: 18px; height: 18px; border-radius: 99px; border: 2.5px solid var(--marca-outline); border-right-color: transparent; animation: girar .8s linear infinite; }
+
+/* Textos mais curtos: menos espaço entre título e campos */
+.tela__cab { margin-bottom: 20px; }
+.tela__sub { margin-top: 6px; font-size: 16px; }
+.produto__cab { margin-bottom: 18px; }
+.combo-passos { margin-bottom: 16px; }
+.ct-abas { margin-bottom: 14px; }
+
+/* Pagamento: valor total em cada opção */
+.pag__tag { font-size: 13px; }
+.pag__tag--neutra { background: var(--fundo-superficie-alt); color: var(--texto-corpo-forte); }
+
+/* Tela final */
+.fim__alt { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 14px; color: #c6f2dd; }
+.fim__copiar { min-height: 48px; padding: 0 22px; border-radius: 99px; border: 1.5px solid rgba(255, 255, 255, .35); font-weight: 700; font-size: 15px; color: #fff; }
+.fim__copiar:hover { background: rgba(255, 255, 255, .08); }
+.fim__alt b { color: #fff; }
+@media (max-width: 767px) {
+  .fim__zap { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 5; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+}
+.dock__ir { white-space: nowrap; padding: 0 20px; }

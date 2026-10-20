@@ -22,7 +22,7 @@
   const ORDENS = { internet: ['internet', 'celular', 'energia'], celular: ['celular', 'internet', 'energia'], energia: ['energia', 'internet', 'celular'], home: ['internet', 'celular', 'energia'], combo: ['internet', 'celular', 'energia'] };
   const st = {
     id: DY.novoIdPedido(), origem,
-    end: { cep: '', logradouro: '', bairro: '', cidade: '', uf: '', numero: '', temComp: null, tipoComp: '', comp: '' },
+    end: { cep: '', logradouro: '', bairro: '', cidade: '', uf: '', numero: '', comp: '' },
     fibra: 'talvez', ordem: ORDENS[origem].slice(), idx: 0,
     // undefined = ainda não decidiu · null = pulou · objeto = adicionou
     esc: { internet: undefined, celular: undefined, energia: undefined },
@@ -52,7 +52,11 @@
     document.body.classList.toggle('pg-fim', nome === 'fim');
     $('[data-progresso]').hidden = nome === 'fim';
     atualizarProgresso();
-    $('[data-carrinho]').hidden = !['combo', 'resumo', 'contato', 'cadastro', 'pagamento'].includes(nome) || nome === 'combo' && !temItens() && st.idx === 0 && !algumRascunho();
+    dock.hidden = ['consulta', 'fim'].includes(nome);
+    document.body.classList.toggle('com-dock', !dock.hidden);
+    atualizarCarrinho();
+    if (nome === 'pagamento') atualizarPagamento();
+    syncDock();
     if (empurrar) history.pushState({ tela: nome, idx: st.idx }, '', '#' + nome);
     window.scrollTo({ top: 0, behavior: reduzir ? 'auto' : 'smooth' });
     const foco = tela.querySelector('[tabindex="-1"]');
@@ -137,9 +141,9 @@
      ========================================================= */
   const fEnd = $('[data-form="endereco"]');
   const inCep = $('#f-cep'), inLog = $('#f-logradouro'), inNum = $('#f-numero');
-  const blocoEnd = $('[data-revela-endereco]'), blocoComp = $('[data-revela-comp]');
+  const blocoEnd = $('[data-revela-endereco]');
   const gCep = $('[data-grupo="cep"]');
-  revelar(blocoEnd, false); revelar(blocoComp, false);
+  revelar(blocoEnd, false);
   let cepBuscado = '';
 
   async function consultarCep() {
@@ -172,25 +176,15 @@
   inLog.addEventListener('input', () => { const c = inLog.closest('.campo'); const ok = inLog.value.trim().length >= 3; c.classList.toggle('valido', ok); c.querySelector('.campo__ico').innerHTML = CHECK; checarEnd(); });
 
   ligarCampo('numero', { masc: (v) => v.replace(/[^\dsSnN/]/g, '').toUpperCase().slice(0, 6), val: validar.numero, depois: checarEnd });
-  ligarCampo('comp', { val: validar.comp, depois: checarEnd });
-  $('#f-tipo-comp').addEventListener('change', () => { marcar('tipoComp', ''); checarEnd(); setTimeout(() => $('#f-comp').focus(), 50); });
-  $('[data-tem-comp]').addEventListener('click', (e) => {
-    const b = e.target.closest('[role="radio"]'); if (!b) return;
-    $$('[data-tem-comp] [role="radio"]').forEach((x) => x.setAttribute('aria-checked', x === b));
-    st.end.temComp = b.dataset.v === 'sim';
-    revelar(blocoComp, st.end.temComp);
-    if (st.end.temComp) setTimeout(() => $('#f-tipo-comp').focus(), 250);
-    checarEnd();
-  });
+  $('#f-comp').addEventListener('input', () => { const c = $('#f-comp').closest('.campo'); const ok = !!$('#f-comp').value.trim(); c.classList.toggle('valido', ok); c.querySelector('.campo__ico').innerHTML = CHECK; });
   function endOk() {
-    return so(inCep.value).length === 8 && cepBuscado && inLog.value.trim().length >= 3 && !validar.numero(inNum.value) && st.end.temComp !== null
-      && (!st.end.temComp || ($('#f-tipo-comp').value && !validar.comp($('#f-comp').value)));
+    return so(inCep.value).length === 8 && cepBuscado && inLog.value.trim().length >= 3 && !validar.numero(inNum.value);
   }
   function checarEnd() { fEnd.querySelector('[data-continuar]').disabled = !endOk(); }
   fEnd.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!endOk()) return;
-    Object.assign(st.end, { logradouro: inLog.value.trim(), numero: inNum.value.trim(), tipoComp: st.end.temComp ? $('#f-tipo-comp').value : '', comp: st.end.temComp ? $('#f-comp').value.trim() : '' });
+    Object.assign(st.end, { logradouro: inLog.value.trim(), numero: inNum.value.trim(), comp: $('#f-comp').value.trim() });
     try { sessionStorage.setItem('dy_endereco', JSON.stringify({ cep: st.end.cep, numero: st.end.numero, logradouro: st.end.logradouro, bairro: st.end.bairro, cidade: st.end.cidade, uf: st.end.uf })); } catch (er) { /* modo privado */ }
     rodarConsulta();
   });
@@ -252,7 +246,7 @@
     const box = $('.consulta'); box.classList.remove('ok', 'alerta');
     const titulo = $('[data-consulta-titulo]'); const res = $('[data-consulta-resultado]');
     titulo.textContent = 'Consultando o seu endereço…'; res.hidden = true; res.innerHTML = '';
-    $('[data-consulta-end]').textContent = `${st.end.logradouro}, ${st.end.numero}${st.end.comp ? ' · ' + st.end.tipoComp + ' ' + st.end.comp : ''} — ${st.end.cidade}/${st.end.uf}`;
+    $('[data-consulta-end]').textContent = `${st.end.logradouro}, ${st.end.numero}${st.end.comp ? ' · ' + st.end.comp : ''} — ${st.end.cidade}/${st.end.uf}`;
     const passos = $$('[data-consulta-passos] li'); passos.forEach((p) => p.className = '');
     passos[0].classList.add('rodando'); await espera(500); passos[0].className = 'feito';
     passos[1].classList.add('rodando');
@@ -266,20 +260,21 @@
     box.classList.add('ok');
     if (fibra === 'sim') {
       titulo.textContent = 'Boa notícia: tem fibra no seu endereço!';
-      res.innerHTML = `<div class="aviso aviso--ok">${CHECK.replace('<svg', '<svg style="color:var(--ok)"')}<span>Internet Fibra, Planos de Celular e Energia Solar por Assinatura estão disponíveis para você.</span></div>`;
+      res.innerHTML = `<div class="aviso aviso--ok">${CHECK.replace('<svg', '<svg style="color:var(--ok)"')}<span>Internet, celular e energia disponíveis para você.</span></div>`;
     } else if (fibra === 'nao') {
       box.classList.add('alerta');
       titulo.textContent = 'Ainda não tem fibra na sua rua';
-      res.innerHTML = `<div class="aviso aviso--info"><img src="${img('icones/aviso-info.svg')}" alt=""><span>A internet fibra ainda não chegou no seu número. Mas os <b>planos de celular</b> e a <b>energia solar por assinatura</b> funcionam normalmente aí — e o cashback continua valendo.</span></div>`;
+      res.innerHTML = `<div class="aviso aviso--info"><img src="${img('icones/aviso-info.svg')}" alt=""><span>Mas <b>celular</b> e <b>energia solar</b> funcionam aí, com cashback.</span></div>`;
     } else {
       titulo.textContent = 'Endereço confirmado!';
-      res.innerHTML = `<div class="aviso aviso--neutro"><img src="${img('icones/aviso-info.svg')}" alt=""><span>Agora é só escolher o que você quer. A disponibilidade da fibra no seu número é confirmada no WhatsApp, antes de qualquer contratação.</span></div>`;
+      res.innerHTML = `<div class="aviso aviso--neutro"><img src="${img('icones/aviso-info.svg')}" alt=""><span>A fibra no seu número é confirmada no WhatsApp.</span></div>`;
     }
-    res.insertAdjacentHTML('beforeend', '<button class="dy-btn dy-btn--primario dy-btn--g dy-btn--bloco" type="button" data-ver-ofertas>Ver as ofertas <span class="seta-dir" aria-hidden="true">→</span></button>');
+    res.insertAdjacentHTML('beforeend', '<p class="consulta__indo"><span class="pt-indo" aria-hidden="true"></span>Abrindo as ofertas…</p>');
     res.hidden = false;
     titulo.focus({ preventScroll: true });
-    const ir = () => { if (telaAtual === 'consulta') { renderProduto(); history.replaceState({ tela: 'endereco' }, ''); mostrar('combo'); } };
-    res.querySelector('[data-ver-ofertas]').addEventListener('click', ir);
+    // Avança sozinho (como a Nio): tempo de ler o resultado e seguir
+    await espera(fibra === 'nao' ? 2600 : 1700);
+    if (telaAtual === 'consulta') { renderProduto(); history.replaceState({ tela: 'endereco' }, ''); mostrar('combo'); }
   }
 
   /* =========================================================
@@ -303,18 +298,17 @@
     const qtd = st.ordem.length;
     const textos = {
       internet: primeiro
-        ? ['Qual internet combina com você?', 'Todos os planos são de <b>fibra óptica TIM UltraFibra</b>: a fibra vai do poste até o modem dentro de casa, com Wi-Fi incluso e instalação gratuita. Quanto mais Mega, mais aparelhos usando ao mesmo tempo sem travar. E <b>metade da mensalidade volta para você</b>.']
-        : ['Quer juntar a internet fibra?', 'Você resolve a internet na <b>mesma conversa</b> do resto — sem ligar para outra empresa. É fibra óptica TIM, com Wi-Fi e instalação gratuita, e <b>50% da mensalidade volta para você</b>, somando ao cashback do combo.'],
+        ? ['Escolha sua internet', 'Fibra TIM com Wi-Fi e instalação grátis. <b>50% da mensalidade volta para você.</b>']
+        : ['Quer internet fibra também?', 'Na mesma conversa. <b>50% da mensalidade volta para você.</b>'],
       celular: primeiro
-        ? ['Quantas linhas e quanto de internet?', 'Planos <b>TIM</b> com ligações ilimitadas para todo o Brasil, 5G e portabilidade do número que você já usa. Escolha a franquia, depois a quantidade de linhas. <b>O valor das linhas volta 100% para você</b>, uma vez, na contratação.']
-        : ['Que tal colocar o celular no combo?', 'Planos <b>TIM</b> com ligações ilimitadas, 5G e o seu número de sempre. Fica tudo no mesmo atendimento — e <b>o valor das linhas volta 100% para você</b>.'],
+        ? ['Escolha seu plano de celular', 'Ligações ilimitadas, 5G e o seu número. <b>100% das linhas volta para você.</b>']
+        : ['Quer incluir celular?', 'Ligações ilimitadas e 5G. <b>100% das linhas volta para você.</b>'],
       energia: primeiro
-        ? ['Quanto vem a sua conta de luz?', 'Com a energia solar por assinatura você recebe créditos de uma usina solar e <b>paga menos na conta</b> — sem placas, sem obra e sem investimento. A distribuidora continua a mesma. E <b>10% do novo valor volta para você</b>.']
-        : ['E a conta de luz? Dá para pagar menos.', 'Sem placas e sem obra: você recebe créditos de uma usina solar e o desconto entra na sua conta todo mês. A distribuidora continua a mesma, e <b>10% do novo valor volta para você</b>, somando ao combo.'],
+        ? ['Quanto vem sua conta de luz?', 'Sem obra e sem placas. <b>10% da nova conta volta para você.</b>']
+        : ['E a conta de luz?', 'Pague menos, sem obra. <b>10% da nova conta volta para você.</b>'],
     };
     const [t, s] = textos[prod];
-    const eb = { internet: 'internet', celular: 'celular', energia: 'energia' }[prod];
-    return `<header class="produto__cab"><span class="dy-eyebrow dy-eyebrow--${eb}">Passo ${st.idx + 1} de ${qtd} do seu combo</span>
+    return `<header class="produto__cab">
       <h1 class="tela__titulo" id="h-combo" tabindex="-1">${t}</h1><p class="tela__sub">${s}</p></header>`;
   }
 
@@ -379,10 +373,10 @@
       </div>`;
     }).join('');
     return `<div class="ct-abas"><div class="segmento" role="radiogroup" aria-label="Para onde é a internet" data-para="internet">
-        <button type="button" role="radio" aria-checked="${st.para.internet === 'casa'}" data-v="casa">Para a minha casa</button>
-        <button type="button" role="radio" aria-checked="${st.para.internet === 'empresa'}" data-v="empresa">Para a minha empresa</button></div></div>
+        <button type="button" role="radio" aria-checked="${st.para.internet === 'casa'}" data-v="casa">Casa</button>
+        <button type="button" role="radio" aria-checked="${st.para.internet === 'empresa'}" data-v="empresa">Empresa</button></div></div>
       <div><div class="ofertas" data-trilho>${cards}</div>${dots(DY.planosInternet.length)}</div>
-      <p class="dy-apoio" style="text-align:center;margin-top:14px">Valores no débito automático. Wi-Fi e instalação gratuita em todos os planos.</p>`;
+      <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. No boleto, + R$ 10.</p>`;
   }
   function ligarInternet() {
     const trilho = $('[data-trilho]', palco); ligarDots(trilho);
@@ -437,8 +431,8 @@
     }).join('');
     const n = sel ? sel.linhas : 1;
     return `<div class="ct-abas"><div class="segmento" role="radiogroup" aria-label="Para quem são as linhas" data-para="celular">
-        <button type="button" role="radio" aria-checked="${st.para.celular === 'cpf'}" data-v="cpf">Para mim (CPF)</button>
-        <button type="button" role="radio" aria-checked="${st.para.celular === 'cnpj'}" data-v="cnpj">Para a empresa (CNPJ)</button></div></div>
+        <button type="button" role="radio" aria-checked="${st.para.celular === 'cpf'}" data-v="cpf">Para mim · CPF</button>
+        <button type="button" role="radio" aria-checked="${st.para.celular === 'cnpj'}" data-v="cnpj">Empresa · CNPJ</button></div></div>
       <div><div class="ofertas ofertas--cel" data-trilho>${cards}</div>${dots(DY.planosCelular.length)}</div>
       <div class="linhas" data-linhas-box>
         <p class="linhas__titulo" id="lbl-linhas">Quantas linhas você quer?</p>
@@ -583,13 +577,28 @@
 
   /* ---------- Barra do combo ---------- */
   const car = $('[data-carrinho]');
+  const dock = $('[data-dock]'), dockIr = $('[data-dock-ir]'), dockRot = $('[data-dock-rot]');
+  const PRIM = '[data-continuar], [data-add], [data-ir-dados], [data-finalizar]';
+  // O botão fixo espelha (rótulo, ativo/inativo, carregando) o botão principal da tela visível
+  function alvoDock() { const t = $('.tela:not([hidden])'); return t ? $$(PRIM, t)[0] : null; }
+  function syncDock() {
+    const a = alvoDock();
+    dockIr.hidden = !a;
+    if (!a) return;
+    dockIr.disabled = a.disabled;
+    dockIr.classList.toggle('carregando', a.classList.contains('carregando'));
+    const t = a.textContent.replace('→', '').trim();
+    dockRot.textContent = /^Adicionar/.test(t) ? 'Adicionar' : /^Manter/.test(t) ? 'Continuar' : t === 'Criar meu pedido' ? 'Criar pedido' : t;
+  }
+  dockIr.addEventListener('click', () => { const a = alvoDock(); if (a && !a.disabled) a.click(); });
+  new MutationObserver(() => requestAnimationFrame(syncDock)).observe($('#fluxo'), { subtree: true, childList: true, attributes: true, attributeFilter: ['disabled', 'hidden', 'class'] });
   function atualizarCarrinho() {
     const l = itens(telaAtual === 'combo' ? 'misto' : 'esc');
     $('[data-carrinho-qtd]').textContent = l.length;
-    $('[data-carrinho-resumo]').textContent = l.length ? l.map((i) => ROTULO[i.produto]).join(' + ') : 'Nenhum serviço ainda';
     $('[data-carrinho-cb]').textContent = brl(somaCb(l));
     $('[data-carrinho-lista]').innerHTML = l.length ? '<ul style="display:flex;flex-direction:column;gap:10px">' + l.map((i) => `<li><span><b>${i.titulo}</b><br>${i.detalhe}</span><span>${brl(i.cashback)}</span></li>`).join('') + '</ul>' : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
-    if (['combo', 'resumo', 'contato', 'cadastro', 'pagamento'].includes(telaAtual)) car.hidden = false;
+    car.hidden = !l.length;
+    if (!l.length) { $('[data-carrinho-lista]').hidden = true; car.setAttribute('aria-expanded', 'false'); }
   }
   function pulsar() { const q2 = $('[data-carrinho-qtd]'); q2.classList.remove('pulsar'); void q2.offsetWidth; q2.classList.add('pulsar'); }
   $('[data-carrinho-toggle]').addEventListener('click', (e) => {
@@ -612,8 +621,7 @@
       + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
         <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Energia Solar por Assinatura' }[p]}</b><span>${{ internet: '50% da mensalidade volta para você', celular: '100% do valor das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
         <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('')
-      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Pago uma única vez, no seu PIX, quando o contrato fecha.${mensal ? ` Mensalidade de internet e celular: ${brl(mensal)}/mês no débito.` : ''}${st.esc.energia ? ' Na energia, a economia vem todo mês na conta de luz.' : ''}</small></div>` : '')
-      + `<div class="resumo__zap"><img src="img/apps/whatsapp.svg" alt=""><span><b>Uma conversa só.</b> Dúvidas, contrato e suporte de todos os serviços no mesmo WhatsApp — em vez de três números diferentes.</span></div>`;
+      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Uma vez, no seu PIX, quando o contrato fecha.</small></div>` : '');
     $('[data-ir-dados]').disabled = !l.length;
     atualizarCarrinho();
   }
@@ -689,6 +697,16 @@
     $('[data-finalizar]').scrollIntoView({ block: 'nearest', behavior: reduzir ? 'auto' : 'smooth' });
   });
 
+  function valoresPagamento() {
+    const l = itens().filter((i) => i.produto !== 'energia');
+    const debito = l.reduce((a, i) => a + i.mensal, 0);
+    return { debito, boleto: debito + l.length * 1000, planos: l.length };
+  }
+  function atualizarPagamento() {
+    const v = valoresPagamento();
+    $$('[data-pag-valor]').forEach((e) => { e.hidden = !v.planos; e.textContent = brl(v[e.dataset.pagValor]) + '/mês'; });
+    const sm = $('[data-pag="boleto"] small'); if (sm) sm.textContent = v.planos ? 'R$ 10 a mais por plano.' : 'Você paga todo mês, até o vencimento.';
+  }
   function montarPedido(etapa) {
     const l = itens();
     const utm = {}; ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'gclid', 'fbclid'].forEach((k) => q.get(k) && (utm[k] = q.get(k)));
@@ -697,7 +715,7 @@
       endereco: { ...st.end }, fibra_viabilidade: st.fibra,
       itens: l.map(({ linhaZap, ...resto }) => resto), cashback_total_centavos: somaCb(l),
       nome: st.contato.nome, telefone: st.contato.telefone, email: st.cad.email, cpf: st.cad.cpf, cnpj: st.cad.cnpj,
-      consentimento: st.cad.consent, pagamento: { ...st.pag }, utm,
+      consentimento: st.cad.consent, pagamento: { ...st.pag, mensal_centavos: st.pag.tipo ? valoresPagamento()[st.pag.tipo] : null }, utm,
     };
   }
 
@@ -709,15 +727,19 @@
     b.classList.remove('carregando');
     const l = itens();
     const msg = DY.mensagemPedido({ id: st.id, itens: l })
-      .replace('Meu pedido é', `Forma de pagamento: ${st.pag.tipo === 'debito' ? 'Débito automático (' + st.pag.banco + ')' : 'Boleto ou PIX'}\nMeu pedido é`);
+      .replace('Meu pedido é', `Forma de pagamento: ${st.pag.tipo === 'debito' ? 'Débito automático (' + st.pag.banco + ')' : 'Boleto ou PIX'}${valoresPagamento().planos ? ' — total de ' + brl(valoresPagamento()[st.pag.tipo]) + '/mês' : ''}\nMeu pedido é`);
     $('[data-zap-pedido]').href = DY.linkWhatsApp(msg);
     $('[data-num-pedido]').textContent = st.id;
     $('[data-fim-cb]').textContent = brl(somaCb(l));
     $('[data-fim-itens]').innerHTML = l.map((i) => `<li><span>${i.titulo}</span><span>${brl(i.cashback)}</span></li>`).join('');
-    car.hidden = true;
+    $('[data-copiar]').onclick = async () => {
+      try { await navigator.clipboard.writeText(msg); toast('Mensagem copiada. Cole no WhatsApp.'); }
+      catch (er) { toast('Não deu para copiar. Toque em "Enviar no WhatsApp".'); }
+    };
     try { sessionStorage.removeItem('dy_endereco'); } catch (er) { /* */ }
     mostrar('fim');
   });
 
   document.querySelectorAll('[data-ano]').forEach((el) => (el.textContent = new Date().getFullYear()));
+  dock.hidden = false; document.body.classList.add('com-dock'); atualizarCarrinho(); syncDock();
 })();
