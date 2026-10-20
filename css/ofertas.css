@@ -107,3 +107,19 @@
 }
 .oferta__extra { font-weight: 800; color: var(--cor-v-titulo); }
 .oferta.premium .oferta__extra { color: var(--premium-acento); }
+
+/* "Seu plano": quadradinhos com o que vem no plano */
+.pz-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.pz-tiles--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.pz-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px; border-radius: 14px; background: var(--internet-tint); text-align: center; }
+.pz-tile img { width: 24px; height: 24px; }
+.pz-tile img.yt { width: 86px; height: 24px; object-fit: contain; }
+.pz-tile span { font-size: 12px; color: var(--internet-soft-texto); font-weight: 600; }
+.pz-tile b { font-size: 15px; color: var(--texto-titulo); line-height: 1.2; }
+.personaliza__titulo--2 { margin-top: 18px; font-size: 16px; }
+@media (max-width: 600px) { .pz-tiles--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pz-tile b { font-size: 14px; } }
+/* Card marcado (tocado) antes de escolher */
+.oferta.marcado:not([aria-checked="true"]) { border: 2.5px solid var(--cor-v); box-shadow: 0 0 0 5px var(--cor-v-tint), var(--sombra-2); }
+.oferta.premium.marcado:not([aria-checked="true"]) { border-color: var(--premium-acento); box-shadow: 0 0 0 5px rgba(212,175,90,.25), var(--sombra-2); }
+.oferta.marcado:not([aria-checked="true"]) .oferta__check { border-color: var(--cor-v); }
+.pz-tiles + .personaliza__sub { margin-top: 12px; }

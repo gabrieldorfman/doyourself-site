@@ -52,7 +52,7 @@ DY.planosInternet = [
   {
     id: '500', variante: 'branco', selo: 'BÁSICO', num: '500', unidade: 'MEGA',
     nota: 'Oferta padrão — demais UFs',
-    detalhes: [['download.svg', 'Download', '500 Mega'], ['upload.svg', 'Upload', '250 Mega'], ['modem.svg', 'Modem', 'Wi-Fi incluso'], ['instalacao.svg', 'Instalação:', 'Gratuita']],
+    detalhes: [['download.svg', 'Download', '500 Mega'], ['upload.svg', 'Upload', '250 Mega'], ['modem.svg', 'Modem', 'Wi-Fi 5 incluso'], ['instalacao.svg', 'Instalação:', 'Gratuita']],
     apps: ['aya-books', 'aya-bancah'],
     tituloAcao: 'Este plano inclui',
     opcoes: [{ nome: 'Somente Internet', preco: 99.99, resumo: '500 Mb' }],
@@ -61,7 +61,7 @@ DY.planosInternet = [
   },
   {
     id: '600', variante: 'tint', selo: 'ESSENCIAL', num: '600', unidade: 'MEGA',
-    detalhes: [['download.svg', 'Download', '600 Mega'], ['upload.svg', 'Upload', '300 Mega'], ['modem.svg', 'Modem', 'Wi-Fi incluso'], ['instalacao.svg', 'Instalação:', 'Gratuita']],
+    detalhes: [['download.svg', 'Download', '600 Mega'], ['upload.svg', 'Upload', '300 Mega'], ['modem.svg', 'Modem', 'Wi-Fi 5 incluso'], ['instalacao.svg', 'Instalação:', 'Gratuita']],
     apps: ['aya-books', 'aya-bancah', 'paramount'],
     tituloAcao: 'Personalize o seu plano',
     opcoes: [

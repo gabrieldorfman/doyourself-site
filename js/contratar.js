@@ -400,13 +400,23 @@
         if (!on) pintarCard(c, DY.planosInternet.find((x) => x.id === c.dataset.id), 0);
       });
       pintarCard(card, p, op);
-      if (!mesmo) box.innerHTML = DY.ofertas.personaliza(p, op);
+      if (!mesmo || !box.innerHTML.trim()) box.innerHTML = DY.ofertas.personaliza(p, op);
       atualizarBotaoAdd(); atualizarCarrinho();
-      const pers = $('[data-personaliza]', box);
-      if (pers) descer(pers); else centralizar(card);
+      descer($('[data-personaliza]', box));
     };
     // Toque no card só centraliza; o botão "Escolher este plano" é que escolhe
-    trilho.addEventListener('click', (e) => { const card = e.target.closest('.oferta'); if (!card) return; if (e.target.closest('.oferta__escolher')) escolher(card); else centralizar(card); });
+    // Toque no card marca e centraliza; se havia outro plano escolhido, ele é desfeito
+    const marcar = (card) => {
+      $$('.oferta', trilho).forEach((c) => c.classList.toggle('marcado', c === card));
+      const r = st.rasc.internet;
+      if (r && r.id !== card.dataset.id) {
+        st.rasc.internet = null; box.innerHTML = '';
+        $$('.oferta', trilho).forEach((c) => { c.setAttribute('aria-checked', 'false'); c.querySelector('.oferta__escolher').textContent = 'Escolher este plano'; pintarCard(c, DY.planosInternet.find((x) => x.id === c.dataset.id), 0); });
+        atualizarBotaoAdd(); atualizarCarrinho();
+      }
+      centralizar(card);
+    };
+    trilho.addEventListener('click', (e) => { const card = e.target.closest('.oferta'); if (!card) return; if (e.target.closest('.oferta__escolher')) { $$('.oferta', trilho).forEach((c) => c.classList.toggle('marcado', c === card)); escolher(card); } else marcar(card); });
     trilho.addEventListener('keydown', (e) => { const card = e.target.closest('.oferta'); if (card && e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); escolher(card); } });
     box.addEventListener('click', (e) => {
       const b = e.target.closest('.p-op'); if (!b || !st.rasc.internet) return;
@@ -466,7 +476,17 @@
       atualizarLinhas(); atualizarBotaoAdd(); atualizarCarrinho();
       descer(box);
     };
-    trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (!c) return; if (e.target.closest('.oferta__escolher')) escolher(c); else centralizar(c); });
+    const marcar = (card) => {
+      $$('.oferta', trilho).forEach((c) => c.classList.toggle('marcado', c === card));
+      const r = st.rasc.celular;
+      if (r && r.id !== card.dataset.id) {
+        st.rasc.celular = null; $('[data-l-qtd]', palco).textContent = r.linhas;
+        $$('.oferta', trilho).forEach((c) => { c.setAttribute('aria-checked', 'false'); c.querySelector('.oferta__escolher').textContent = 'Escolher este plano'; });
+        $('[data-linhas-box]', palco).hidden = true; atualizarBotaoAdd(); atualizarCarrinho();
+      }
+      centralizar(card);
+    };
+    trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (!c) return; if (e.target.closest('.oferta__escolher')) { $$('.oferta', trilho).forEach((x) => x.classList.toggle('marcado', x === c)); escolher(c); } else marcar(c); });
     trilho.addEventListener('keydown', (e) => { const c = e.target.closest('.oferta'); if (c && e.target === c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); escolher(c); } });
     $('[data-linhas-box]', palco).addEventListener('click', (e) => {
       const b = e.target.closest('[data-l]'); if (!b) return;

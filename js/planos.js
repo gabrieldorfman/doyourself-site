@@ -283,7 +283,7 @@
         const q = net ? { origem: 'internet', plano: card.dataset.id, para } : { origem: 'celular', plano: card.dataset.id, linhas: 1, para };
         location.href = config.paginaConversao + '?' + new URLSearchParams(q);
       };
-      trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (!c) return; if (e.target.closest('.oferta__escolher')) ir(c); else DY.ofertas.centralizar(c); });
+      trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (!c) return; if (e.target.closest('.oferta__escolher')) ir(c); else { trilho.querySelectorAll('.oferta').forEach((x) => x.classList.toggle('marcado', x === c)); DY.ofertas.centralizar(c); } });
       trilho.addEventListener('keydown', (e) => { const c = e.target.closest('.oferta'); if (c && e.target === c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(c); } });
       const posicionar = () => { const c = trilho.children[destaque]; if (c && trilho.scrollWidth > trilho.clientWidth + 4) trilho.scrollLeft = c.offsetLeft - (trilho.clientWidth - c.offsetWidth) / 2; };
       requestAnimationFrame(posicionar);

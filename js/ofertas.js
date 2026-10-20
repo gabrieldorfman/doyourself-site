@@ -44,18 +44,31 @@
     </div>`;
   }
 
-  // Bloco "Quer personalizar sua internet?" — só para planos com mais de uma opção
+  // Bloco "Seu plano": o que vem no plano + (quando houver) a escolha do streaming
   function personaliza(p, op) {
-    if (!p || p.opcoes.length < 2) return '';
-    const ops = p.opcoes.map((o, i) => {
-      const logo = o.logo ? `<img src="${img(logos[o.logo].src)}" alt="">` : `<span class="p-op__wifi"><img src="${img('icones/hero-wifi.svg')}" alt=""></span>`;
-      const tag = o.logo ? '<span class="p-op__tag">Incluso no plano</span>' : '<span class="p-op__tag p-op__tag--neutra">Sem streaming</span>';
-      return `<button type="button" class="p-op" role="radio" aria-checked="${i === op}" data-op="${i}"><span class="p-op__logo">${logo}</span><span class="p-op__txt"><b>${o.logo ? o.nome : 'Só internet'}</b>${tag}</span><span class="p-op__preco">${brl(centavos(o.preco))}<small>/mês</small></span></button>`;
-    }).join('');
+    if (!p) return '';
+    const [dl, ul, mo] = p.detalhes;
+    const tile = (ico, r, v) => `<div class="pz-tile"><img src="${img('icones/' + ico)}" alt=""><span>${r}</span><b>${v}</b></div>`;
+    let tiles = tile(dl[0], 'Download', dl[2]) + tile(ul[0], 'Upload', ul[2]) + tile(mo[0], 'Modem', mo[2].replace(' incluso', ''));
+    const yt = p.opcoes.length === 1 && p.opcoes[0].logo === 'youtube-premium';
+    if (yt) tiles += `<div class="pz-tile pz-tile--app"><img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium"><span>Assinatura</span><b>Já inclusa</b></div>`;
+    let extra = '';
+    if (p.opcoes.length > 1) {
+      const ops = p.opcoes.map((o, i) => {
+        const logo = o.logo ? `<img src="${img(logos[o.logo].src)}" alt="">` : `<span class="p-op__wifi"><img src="${img('icones/hero-wifi.svg')}" alt=""></span>`;
+        const tag = o.logo ? '<span class="p-op__tag">Incluso no plano</span>' : '<span class="p-op__tag p-op__tag--neutra">Sem streaming</span>';
+        return `<button type="button" class="p-op" role="radio" aria-checked="${i === op}" data-op="${i}"><span class="p-op__logo">${logo}</span><span class="p-op__txt"><b>${o.logo ? o.nome : 'Só internet'}</b>${tag}</span><span class="p-op__preco">${brl(centavos(o.preco))}<small>/mês</small></span></button>`;
+      }).join('');
+      extra = `<p class="personaliza__titulo personaliza__titulo--2">Quer adicionar um streaming?</p>
+        <p class="personaliza__sub">Já vem no preço do plano.</p>
+        <div class="personaliza__ops" role="radiogroup" aria-label="Streaming do plano de ${p.num} ${unid(p)}">${ops}</div>`;
+    } else if (!yt) {
+      extra = '<p class="personaliza__sub">Somente internet, sem streaming.</p>';
+    }
     return `<div class="personaliza" data-personaliza>
-      <p class="personaliza__titulo">Quer personalizar sua internet?</p>
-      <p class="personaliza__sub">O streaming já vem no preço do plano.</p>
-      <div class="personaliza__ops" role="radiogroup" aria-label="Personalize o plano de ${p.num} ${unid(p)}">${ops}</div>
+      <p class="personaliza__titulo">Seu plano de ${p.num} ${unid(p)}</p>
+      <div class="pz-tiles${yt ? ' pz-tiles--4' : ''}">${tiles}</div>
+      ${extra}
     </div>`;
   }
 
