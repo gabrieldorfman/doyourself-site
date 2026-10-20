@@ -285,11 +285,11 @@
     $('[data-disp]').innerHTML = ordem.map((p, k) => {
       const [nome, ico, cb] = info[p]; const d = st.disp[p];
       const selo = d === 'nao' ? '<span class="disp-selo disp-selo--nao">Indisponível</span>' : d === 'talvez' ? '<span class="disp-selo disp-selo--talvez">Disponível*</span>' : '<span class="disp-selo">Disponível</span>';
-      const txt = d === 'nao' ? (p === 'internet' ? 'Ainda não chegou no seu número.' : 'Ainda não atende a sua região.') : cb;
+      const txt = d === 'nao' ? (p === 'internet' ? 'Ainda não temos fibra no seu endereço.' : 'Ainda não atende a sua região.') : cb;
       return `<div class="item-combo disp-item${d === 'nao' ? ' disp-item--nao' : ''}" style="animation-delay:${k * 0.12}s"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico)}" alt=""></span>
         <span class="item-combo__txt"><span class="disp-topo"><b>${nome}</b>${selo}</span><span>${txt}</span></span></div>`;
     }).join('');
-    if (st.disp.internet === 'talvez') $('[data-disp]').insertAdjacentHTML('beforeend', '<p class="dy-apoio" style="text-align:center">* A fibra no seu número é confirmada no WhatsApp.</p>');
+    if (st.disp.internet === 'talvez') $('[data-disp]').insertAdjacentHTML('beforeend', '<p class="dy-apoio" style="text-align:center">* A fibra no seu endereço é confirmada no WhatsApp.</p>');
     const algum = st.ordem.length > 0;
     const b = $('[data-montar]');
     b.innerHTML = algum ? (st.ordem.length === 1 ? 'Escolher meu plano' : 'Montar meu combo') + ' <span class="seta-dir" aria-hidden="true">→</span>' : 'Falar no WhatsApp';
@@ -643,7 +643,7 @@
       + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
         <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Energia Solar por Assinatura' }[p]}</b><span>${{ internet: '50% da mensalidade volta para você', celular: '100% do valor das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
         <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('')
-      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Uma vez, via PIX na sua conta, quando o contrato fecha.</small></div>` : '');
+      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Uma vez, via PIX na sua conta bancária, quando o contrato fecha.</small></div>` : '');
     $('[data-ir-dados]').disabled = !l.length;
     atualizarCarrinho();
   }
