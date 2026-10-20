@@ -34,7 +34,8 @@
       requestAnimationFrame(() => pilha.classList.add('ativa'));
       const alvo = $('[data-contador]', pilha);
       if (!reduzir) {
-        const dur = 1100, ini = performance.now() + 900;
+        // o total começa a contar depois que o cartão dele aparece (4º da fila: 0,3 s + 3 × 0,5 s)
+        const dur = 1600, ini = performance.now() + 2100;
         const passo = (t) => {
           const k = Math.min(1, Math.max(0, (t - ini) / dur)); const e = 1 - Math.pow(1 - k, 3);
           alvo.textContent = brl(Math.round(ex.total * e));
