@@ -269,7 +269,7 @@
     const ri = document.querySelector('[data-acordeao="internet"]');
     if (ri) montar(ri, { planos: DY.planosInternet, padrao: DY.internetPadrao, vertical: 'internet', larguraCard: 936, tarja: tarjaInternet, card: cardInternet, atualizar: atualizarInternet });
     const rc = document.querySelector('[data-acordeao="celular"]');
-    if (rc) montar(rc, { planos: DY.planosCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 792, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
+    if (rc) montar(rc, { planos: DY.planosCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 936, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
 
     // Abas "Para a sua casa / empresa" e "Para você / empresa"
     document.querySelectorAll('[data-abas-planos]').forEach((lista) => {
