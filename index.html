@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Do Yourself — Internet, celular e energia com cashback para você</title>
+  <meta name="description" content="Contrate Internet Fibra, Planos de Celular e Energia Solar por Assinatura pela Do Yourself e receba cashback quando o contrato fecha. Um serviço ou os três, tudo em uma conversa de WhatsApp.">
+  <meta name="theme-color" content="#f6f5f1">
+  <link rel="icon" href="img/marca/dy-selo-verde.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Do Yourself — aqui, quem recebe é você">
+  <meta property="og:description" content="Internet fibra, celular e energia solar com cashback na contratação.">
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('dy_tema'); } catch (e) {}
+      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'escuro';
+      document.documentElement.dataset.tema = t || 'claro';
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dy.css">
+  <link rel="stylesheet" href="css/planos.css">
+  <link rel="stylesheet" href="css/inicio.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"Do Yourself","description":"Marca 100% digital que reúne Internet Fibra, Planos de Celular e Energia Solar por Assinatura, com cashback para o cliente na contratação.","logo":"img/marca/dy-selo-verde.svg"}
+  </script>
+</head>
+<body class="pg-inicio">
+  <a class="sr-only" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ============ HEADER ============ -->
+  <header class="header">
+    <div class="container header__barra">
+      <a class="header__logo" href="/" aria-label="Do Yourself — página inicial">
+        <img class="logo--claro" src="img/marca/dy-lockup-menu-claro.svg" alt="Do Yourself — Energia · Internet · Celular" width="300" height="58">
+        <img class="logo--escuro" src="img/marca/dy-lockup-menu-escuro.svg" alt="" width="300" height="58">
+      </a>
+      <nav aria-label="Principal">
+        <ul class="nav">
+          <li><a class="nav__link" href="/" aria-current="page">Início</a></li>
+          <li><a class="nav__link" href="#como-funciona">Como funciona</a></li>
+          <li><a class="nav__link" href="#internet">Internet Fibra</a></li>
+          <li><a class="nav__link" href="#celular">Celular</a></li>
+          <li><a class="nav__link" href="#energia">Energia Solar</a></li>
+          <li><a class="nav__link" href="#duvidas">Dúvidas</a></li>
+        </ul>
+      </nav>
+      <div class="header__acoes">
+        <button class="btn-tema" type="button" data-tema-toggle aria-label="Alternar tema claro e escuro">
+          <img class="ico-lua" src="img/icones/tema-lua.svg" alt="" width="18" height="18">
+          <span class="ico-sol" aria-hidden="true">☀</span>
+        </button>
+        <a class="dy-btn dy-btn--whatsapp header__zap" data-whatsapp="Olá! Vim pelo site da Do Yourself e quero saber mais.">
+          <img src="img/apps/whatsapp.svg" alt="" width="22" height="22">Falar no WhatsApp
+        </a>
+        <button class="btn-menu" type="button" aria-expanded="false" aria-controls="drawer">
+          <span class="btn-menu__ico" aria-hidden="true"><span></span><span></span><span></span></span><span class="btn-menu__txt">Menu</span>
+        </button>
+      </div>
+    </div>
+    <div class="drawer" id="drawer">
+      <ul class="drawer__lista">
+        <li><a class="drawer__item" href="/" aria-current="page">Início</a></li>
+        <li><a class="drawer__item" href="#como-funciona">Como funciona</a></li>
+        <li><a class="drawer__item" href="#internet">Internet Fibra</a></li>
+        <li><a class="drawer__item" href="#celular">Planos de Celular</a></li>
+        <li><a class="drawer__item" href="#energia">Energia Solar por Assinatura</a></li>
+        <li><a class="drawer__item" href="#duvidas">Dúvidas frequentes</a></li>
+      </ul>
+      <a class="dy-btn dy-btn--primario dy-btn--bloco drawer__cta" href="contratar.html?origem=home">Consultar meu endereço</a>
+      <a class="dy-btn dy-btn--whatsapp dy-btn--bloco drawer__cta" style="margin-top:10px" data-whatsapp="Olá! Vim pelo site da Do Yourself e quero saber mais.">Falar no WhatsApp</a>
+      <p class="drawer__contato"><span data-whatsapp-numero></span> · Atendimento 24 horas</p>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero2" aria-labelledby="hero-titulo">
+      <div class="container hero2__grade">
+        <div class="hero2__copy">
+          <span class="dy-eyebrow">Cashback para o cliente</span>
+          <h1 class="dy-display" id="hero-titulo">Internet, celular e energia solar. <span class="realce">E dinheiro de volta para você.</span></h1>
+          <p class="dy-lead">Na Do Yourself, a comissão que normalmente ficaria com o vendedor <strong>volta para você como cashback</strong> quando o contrato fecha. Contrate um serviço ou os três juntos — e resolva tudo em <strong>uma conversa só</strong> no WhatsApp.</p>
+
+          <form class="consulta-cep" data-hero-cep novalidate aria-labelledby="cep-titulo">
+            <p class="consulta-cep__titulo" id="cep-titulo">Veja o que chega no seu endereço</p>
+            <div class="consulta-cep__campos">
+              <div class="campo-grupo" data-g="cep">
+                <div class="campo">
+                  <input id="h-cep" name="cep" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000">
+                  <label for="h-cep">CEP</label>
+                  <span class="campo__ico" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="campo-grupo" data-g="num">
+                <div class="campo">
+                  <input id="h-num" name="numero" inputmode="numeric" maxlength="6" placeholder=" ">
+                  <label for="h-num">Número</label>
+                  <span class="campo__ico" aria-hidden="true"></span>
+                </div>
+              </div>
+              <button class="dy-btn dy-btn--primario dy-btn--g consulta-cep__btn" type="submit">Consultar endereço <span class="seta-dir" aria-hidden="true">→</span></button>
+            </div>
+            <p class="campo__msg" data-hero-msg role="alert"></p>
+            <div class="consulta-cep__rodape">
+              <a class="dy-link" href="contratar.html?origem=home#buscar-cep">Não sei o meu CEP</a>
+              <span aria-hidden="true">·</span>
+              <a class="dy-link dy-link--zap" data-whatsapp="Olá! Quero saber o que a Do Yourself tem para o meu endereço.">Prefiro falar no WhatsApp</a>
+            </div>
+          </form>
+
+          <ul class="hero2__provas" aria-label="Vantagens">
+            <li><img src="img/icones/verificado.svg" alt="">Sem custo extra pelo cashback</li>
+            <li><img src="img/icones/verificado.svg" alt="">Vale para CPF e CNPJ</li>
+            <li><img src="img/icones/verificado.svg" alt="">Atendimento de pessoa de verdade</li>
+          </ul>
+        </div>
+
+        <!-- Cartões animados: quanto volta em cada serviço -->
+        <div class="hero2__visual" aria-label="Exemplo de cashback de um combo">
+          <div class="cb-pilha" data-pilha>
+            <article class="cb-card cb-card--internet" style="--i:0">
+              <span class="cb-card__ico"><img src="img/icones/hero-wifi.svg" alt=""></span>
+              <div class="cb-card__txt"><b>Internet Fibra 800 Mega</b><span data-ex="internet-desc">R$ 129,99/mês</span></div>
+              <div class="cb-card__valor"><small>volta</small><b data-ex="internet">R$ 64,99</b></div>
+            </article>
+            <article class="cb-card cb-card--celular" style="--i:1">
+              <span class="cb-card__ico"><img src="img/icones/hero-celular-5g.svg" alt=""></span>
+              <div class="cb-card__txt"><b>3 linhas de 30 GB</b><span data-ex="celular-desc">R$ 158,97/mês</span></div>
+              <div class="cb-card__valor"><small>volta</small><b data-ex="celular">R$ 158,97</b></div>
+            </article>
+            <article class="cb-card cb-card--energia" style="--i:2">
+              <span class="cb-card__ico"><img src="img/icones/hero-lampada.svg" alt=""></span>
+              <div class="cb-card__txt"><b>Energia Solar</b><span data-ex="energia-desc">conta de R$ 800,00</span></div>
+              <div class="cb-card__valor"><small>volta</small><b data-ex="energia">R$ 65,60</b></div>
+            </article>
+            <div class="cb-total" style="--i:3">
+              <span>Cashback do combo</span>
+              <b data-ex="total" data-contador>R$ 289,56</b>
+              <small>pago uma única vez, no seu PIX</small>
+            </div>
+          </div>
+          <p class="hero2__legenda">Exemplo com os preços de hoje. A energia é uma estimativa e o valor final depende da sua fatura.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COMO FUNCIONA ============ -->
+    <section class="secao" id="como-funciona" aria-labelledby="cf-titulo">
+      <div class="container">
+        <header class="cab surgir">
+          <span class="dy-eyebrow">Como funciona</span>
+          <h2 class="dy-h2" id="cf-titulo">Três passos, sem complicação</h2>
+          <p class="dy-lead">Você faz tudo pelo celular, no seu tempo. Ninguém vai te ligar sem você pedir.</p>
+        </header>
+        <ol class="passos3">
+          <li class="passo surgir" style="--atraso:.05s">
+            <span class="passo__n">1</span>
+            <h3 class="dy-h3">Consulte o seu endereço</h3>
+            <p class="dy-texto">Digite o CEP e o número do imóvel. Em poucos segundos você vê o que está disponível na sua rua.</p>
+          </li>
+          <li class="passo surgir" style="--atraso:.15s">
+            <span class="passo__n">2</span>
+            <h3 class="dy-h3">Monte o seu combo</h3>
+            <p class="dy-texto">Escolha a internet, as linhas de celular e a energia — um, dois ou os três. A cada escolha você vê quanto volta para você.</p>
+          </li>
+          <li class="passo surgir" style="--atraso:.25s">
+            <span class="passo__n">3</span>
+            <h3 class="dy-h3">Finalize no WhatsApp</h3>
+            <p class="dy-texto">O seu pedido chega pronto para a gente. Confirmamos tudo numa conversa só e, quando o contrato fecha, o cashback cai no seu PIX.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ POR QUE EXISTE O CASHBACK ============ -->
+    <section class="secao secao--alt" aria-labelledby="pq-titulo">
+      <div class="container porque2">
+        <div class="porque2__copy surgir">
+          <span class="dy-eyebrow">De onde vem o cashback</span>
+          <h2 class="dy-h2" id="pq-titulo">A comissão que iria para o vendedor fica com você</h2>
+          <p class="dy-texto">Quando alguém vende um plano de internet, de celular ou de energia, a empresa paga uma comissão para quem vendeu. É assim em qualquer loja ou vendedor.</p>
+          <p class="dy-texto">Na Do Yourself, você faz a contratação <strong>por conta própria</strong> — é daí que vem o nome. Então a gente devolve uma parte dessa comissão para você. <strong>O preço do plano é o mesmo</strong>: você não paga nada a mais por isso.</p>
+        </div>
+        <div class="comparativo surgir" style="--atraso:.1s" aria-label="Comparação">
+          <div class="comparativo__lado">
+            <p class="comparativo__rot">Em outros lugares</p>
+            <div class="fluxo"><span class="fluxo__no">Você paga o plano</span><span class="fluxo__seta" aria-hidden="true">↓</span><span class="fluxo__no">A empresa paga comissão</span><span class="fluxo__seta" aria-hidden="true">↓</span><span class="fluxo__no fluxo__no--fim">Fica com o vendedor</span></div>
+          </div>
+          <div class="comparativo__lado comparativo__lado--dy">
+            <p class="comparativo__rot">Na Do Yourself</p>
+            <div class="fluxo"><span class="fluxo__no">Você paga o plano</span><span class="fluxo__seta" aria-hidden="true">↓</span><span class="fluxo__no">A empresa paga comissão</span><span class="fluxo__seta" aria-hidden="true">↓</span><span class="fluxo__no fluxo__no--fim">Volta para você</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ QUANTO VOLTA ============ -->
+    <section class="secao" aria-labelledby="qv-titulo">
+      <div class="container">
+        <header class="cab surgir">
+          <span class="dy-eyebrow">Quanto volta para você</span>
+          <h2 class="dy-h2" id="qv-titulo">Cada serviço devolve uma parte, e no combo tudo soma</h2>
+          <p class="dy-lead">O cashback é pago <strong>uma única vez</strong>, quando o contrato fecha. Não é desconto na fatura: é dinheiro que volta para o seu PIX.</p>
+        </header>
+        <div class="volta3">
+          <a class="volta surgir volta--internet" href="#internet" style="--atraso:.05s">
+            <span class="volta__ico"><img src="img/secoes/wifi-grande.svg" alt=""></span>
+            <p class="volta__pct"><b>50%</b> da mensalidade</p>
+            <h3 class="dy-h3">Internet Fibra</h3>
+            <p class="dy-texto">Metade de um mês do plano volta para você. No plano de 800 Mega, por <span data-ex="internet-preco">R$ 129,99</span>, você recebe <strong data-ex="internet">R$ 64,99</strong>.</p>
+            <span class="volta__link">Ver os planos de internet →</span>
+          </a>
+          <a class="volta surgir volta--celular" href="#celular" style="--atraso:.15s">
+            <span class="volta__ico"><img src="img/secoes/celular-5g-grande.svg" alt=""></span>
+            <p class="volta__pct"><b>100%</b> das linhas</p>
+            <h3 class="dy-h3">Planos de Celular</h3>
+            <p class="dy-texto">O valor de um mês de todas as linhas volta inteiro. Com 3 linhas de 30 GB, você recebe <strong data-ex="celular">R$ 158,97</strong>.</p>
+            <span class="volta__link">Ver os planos de celular →</span>
+          </a>
+          <a class="volta surgir volta--energia" href="#energia" style="--atraso:.25s">
+            <span class="volta__ico"><img src="img/secoes/lampada-grande.svg" alt=""></span>
+            <p class="volta__pct"><b>10%</b> da nova conta</p>
+            <h3 class="dy-h3">Energia Solar</h3>
+            <p class="dy-texto">Você paga menos na conta de luz e ainda recebe 10% do novo valor. Numa conta de R$ 800, cerca de <strong data-ex="energia">R$ 65,60</strong>.</p>
+            <span class="volta__link">Simular a minha conta →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTERNET FIBRA ============ -->
+    <section class="secao secao--alt secao--planos" id="internet" aria-labelledby="int-titulo">
+      <div class="container">
+        <header class="cab surgir">
+          <span class="dy-eyebrow dy-eyebrow--internet">Internet Fibra TIM UltraFibra</span>
+          <h2 class="dy-h2" id="int-titulo">Fibra do poste até o modem, dentro da sua casa</h2>
+          <p class="dy-lead">Sem cabo de cobre no caminho: é por isso que a fibra não cai com chuva e aguenta vários aparelhos ao mesmo tempo. O Wi-Fi e a instalação já estão inclusos.</p>
+        </header>
+        <div class="explica2 surgir">
+          <div><b>Download</b><p>É a velocidade do plano. Quanto mais Mega, mais rápido para assistir, baixar e navegar — mesmo com a família toda conectada.</p></div>
+          <div><b>Upload</b><p>É a velocidade de envio. Faz diferença em chamada de vídeo, jogo online, trabalho em casa e para mandar fotos e vídeos.</p></div>
+        </div>
+        <div class="planos-escolha">
+          <div class="abas abas--internet" role="tablist" aria-label="Para quem é a internet" data-abas-planos="internet">
+            <button class="aba" role="tab" aria-selected="true" data-tipo="casa"><span class="icone-mask" style="--src:url(../img/icones/aba-casa.svg)"></span>Para a sua casa</button>
+            <button class="aba" role="tab" aria-selected="false" data-tipo="empresa"><span class="icone-mask" style="--src:url(../img/icones/aba-predio.svg)"></span>Para a sua empresa</button>
+          </div>
+          <div class="planos-bloco">
+            <div class="acordeao" data-acordeao="internet" data-tipo="casa" aria-label="Planos de Internet Fibra"></div>
+            <div class="controles controles--internet">
+              <button class="seta" type="button" data-seta="-1" aria-label="Plano anterior">‹</button>
+              <div class="pontos"></div>
+              <button class="seta" type="button" data-seta="1" aria-label="Próximo plano">›</button>
+            </div>
+            <p class="dica-arraste">Toque em um plano para abrir, ou arraste para os lados</p>
+          </div>
+        </div>
+        <p class="planos-nota">Valores no débito automático. O preço e a disponibilidade do seu endereço aparecem na consulta de CEP.</p>
+      </div>
+    </section>
+
+    <!-- ============ CELULAR ============ -->
+    <section class="secao secao--planos" id="celular" aria-labelledby="cel-titulo">
+      <div class="container">
+        <header class="cab surgir">
+          <span class="dy-eyebrow dy-eyebrow--celular">Planos de Celular TIM</span>
+          <h2 class="dy-h2" id="cel-titulo">Uma linha ou várias, com o número que você já usa</h2>
+          <p class="dy-lead">Ligações ilimitadas para todo o Brasil, internet no 5G e WhatsApp sem gastar a franquia. Trazer o seu número de outra operadora (portabilidade) não custa nada.</p>
+        </header>
+        <div class="planos-escolha">
+          <div class="abas abas--celular" role="tablist" aria-label="Para quem é o plano" data-abas-planos="celular">
+            <button class="aba" role="tab" aria-selected="false" data-tipo="cpf"><span class="icone-mask" style="--src:url(../img/icones/aba-pessoa.svg)"></span>Para você</button>
+            <button class="aba" role="tab" aria-selected="true" data-tipo="cnpj"><span class="icone-mask" style="--src:url(../img/icones/aba-predio-branco.svg)"></span>Para a sua empresa</button>
+          </div>
+          <div class="planos-bloco">
+            <div class="acordeao" data-acordeao="celular" data-tipo="cnpj" aria-label="Planos de Celular"></div>
+            <div class="controles controles--celular">
+              <button class="seta" type="button" data-seta="-1" aria-label="Plano anterior">‹</button>
+              <div class="pontos"></div>
+              <button class="seta" type="button" data-seta="1" aria-label="Próximo plano">›</button>
+            </div>
+            <p class="dica-arraste">Toque em um plano para abrir, ou arraste para os lados</p>
+          </div>
+        </div>
+        <p class="planos-nota">Valores por linha, no débito automático. A oferta válida para você aparece na consulta de CEP.</p>
+      </div>
+    </section>
+
+    <!-- ============ ENERGIA ============ -->
+    <section class="secao secao--energia" id="energia" aria-labelledby="en-titulo">
+      <div class="container energia2">
+        <div class="energia2__copy surgir">
+          <span class="dy-eyebrow dy-eyebrow--energia">Energia Solar por Assinatura</span>
+          <h2 class="dy-h2" id="en-titulo">Conta de luz mais barata, sem placa no telhado</h2>
+          <p class="dy-texto">Uma usina solar parceira produz a energia e manda os créditos para a sua conta. Você <strong>continua com a mesma distribuidora</strong>, o mesmo fio e o mesmo medidor — só passa a pagar menos todo mês.</p>
+          <ul class="lista-ok">
+            <li><b>Sem obra e sem equipamento.</b> Nada é instalado na sua casa ou empresa.</li>
+            <li><b>Sem investimento.</b> Você não compra nada: só assina.</li>
+            <li><b>Regulamentado por lei.</b> A geração distribuída é prevista na Lei 14.300/2022.</li>
+            <li><b>E 10% de volta.</b> Do novo valor da conta, uma vez, quando o contrato fecha.</li>
+          </ul>
+        </div>
+        <div class="simula surgir" style="--atraso:.1s" data-simula>
+          <p class="simula__titulo">Quanto você paga de luz por mês?</p>
+          <div class="campo-grupo">
+            <div class="campo campo--moeda">
+              <input id="s-conta" inputmode="numeric" placeholder="0,00" aria-describedby="s-dica">
+              <label for="s-conta">Valor médio da conta</label>
+              <span class="campo__ico" aria-hidden="true"></span>
+            </div>
+            <p class="campo__msg dica" id="s-dica">Use uma conta recente. Se muda muito, use a média.</p>
+          </div>
+          <div class="chips" role="group" aria-label="Valores comuns">
+            <button type="button" class="chip-op" data-v="250" aria-pressed="false">R$ 250</button>
+            <button type="button" class="chip-op" data-v="500" aria-pressed="false">R$ 500</button>
+            <button type="button" class="chip-op" data-v="800" aria-pressed="false">R$ 800</button>
+            <button type="button" class="chip-op" data-v="1500" aria-pressed="false">R$ 1.500</button>
+          </div>
+          <div class="simula__res" data-simula-res aria-live="polite">
+            <div class="simula__linha"><span>Economia estimada por mês</span><b data-s="economia">—</b></div>
+            <div class="simula__linha"><span>Em um ano</span><b data-s="ano">—</b></div>
+            <div class="simula__linha simula__linha--cb"><span>Cashback (uma vez)</span><b data-s="cb">—</b></div>
+          </div>
+          <p class="simula__nota" data-s="nota">Estimativa de até 18% de desconto. O valor exato depende da cidade, da distribuidora e da sua fatura.</p>
+          <a class="dy-btn dy-btn--primario dy-btn--bloco" href="contratar.html?origem=energia">Simular no meu endereço <span class="seta-dir" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ UMA CONVERSA SÓ ============ -->
+    <section class="secao secao--escura" aria-labelledby="zap-titulo">
+      <div class="container zap2">
+        <div class="zap2__copy surgir">
+          <span class="dy-eyebrow dy-eyebrow--claro">Combo Do Yourself</span>
+          <h2 class="dy-h2" id="zap-titulo">Três serviços, um WhatsApp só</h2>
+          <p class="dy-texto">Sem ligar para a operadora de internet, depois para a de celular e depois para a de energia. Na Do Yourself você tira dúvidas, contrata e pede suporte dos três <strong>no mesmo número</strong>, com uma pessoa de verdade do outro lado.</p>
+          <p class="dy-texto">Quando você monta o pedido pelo site, a gente já recebe o endereço e os serviços que você escolheu. É por isso que o atendimento é rápido: <strong>você não precisa repetir nada.</strong></p>
+          <div class="zap2__acoes">
+            <a class="dy-btn dy-btn--primario-claro dy-btn--g" href="contratar.html?origem=combo">Montar meu combo <span class="seta-dir" aria-hidden="true">→</span></a>
+            <a class="dy-btn dy-btn--whatsapp dy-btn--g" data-whatsapp="Olá! Quero montar um combo com a Do Yourself."><img src="img/apps/whatsapp.svg" alt="" width="22" height="22">Falar no WhatsApp</a>
+          </div>
+        </div>
+        <div class="celular-mock surgir" style="--atraso:.1s" aria-hidden="true">
+          <div class="celular-mock__topo"><img src="img/marca/dy-selo-verde.svg" alt=""><div><b>Do Yourself</b><small>online</small></div></div>
+          <div class="celular-mock__msgs" data-chat>
+            <p class="msg msg--env">Olá, Do Yourself!<br>Eu gostaria de contratar os seguintes produtos:<br><br>- Internet Fibra 800 Mega + YouTube Premium no valor de R$ 129,99<br>- Energia Solar para uma conta de luz de R$ 800,00<br>- 3 linhas de celular de 30 GB<br><br>Meu pedido é o DY-261020-K6LQ.<time>14:02</time></p>
+            <p class="msg msg--rec">Oi, Maria! Já recebi o seu pedido com o endereço da Rua XV de Novembro. 😊<br>Tem fibra no seu número, e o seu cashback total fica em <b>R$ 289,56</b>. Posso agendar a instalação para amanhã?<time>14:03</time></p>
+            <p class="msg msg--env">Pode sim! 🙌<time>14:03</time></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DÚVIDAS ============ -->
+    <section class="secao" id="duvidas" aria-labelledby="faq-titulo">
+      <div class="container faq2" data-faq>
+        <header class="cab surgir">
+          <span class="dy-eyebrow">Dúvidas frequentes</span>
+          <h2 class="dy-h2" id="faq-titulo">As perguntas que a gente mais ouve</h2>
+        </header>
+        <div class="faq2__abas" role="tablist" aria-label="Assuntos">
+          <button class="chip-op" role="tab" aria-selected="true" aria-controls="faq-dy">Do Yourself e cashback</button>
+          <button class="chip-op" role="tab" aria-selected="false" aria-controls="faq-internet">Internet</button>
+          <button class="chip-op" role="tab" aria-selected="false" aria-controls="faq-celular">Celular</button>
+          <button class="chip-op" role="tab" aria-selected="false" aria-controls="faq-energia">Energia</button>
+        </div>
+
+        <div class="faq2__lista" role="tabpanel" id="faq-dy">
+          <div class="pergunta aberta"><button class="pergunta__btn" aria-expanded="true">O que é a Do Yourself?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>É uma marca 100% digital que reúne três serviços num lugar só: internet fibra, planos de celular e energia solar por assinatura. Em vez de contratar cada um com uma empresa diferente, você resolve tudo com a gente — na contratação e no suporte depois dela.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Como funciona o cashback?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Quando o seu contrato fecha, uma parte do valor volta para você: <b>50% de um mês</b> do plano de internet, <b>100% de um mês</b> das linhas de celular e <b>10% do novo valor</b> da conta de luz. Se você contratar mais de um serviço, os valores somam.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Eu pago mais caro por causa do cashback?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Não. O preço do plano é o mesmo. O cashback sai da comissão que a empresa pagaria para um vendedor — como você contrata por conta própria, essa parte volta para você.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Quando e como eu recebo?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Uma única vez, depois que o contrato é fechado. Não é desconto na fatura nem mensalidade: é um valor que volta de uma vez, no seu PIX. A gente combina tudo com você pelo WhatsApp.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Vale para CPF e CNPJ?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Sim. O percentual do cashback é o mesmo para pessoa física e para empresa.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">A Do Yourself é uma operadora?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Não. A internet fibra e os planos de celular são da TIM, e a energia solar vem de uma empresa parceira de geração distribuída. A Do Yourself reúne os três num lugar só e cuida do seu atendimento.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Preciso contratar os três serviços?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Não. Você escolhe só o que quiser — um, dois ou os três. Cada serviço tem o seu cashback, e no combo eles se somam.</p></div></div></div>
+        </div>
+        <div class="faq2__lista" role="tabpanel" id="faq-internet" hidden>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Como sei se tem fibra na minha rua?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Digite o CEP e o número do imóvel no topo da página. A cobertura da fibra muda de rua para rua, e às vezes de um número para o outro — por isso pedimos o número.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">A instalação é paga?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Não. A instalação é gratuita e o modem com Wi-Fi já vem incluso no plano.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Quanto volta de cashback na internet?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Metade de uma mensalidade, uma única vez. No plano de R$ 129,99, você recebe R$ 64,99.</p></div></div></div>
+        </div>
+        <div class="faq2__lista" role="tabpanel" id="faq-celular" hidden>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Posso manter o meu número?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Pode. A portabilidade do número que você já usa é gratuita.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Quantas linhas posso contratar?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Uma ou várias, na mesma fatura. Para MEI, o máximo é de 3 linhas. A partir de 10 linhas existem condições especiais — fale com a gente no WhatsApp.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Como funciona o cashback do celular?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>O valor de um mês de todas as linhas volta inteiro para você, uma única vez. Exemplo: 3 linhas de 30 GB a R$ 52,99 devolvem R$ 158,97.</p></div></div></div>
+        </div>
+        <div class="faq2__lista" role="tabpanel" id="faq-energia" hidden>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Preciso instalar placas ou fazer obra?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Não. Uma usina solar parceira produz a energia e os créditos vão para a sua conta. Não tem obra, painel, equipamento nem investimento.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Continuo com a mesma distribuidora?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Sim. O fio, o medidor e a distribuidora continuam os mesmos. Se faltar luz, você chama a distribuidora como sempre.</p></div></div></div>
+          <div class="pergunta"><button class="pergunta__btn" aria-expanded="false">Quanto eu economizo?<span class="pergunta__ico" aria-hidden="true"></span></button><div class="pergunta__resp"><div><p>Depende da sua cidade, da distribuidora e do valor da conta. Use a simulação acima para ter uma ideia, e a gente confirma o valor exato com a sua fatura antes de você assinar. Para contas abaixo de R$ 150 a assinatura ainda não compensa.</p></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA FINAL ============ -->
+    <section class="secao cta2" aria-labelledby="cta-titulo">
+      <div class="container">
+        <div class="cta2__painel surgir">
+          <h2 class="dy-h2" id="cta-titulo">Quanto volta para você?</h2>
+          <p class="dy-lead">Leva menos de 3 minutos para montar o seu combo e ver o cashback de cada serviço.</p>
+          <div class="cta2__acoes">
+            <a class="dy-btn dy-btn--primario dy-btn--g" href="contratar.html?origem=home">Consultar meu endereço <span class="seta-dir" aria-hidden="true">→</span></a>
+            <a class="dy-btn dy-btn--contorno dy-btn--g" data-whatsapp="Olá! Quero saber quanto de cashback eu recebo na Do Yourself.">Falar no WhatsApp</a>
+          </div>
+          <p class="dy-apoio">Atendimento 24 horas · <span data-whatsapp-numero></span></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ RODAPÉ (Figma 23:14177 / 23:14290 / 23:14403) ============ -->
+  <footer class="rodape">
+    <div class="rodape__inner">
+      <div class="rodape__topo">
+        <div class="rodape__pilulas">
+          <a class="pilula-rod pilula-rod--cheia" data-whatsapp="Olá! Vim pelo site da Do Yourself.">Falar no WhatsApp</a>
+          <a class="pilula-rod pilula-rod--vazada" href="/biometria">Como fazer a Biometria</a>
+        </div>
+        <div class="rodape__social">
+          <a data-whatsapp aria-label="WhatsApp da Do Yourself"><img src="img/social/whatsapp.svg" alt=""></a>
+          <a href="https://www.instagram.com/do.yourself_/" target="_blank" rel="noopener" aria-label="Instagram da Do Yourself"><img src="img/social/instagram-fundo.svg" alt=""><img class="ig-glifo" src="img/social/instagram-glifo.svg" alt=""></a>
+          <a href="https://www.facebook.com/profile.php?id=61591531077211" target="_blank" rel="noopener" aria-label="Facebook da Do Yourself"><img src="img/social/facebook.svg" alt=""></a>
+          <a href="#" aria-label="YouTube da Do Yourself (em breve)"><img src="img/social/youtube.svg" alt=""></a>
+        </div>
+      </div>
+      <div class="rodape__linha"></div>
+      <div class="rodape__main">
+        <nav class="rodape__nav" aria-label="Rodapé">
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Combo Do Yourself <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="contratar.html?origem=combo">Montar meu Combo</a><a href="/combo">Economize com o Combo</a><a href="/combo#como-funciona">Como Funciona</a><a href="/combo#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Energia Solar <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="contratar.html?origem=energia">Simulador de Economia</a><a href="/energia/casas">Para Casas e Apartamentos</a><a href="/energia/condominios">Para Condomínios</a><a href="/energia/empresas">Para Comércios e Empresas</a><a href="/energia#como-funciona">Como Funciona</a><a href="/energia#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Internet Fibra <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="/internet-fibra/casa">Internet para Residências</a><a href="/internet-fibra/empresa">Internet para Empresas</a><a href="/internet-fibra/home-office">Internet para Home Office</a><a href="/internet-fibra/gamer">Internet Gamer</a><a href="/internet-fibra/streaming">Internet com Streaming</a><a href="/aplicativos">Como Entrar nos Aplicativos</a><a href="/internet-fibra/wifi-6">Wi-Fi 6</a><a href="/internet-fibra#como-funciona">Como Funciona</a><a href="/internet-fibra#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Planos de Celular <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="/celular/cnpj">Planos para CNPJ (Empresas)</a><a href="/celular/cpf">Planos para CPF</a><a href="/celular#como-funciona">Como Funciona</a><a href="/celular#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Institucional <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="/sobre">Sobre a Do Yourself</a><a href="/cobertura">Cobertura</a><a href="/blog">Blog da Do Yourself</a><a class="forte" href="/parceiros">Seja um parceiro da<br>Do Yourself</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Atendimento <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a class="forte" href="/biometria">Como fazer a Biometria</a><a href="/contato">Fale Conosco</a><a href="/suporte">Central de Suporte</a><a href="/area-do-cliente">Área do Cliente</a>
+              <span class="contato-item">WhatsApp<strong data-whatsapp-numero></strong></span>
+              <span class="contato-item">E-mail<strong>contato@doyourself.online</strong></span>
+              <span class="contato-item">Suporte<strong>suporte@doyourself.online</strong></span>
+              <span class="contato-item">Horário<strong>Atendimento 24 horas</strong></span></div></div>
+        </nav>
+        <aside class="rodape__cta">
+          <h3>Fale com a gente</h3>
+          <p>Dúvidas sobre produtos, serviços ou sua fatura? Fale direto com a Do Yourself pelo WhatsApp.</p>
+          <a class="pilula-rod pilula-rod--cheia" data-whatsapp="Olá! Tenho uma dúvida sobre os serviços da Do Yourself.">Chamar no WhatsApp</a>
+        </aside>
+      </div>
+      <div class="rodape__linha"></div>
+      <div class="rodape__base">
+        <div class="rodape__logo-legal">
+          <a class="rodape__logo" href="/" aria-label="Do Yourself — página inicial"><img src="img/marca/dy-lockup-completo-escuro.svg" alt="Do Yourself — Energia · Internet · Celular" width="240" height="68"></a>
+          <p class="rodape__legal"><strong>© <span data-ano>2026</span> Do Yourself</strong> — Todos os direitos reservados.</p>
+        </div>
+        <div class="rodape__links-base"><a href="politica-de-privacidade.html">Privacidade</a><a href="/etica-e-integridade">Ética e Integridade</a></div>
+      </div>
+      <button class="rodape__subir" type="button" aria-label="Voltar ao topo">↑</button>
+    </div>
+  </footer>
+
+  <!-- Barra fixa no celular: aparece quando o formulário do topo sai da tela -->
+  <div class="barra-cep" data-barra-cep aria-hidden="true">
+    <a class="dy-btn dy-btn--primario dy-btn--bloco" href="#conteudo" data-ir-cep tabindex="-1">Consultar meu endereço</a>
+  </div>
+  <a class="zap-flutuante" data-whatsapp="Olá! Vim pelo site da Do Yourself." aria-label="Falar no WhatsApp"><img src="img/icones/whatsapp-branco.svg" alt=""></a>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/planos.js"></script>
+  <script src="js/inicio.js"></script>
+</body>
+</html>
