@@ -414,3 +414,7 @@
   .fim__zap { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 5; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
 }
 .dock__ir { white-space: nowrap; padding: 0 20px; }
+
+/* Rodapé completo do site também na contratação */
+.pg-contratar .rodape { margin-top: 24px; }
+@media (max-width: 767px) { .com-dock .rodape { padding-bottom: 120px; } }

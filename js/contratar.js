@@ -621,7 +621,7 @@
       + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
         <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Energia Solar por Assinatura' }[p]}</b><span>${{ internet: '50% da mensalidade volta para você', celular: '100% do valor das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
         <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('')
-      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Uma vez, no seu PIX, quando o contrato fecha.</small></div>` : '');
+      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Uma vez, via PIX na sua conta, quando o contrato fecha.</small></div>` : '');
     $('[data-ir-dados]').disabled = !l.length;
     atualizarCarrinho();
   }

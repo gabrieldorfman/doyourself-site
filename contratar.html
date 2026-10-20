@@ -12,7 +12,7 @@
     (function () {
       var t = null;
       try { t = localStorage.getItem('dy_tema'); } catch (e) {}
-      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'escuro';
+      /* Abre sempre no claro; o escuro só aparece se a pessoa escolher no botão */
       document.documentElement.dataset.tema = t || 'claro';
     })();
   </script>
@@ -318,16 +318,63 @@
         <ol class="fim__passos">
           <li><b>Em minutos</b>a gente confirma a oferta.</li>
           <li><b>Instalação e ativação</b>agendadas com você.</li>
-          <li><b>Contrato fechado</b>cashback no seu PIX.</li>
+          <li><b>Contrato fechado</b>cashback via PIX na sua conta.</li>
         </ol>
         <a class="dy-link fim__home" href="/">Voltar para a página inicial</a>
       </div>
     </section>
   </main>
 
-  <footer class="ct-rodape">
-    <p><b>© <span data-ano>2026</span> Do Yourself</b> — Internet Fibra e Planos de Celular TIM, Energia Solar por Assinatura com empresa parceira.</p>
-    <p><a href="politica-de-privacidade.html">Privacidade</a> · <a data-whatsapp>Atendimento pelo WhatsApp</a></p>
+  <footer class="rodape">
+    <div class="rodape__inner">
+      <div class="rodape__topo">
+        <div class="rodape__pilulas">
+          <a class="pilula-rod pilula-rod--cheia" data-whatsapp="Olá! Vim pelo site da Do Yourself.">Falar no WhatsApp</a>
+          <a class="pilula-rod pilula-rod--vazada" href="/biometria">Como fazer a Biometria</a>
+        </div>
+        <div class="rodape__social">
+          <a data-whatsapp aria-label="WhatsApp da Do Yourself"><img src="img/social/whatsapp.svg" alt=""></a>
+          <a href="https://www.instagram.com/do.yourself_/" target="_blank" rel="noopener" aria-label="Instagram da Do Yourself"><img src="img/social/instagram-fundo.svg" alt=""><img class="ig-glifo" src="img/social/instagram-glifo.svg" alt=""></a>
+          <a href="https://www.facebook.com/profile.php?id=61591531077211" target="_blank" rel="noopener" aria-label="Facebook da Do Yourself"><img src="img/social/facebook.svg" alt=""></a>
+          <a href="#" aria-label="YouTube da Do Yourself (em breve)"><img src="img/social/youtube.svg" alt=""></a>
+        </div>
+      </div>
+      <div class="rodape__linha"></div>
+      <div class="rodape__main">
+        <nav class="rodape__nav" aria-label="Rodapé">
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Combo Do Yourself <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="contratar.html?origem=combo">Montar meu Combo</a><a href="/combo">Economize com o Combo</a><a href="/combo#como-funciona">Como Funciona</a><a href="/combo#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Energia Solar <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="contratar.html?origem=energia">Simulador de Economia</a><a href="/energia/casas">Para Casas e Apartamentos</a><a href="/energia/condominios">Para Condomínios</a><a href="/energia/empresas">Para Comércios e Empresas</a><a href="/energia#como-funciona">Como Funciona</a><a href="/energia#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Internet Fibra <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="/internet-fibra/casa">Internet para Residências</a><a href="/internet-fibra/empresa">Internet para Empresas</a><a href="/internet-fibra/home-office">Internet para Home Office</a><a href="/internet-fibra/gamer">Internet Gamer</a><a href="/internet-fibra/streaming">Internet com Streaming</a><a href="/aplicativos">Como Entrar nos Aplicativos</a><a href="/internet-fibra/wifi-6">Wi-Fi 6</a><a href="/internet-fibra#como-funciona">Como Funciona</a><a href="/internet-fibra#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Planos de Celular <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="/celular/cnpj">Planos para CNPJ (Empresas)</a><a href="/celular/cpf">Planos para CPF</a><a href="/celular#como-funciona">Como Funciona</a><a href="/celular#duvidas">Dúvidas Frequentes</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Institucional <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a href="/sobre">Sobre a Do Yourself</a><a href="/cobertura">Cobertura</a><a href="/blog">Blog da Do Yourself</a><a class="forte" href="/parceiros">Seja um parceiro da<br>Do Yourself</a></div></div>
+          <div class="rodape__col"><button class="rodape__col-titulo" type="button" aria-expanded="false">Atendimento <span class="glifo">+</span></button>
+            <div class="rodape__col-lista"><a class="forte" href="/biometria">Como fazer a Biometria</a><a href="/contato">Fale Conosco</a><a href="/suporte">Central de Suporte</a><a href="/area-do-cliente">Área do Cliente</a>
+              <span class="contato-item">WhatsApp<strong data-whatsapp-numero></strong></span>
+              <span class="contato-item">E-mail<strong>contato@doyourself.online</strong></span>
+              <span class="contato-item">Suporte<strong>suporte@doyourself.online</strong></span>
+              <span class="contato-item">Horário<strong>Atendimento 24 horas</strong></span></div></div>
+        </nav>
+        <aside class="rodape__cta">
+          <h3>Fale com a gente</h3>
+          <p>Dúvidas sobre produtos, serviços ou sua fatura? Fale direto com a Do Yourself pelo WhatsApp.</p>
+          <a class="pilula-rod pilula-rod--cheia" data-whatsapp="Olá! Tenho uma dúvida sobre os serviços da Do Yourself.">Chamar no WhatsApp</a>
+        </aside>
+      </div>
+      <div class="rodape__linha"></div>
+      <div class="rodape__base">
+        <div class="rodape__logo-legal">
+          <a class="rodape__logo" href="/" aria-label="Do Yourself — página inicial"><img src="img/marca/dy-lockup-completo-escuro.svg" alt="Do Yourself — Energia · Internet · Celular" width="240" height="68"></a>
+          <p class="rodape__legal"><strong>© <span data-ano>2026</span> Do Yourself</strong> — Todos os direitos reservados.</p>
+        </div>
+        <div class="rodape__links-base"><a href="politica-de-privacidade.html">Privacidade</a><a href="/etica-e-integridade">Ética e Integridade</a></div>
+      </div>
+      <button class="rodape__subir" type="button" aria-label="Voltar ao topo">↑</button>
+    </div>
   </footer>
 
   <!-- Barra fixa: resumo do combo + botão de avançar da tela (sempre à mão no celular) -->
