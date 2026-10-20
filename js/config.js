@@ -25,6 +25,9 @@ DY.config = {
 DY.energia = {
   minimo: 150,
   descontoPct: (conta) => (conta >= 3000 ? 15 : 18),
+  // Estados atendidos pela energia por assinatura. Vazio = todos (até a lista real das parceiras ser definida).
+  ufsAtendidas: [],
+  atende(uf) { return !this.ufsAtendidas.length || this.ufsAtendidas.includes(String(uf || '').toUpperCase()); },
   simular(contaReais) {
     const conta = DY.centavos(contaReais);
     if (contaReais < this.minimo) return { elegivel: false, conta };

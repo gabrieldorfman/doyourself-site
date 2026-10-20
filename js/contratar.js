@@ -67,6 +67,7 @@
     const etapa = +tela.dataset.etapa || 4;
     let parcial = 50;
     if (telaAtual === 'endereco') parcial = 40; if (telaAtual === 'consulta') parcial = 85;
+    if (telaAtual === 'disponivel') parcial = 10;
     if (telaAtual === 'combo') parcial = 20 + (st.idx / st.ordem.length) * 60; if (telaAtual === 'resumo') parcial = 90;
     if (telaAtual === 'contato') parcial = 45; if (telaAtual === 'cadastro') parcial = 85;
     if (telaAtual === 'pagamento') parcial = st.pag.tipo ? 85 : 45;
@@ -254,28 +255,49 @@
     st.fibra = fibra; passos[1].className = 'feito';
     passos[2].classList.add('rodando'); await espera(700); passos[2].className = 'feito';
 
-    st.ordem = ORDENS[origem].slice();
-    if (fibra === 'nao') st.ordem = st.ordem.filter((p) => p !== 'internet');
+    // O que existe no endereço: fibra (Supabase), celular (TIM, todo o Brasil), energia (regiões atendidas)
+    st.disp = { internet: fibra, celular: 'sim', energia: DY.energia.atende(st.end.uf) ? 'sim' : 'nao' };
+    st.ordem = ORDENS[origem].filter((p) => st.disp[p] !== 'nao');
     st.idx = 0;
     box.classList.add('ok');
-    if (fibra === 'sim') {
-      titulo.textContent = 'Boa notícia: tem fibra no seu endereço!';
-      res.innerHTML = `<div class="aviso aviso--ok">${CHECK.replace('<svg', '<svg style="color:var(--ok)"')}<span>Internet, celular e energia disponíveis para você.</span></div>`;
-    } else if (fibra === 'nao') {
-      box.classList.add('alerta');
-      titulo.textContent = 'Ainda não tem fibra na sua rua';
-      res.innerHTML = `<div class="aviso aviso--info"><img src="${img('icones/aviso-info.svg')}" alt=""><span>Mas <b>celular</b> e <b>energia solar</b> funcionam aí, com cashback.</span></div>`;
-    } else {
-      titulo.textContent = 'Endereço confirmado!';
-      res.innerHTML = `<div class="aviso aviso--neutro"><img src="${img('icones/aviso-info.svg')}" alt=""><span>A fibra no seu número é confirmada no WhatsApp.</span></div>`;
-    }
-    res.insertAdjacentHTML('beforeend', '<p class="consulta__indo"><span class="pt-indo" aria-hidden="true"></span>Abrindo as ofertas…</p>');
+    titulo.textContent = 'Endereço verificado!';
+    res.innerHTML = '<p class="consulta__indo"><span class="pt-indo" aria-hidden="true"></span>Vendo o que chega aí…</p>';
     res.hidden = false;
     titulo.focus({ preventScroll: true });
-    // Avança sozinho (como a Nio): tempo de ler o resultado e seguir
-    await espera(fibra === 'nao' ? 2600 : 1700);
-    if (telaAtual === 'consulta') { renderProduto(); history.replaceState({ tela: 'endereco' }, ''); mostrar('combo'); }
+    await espera(1100);
+    if (telaAtual !== 'consulta') return;
+    renderDisponivel();
+    history.replaceState({ tela: 'endereco' }, '');
+    mostrar('disponivel');
   }
+
+  /* =========================================================
+     2b · DISPONÍVEL NO ENDEREÇO
+     ========================================================= */
+  function renderDisponivel() {
+    $('[data-disp-end]').textContent = `${st.end.logradouro}, ${st.end.numero} — ${st.end.cidade}/${st.end.uf}`;
+    const info = {
+      internet: ['Internet Fibra', 'hero-wifi.svg', 'Cashback de 50% do plano'],
+      celular: ['Celular', 'hero-celular-5g.svg', 'Cashback de 100% das linhas'],
+      energia: ['Energia Solar', 'hero-lampada.svg', 'Cashback de 10% da nova conta'],
+    };
+    const ordem = ORDENS[origem];
+    $('[data-disp]').innerHTML = ordem.map((p, k) => {
+      const [nome, ico, cb] = info[p]; const d = st.disp[p];
+      const selo = d === 'nao' ? '<span class="disp-selo disp-selo--nao">Indisponível</span>' : d === 'talvez' ? '<span class="disp-selo disp-selo--talvez">Disponível*</span>' : '<span class="disp-selo">Disponível</span>';
+      const txt = d === 'nao' ? (p === 'internet' ? 'Ainda não chegou no seu número.' : 'Ainda não atende a sua região.') : cb;
+      return `<div class="item-combo disp-item${d === 'nao' ? ' disp-item--nao' : ''}" style="animation-delay:${k * 0.12}s"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico)}" alt=""></span>
+        <span class="item-combo__txt"><span class="disp-topo"><b>${nome}</b>${selo}</span><span>${txt}</span></span></div>`;
+    }).join('');
+    if (st.disp.internet === 'talvez') $('[data-disp]').insertAdjacentHTML('beforeend', '<p class="dy-apoio" style="text-align:center">* A fibra no seu número é confirmada no WhatsApp.</p>');
+    const algum = st.ordem.length > 0;
+    const b = $('[data-montar]');
+    b.innerHTML = algum ? (st.ordem.length === 1 ? 'Escolher meu plano' : 'Montar meu combo') + ' <span class="seta-dir" aria-hidden="true">→</span>' : 'Falar no WhatsApp';
+  }
+  $('[data-montar]').addEventListener('click', () => {
+    if (!st.ordem.length) { location.href = DY.linkWhatsApp('Olá! Consultei meu endereço no site da Do Yourself e quero falar sobre as opções.'); return; }
+    st.idx = 0; renderProduto(); mostrar('combo');
+  });
 
   /* =========================================================
      3 · SEU COMBO — um produto por vez
@@ -578,7 +600,7 @@
   /* ---------- Barra do combo ---------- */
   const car = $('[data-carrinho]');
   const dock = $('[data-dock]'), dockIr = $('[data-dock-ir]'), dockRot = $('[data-dock-rot]');
-  const PRIM = '[data-continuar], [data-add], [data-ir-dados], [data-finalizar]';
+  const PRIM = '[data-continuar], [data-montar], [data-add], [data-ir-dados], [data-finalizar]';
   // O botão fixo espelha (rótulo, ativo/inativo, carregando) o botão principal da tela visível
   function alvoDock() { const t = $('.tela:not([hidden])'); return t ? $$(PRIM, t)[0] : null; }
   function syncDock() {
@@ -611,7 +633,7 @@
      ========================================================= */
   function renderResumo() {
     const l = itens();
-    const faltam = ['internet', 'celular', 'energia'].filter((p) => !st.esc[p] && !(p === 'internet' && st.fibra === 'nao'));
+    const faltam = ['internet', 'celular', 'energia'].filter((p) => !st.esc[p] && (st.disp || {})[p] !== 'nao');
     const ico = { internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg', energia: 'hero-lampada.svg' };
     const mensal = l.filter((i) => i.produto !== 'energia').reduce((a, i) => a + i.mensal, 0);
     $('[data-resumo]').innerHTML = (l.length ? '' : '<div class="aviso aviso--info"><img src="img/icones/aviso-info.svg" alt=""><span>O seu combo está vazio. Para seguir, escolha <b>pelo menos um serviço</b> abaixo.</span></div>')

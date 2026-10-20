@@ -418,3 +418,15 @@
 /* Rodapé completo do site também na contratação */
 .pg-contratar .rodape { margin-top: 24px; }
 @media (max-width: 767px) { .com-dock .rodape { padding-bottom: 120px; } }
+
+/* Tela "Disponível no seu endereço" */
+.disp-item { animation: telaEntra .4s var(--ease) both; }
+.disp-selo { flex: none; align-self: center; padding: 5px 10px; border-radius: 99px; background: var(--ok-fundo); color: var(--ok); border: 1px solid var(--aviso-positivo-borda); font-weight: 800; font-size: 12px; white-space: nowrap; }
+.disp-selo--talvez { background: var(--aviso-informativo-fundo); color: var(--acao-atencao); border-color: var(--aviso-informativo-borda); white-space: normal; max-width: 120px; text-align: center; line-height: 1.25; }
+.disp-selo--nao { background: var(--fundo-superficie-alt); color: var(--texto-terciario); border-color: var(--borda-padrao); }
+.disp-item--nao { opacity: .75; }
+.disp-item--nao .item-combo__ico img { filter: grayscale(1); }
+@media (max-width: 400px) { .disp-item .item-combo__txt span { font-size: 13px; } }
+.disp-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.disp-item { padding: 14px 16px; }
+.disp-selo--talvez { max-width: none; white-space: nowrap; }
