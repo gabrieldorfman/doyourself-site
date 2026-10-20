@@ -37,13 +37,12 @@ DY.energia = {
   },
 };
 
-/* Bancos aceitos no débito automático (wiki debito-automatico-dacc) */
+/* Bancos aceitos no débito automático, em ordem alfabética.
+   Só os que cadastram sem erro no sistema da operadora (Caixa e os demais ficam de fora). */
 DY.bancosDebito = [
-  ['001', 'Banco do Brasil', 'BB'], ['237', 'Bradesco', 'BR'], ['104', 'Caixa', 'CX'], ['341', 'Itaú', 'IT'], ['033', 'Santander', 'SA'],
-  ['260', 'Nubank', 'NU'], ['077', 'Inter', 'IN'], ['336', 'C6 Bank', 'C6'], ['756', 'Sicoob', 'SC'], ['748', 'Sicredi', 'SI'],
-  ['422', 'Safra', 'SF'], ['389', 'Mercantil', 'ME'], ['003', 'Banco da Amazônia', 'BA'], ['037', 'Banpará', 'BP'], ['047', 'Banese', 'BE'],
-  ['084', 'Uniprime', 'UP'], ['085', 'Ailos (Cecred)', 'AI'],
-];
+  ['001', 'Banco do Brasil', 'BB'], ['237', 'Bradesco', 'BR'], ['336', 'C6 Bank', 'C6'], ['077', 'Inter', 'IN'],
+  ['341', 'Itaú', 'IT'], ['260', 'Nubank', 'NU'], ['033', 'Santander', 'SA'],
+]
 
 DY.img = (p) => 'img/' + p;
 
