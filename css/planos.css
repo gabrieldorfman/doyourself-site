@@ -303,3 +303,11 @@
   .faixa-cashback { font-size: 14px; }
   .faixa-cashback b { font-size: 17px; }
 }
+
+/* Celular e tablet: vitrine de cards compactos (arrastar para o lado) no lugar do acordeão */
+.vitrine-movel { display: none; }
+@media (max-width: 1239px) {
+  .vitrine-movel { display: block; width: 100%; }
+  .planos-bloco .acordeao, .planos-bloco .controles, .planos-bloco .dica-arraste { display: none; }
+  .planos-bloco { gap: 0; }
+}

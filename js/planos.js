@@ -271,6 +271,24 @@
     const rc = document.querySelector('[data-acordeao="celular"]');
     if (rc) montar(rc, { planos: DY.planosCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 936, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
 
+    // Celular e tablet: os mesmos cards compactos da contratação, arrastando para o lado
+    document.querySelectorAll('[data-vitrine]').forEach((box) => {
+      const tipo = box.dataset.vitrine; const net = tipo === 'internet';
+      const lista = net ? DY.planosInternet : DY.planosCelular;
+      const destaque = net ? DY.internetPadrao : DY.celularPadrao;
+      box.innerHTML = `<div class="ofertas${net ? '' : ' ofertas--cel'}" data-trilho>${lista.map((p) => net ? DY.ofertas.internet(p, { op: 0 }) : DY.ofertas.celular(p)).join('')}</div>${DY.ofertas.dots(lista.length)}`;
+      const trilho = box.querySelector('[data-trilho]'); DY.ofertas.ligarDots(trilho);
+      const ir = (card) => {
+        const para = document.querySelector(`[data-acordeao="${tipo}"]`).dataset.tipo || (net ? 'casa' : 'cnpj');
+        const q = net ? { origem: 'internet', plano: card.dataset.id, para } : { origem: 'celular', plano: card.dataset.id, linhas: 1, para };
+        location.href = config.paginaConversao + '?' + new URLSearchParams(q);
+      };
+      trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (c) ir(c); });
+      trilho.addEventListener('keydown', (e) => { const c = e.target.closest('.oferta'); if (c && e.target === c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(c); } });
+      const posicionar = () => { const c = trilho.children[destaque]; if (c && trilho.scrollWidth > trilho.clientWidth + 4) trilho.scrollLeft = c.offsetLeft - (trilho.clientWidth - c.offsetWidth) / 2; };
+      requestAnimationFrame(posicionar);
+    });
+
     // Abas "Para a sua casa / empresa" e "Para você / empresa"
     document.querySelectorAll('[data-abas-planos]').forEach((lista) => {
       const alvo = document.querySelector(`[data-acordeao="${lista.dataset.abasPlanos}"]`);

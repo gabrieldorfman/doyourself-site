@@ -363,17 +363,7 @@
     atualizarCarrinho();
   }
 
-  const dots = (n) => `<div class="oferta-dots" aria-hidden="true">${'<span></span>'.repeat(n)}</div>`;
-  function ligarDots(trilho) {
-    const pts = $$('.oferta-dots span', trilho.parentElement);
-    const marcar = () => {
-      const cards = [...trilho.children]; const meio = trilho.scrollLeft + trilho.clientWidth / 2;
-      let i = 0, menor = Infinity; cards.forEach((c, k) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - meio); if (d < menor) { menor = d; i = k; } });
-      pts.forEach((p, k) => p.classList.toggle('on', k === i));
-    };
-    trilho.addEventListener('scroll', () => requestAnimationFrame(marcar), { passive: true });
-    requestAnimationFrame(marcar);
-  }
+  const { dots, ligarDots } = DY.ofertas;
   // No celular, o card escolhido desliza para o centro da tela
   function centralizar(card) {
     const trilho = card.parentElement;
@@ -385,50 +375,52 @@
   /* ----- Internet ----- */
   function htmlInternet() {
     const sel = st.rasc.internet || (st.esc.internet && { ...st.esc.internet });
-    const cards = DY.planosInternet.map((p) => {
-      const on = sel && sel.id === p.id; const op = on ? sel.op : p.opcaoPadrao;
-      const det = p.detalhes.slice(0, 3).map(([ico, r, v]) => `<li><img src="${img('icones/' + ico)}" alt=""><span>${r} <b>${v}</b></span></li>`).join('');
-      const apps = p.apps.map((k) => k === 'youtube-premium' ? `<img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium">` : `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
-      const opcoes = p.opcoes.length > 1 ? `<div class="oferta__opcoes" role="radiogroup" aria-label="Escolha o streaming"><p>Personalize:</p>${p.opcoes.map((o, i) => `<button type="button" class="op-stream" role="radio" aria-checked="${i === op}" data-op="${i}">${o.logo ? `<img src="${img(logos[o.logo].src)}" alt="">` : ''}<span>${o.nome}</span><span class="op-preco">${brl(centavos(o.preco))}</span></button>`).join('')}</div>` : '';
-      const preco = centavos(p.opcoes[op].preco);
-      const nome = p.num + ' ' + (p.unidade === 'GIGA' ? 'Giga' : 'Mega');
-      return `<div class="oferta${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="Internet ${nome}" data-id="${p.id}">
-        <div class="oferta__topo"><span class="oferta__selo">${p.selo}</span><span class="oferta__check" aria-hidden="true">${CHECK}</span></div>
-        <p class="oferta__vel"><b>${p.num}</b><span>${p.unidade === 'GIGA' ? 'Giga' : 'Mega'}</span></p>
-        <ul class="oferta__lista">${det}</ul>
-        <div class="oferta__apps">${apps}</div>
-        ${opcoes}
-        <div class="oferta__espaco"></div>
-        <div class="oferta__preco"><s>De ${brl(centavos(p.de))}</s><div><b data-preco>${brl(preco)}</b><span>/mês</span></div><small>no débito automático</small></div>
-        <div class="oferta__cb"><span>Volta para você<br><small>cashback de 50%</small></span><b data-cb>${brl(cashbackCentavos(preco, 50))}</b></div>
-        <span class="oferta__escolher" aria-hidden="true">${on ? 'Plano escolhido' : 'Escolher este plano'}</span>
-      </div>`;
-    }).join('');
+    const cards = DY.planosInternet.map((p) => { const on = !!(sel && sel.id === p.id); return DY.ofertas.internet(p, { on, op: on ? sel.op : 0 }); }).join('');
+    const pSel = sel && DY.planosInternet.find((x) => x.id === sel.id);
     return `<div class="ct-abas"><div class="segmento" role="radiogroup" aria-label="Para onde é a internet" data-para="internet">
         <button type="button" role="radio" aria-checked="${st.para.internet === 'casa'}" data-v="casa">Casa</button>
         <button type="button" role="radio" aria-checked="${st.para.internet === 'empresa'}" data-v="empresa">Empresa</button></div></div>
       <div><div class="ofertas" data-trilho>${cards}</div>${dots(DY.planosInternet.length)}</div>
+      <div data-pers-box>${pSel ? DY.ofertas.personaliza(pSel, sel.op) : ''}</div>
       <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. No boleto, + R$ 10.</p>`;
   }
   function ligarInternet() {
     const trilho = $('[data-trilho]', palco); ligarDots(trilho);
     ligarPara('internet');
-    const escolher = (card, opIdx) => {
-      const p = DY.planosInternet.find((x) => x.id === card.dataset.id);
-      const op = opIdx ?? (st.rasc.internet && st.rasc.internet.id === p.id ? st.rasc.internet.op : p.opcaoPadrao);
-      st.rasc.internet = { id: p.id, op };
-      $$('.oferta', trilho).forEach((c) => { const on = c === card; c.setAttribute('aria-checked', on); c.querySelector('.oferta__escolher').textContent = on ? 'Plano escolhido' : 'Escolher este plano'; });
-      $$('.op-stream', card).forEach((b) => b.setAttribute('aria-checked', +b.dataset.op === op));
-      const preco = centavos(p.opcoes[op].preco);
+    const box = $('[data-pers-box]', palco);
+    const pintarCard = (card, p, op) => {
+      const o = p.opcoes[op]; const preco = centavos(o.preco);
       card.querySelector('[data-preco]').textContent = brl(preco);
       card.querySelector('[data-cb]').textContent = brl(cashbackCentavos(preco, 50));
+      card.querySelector('[data-preco-obs]').innerHTML = op > 0 && o.logo ? `<span class="oferta__extra">+ ${o.nome}</span>` : 'no débito automático';
+    };
+    const escolher = (card) => {
+      const p = DY.planosInternet.find((x) => x.id === card.dataset.id);
+      const mesmo = st.rasc.internet && st.rasc.internet.id === p.id;
+      const op = mesmo ? st.rasc.internet.op : 0;
+      st.rasc.internet = { id: p.id, op };
+      $$('.oferta', trilho).forEach((c) => {
+        const on = c === card; c.setAttribute('aria-checked', on); c.querySelector('.oferta__escolher').textContent = on ? 'Plano escolhido' : 'Escolher este plano';
+        if (!on) pintarCard(c, DY.planosInternet.find((x) => x.id === c.dataset.id), 0);
+      });
+      pintarCard(card, p, op);
+      if (!mesmo) {
+        box.innerHTML = DY.ofertas.personaliza(p, op);
+        const pers = $('[data-personaliza]', box);
+        if (pers) setTimeout(() => { const r = pers.getBoundingClientRect(); if (r.bottom > innerHeight - 100) window.scrollBy({ top: r.bottom - innerHeight + 110, behavior: reduzir ? 'auto' : 'smooth' }); }, 350);
+      }
       centralizar(card); atualizarBotaoAdd(); atualizarCarrinho();
     };
-    trilho.addEventListener('click', (e) => {
-      const card = e.target.closest('.oferta'); if (!card) return;
-      const op = e.target.closest('.op-stream'); escolher(card, op ? +op.dataset.op : undefined);
-    });
+    trilho.addEventListener('click', (e) => { const card = e.target.closest('.oferta'); if (card) escolher(card); });
     trilho.addEventListener('keydown', (e) => { const card = e.target.closest('.oferta'); if (card && e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); escolher(card); } });
+    box.addEventListener('click', (e) => {
+      const b = e.target.closest('.p-op'); if (!b || !st.rasc.internet) return;
+      const op = +b.dataset.op; st.rasc.internet.op = op;
+      $$('.p-op', box).forEach((x) => x.setAttribute('aria-checked', x === b));
+      const p = DY.planosInternet.find((x) => x.id === st.rasc.internet.id);
+      pintarCard($(`.oferta[data-id="${p.id}"]`, trilho), p, op);
+      atualizarBotaoAdd(); atualizarCarrinho();
+    });
     const sel = trilho.querySelector('[aria-checked="true"].oferta') || trilho.querySelector('.destaque');
     if (sel) requestAnimationFrame(() => { if (trilho.scrollWidth > trilho.clientWidth + 4) trilho.scrollLeft = sel.offsetLeft - (trilho.clientWidth - sel.offsetWidth) / 2; });
   }
@@ -445,22 +437,7 @@
   /* ----- Celular ----- */
   function htmlCelular() {
     const sel = st.rasc.celular || (st.esc.celular && { ...st.esc.celular });
-    const cards = DY.planosCelular.map((p) => {
-      const on = sel && sel.id === p.id;
-      const ic = (k) => img('icones/' + p.detalhes[k][0]);
-      const det = `<li><img src="${ic(0)}" alt=""><span><b>${p.num} GB</b> de internet por mês</span></li><li><img src="${ic(1)}" alt=""><span><b>Ligações ilimitadas</b> para todo o Brasil</span></li><li><img src="${ic(3)}" alt=""><span><b>5G</b> e portabilidade grátis</span></li>`;
-      const apps = p.apps.map((k) => `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
-      return `<div class="oferta oferta--cel${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="Plano de ${p.num} GB" data-id="${p.id}">
-        <div class="oferta__topo"><span class="oferta__selo">${p.selo}</span><span class="oferta__check" aria-hidden="true">${CHECK}</span></div>
-        <p class="oferta__vel"><b>${p.num}</b><span>GB</span></p>
-        <ul class="oferta__lista">${det}</ul>
-        <div class="oferta__apps" title="Apps que não gastam a sua internet">${apps}</div>
-        <div class="oferta__espaco"></div>
-        <div class="oferta__preco"><div><b>${brl(centavos(p.preco))}</b><span>/mês</span></div><small>por linha, no débito automático</small></div>
-        <div class="oferta__cb"><span>Volta para você<br><small>cashback de 100%</small></span><b>${brl(centavos(p.preco))}<small style="font-weight:600">/linha</small></b></div>
-        <span class="oferta__escolher" aria-hidden="true">${on ? 'Plano escolhido' : 'Escolher este plano'}</span>
-      </div>`;
-    }).join('');
+    const cards = DY.planosCelular.map((p) => DY.ofertas.celular(p, { on: !!(sel && sel.id === p.id) })).join('');
     const n = sel ? sel.linhas : 1;
     return `<div class="ct-abas"><div class="segmento" role="radiogroup" aria-label="Para quem são as linhas" data-para="celular">
         <button type="button" role="radio" aria-checked="${st.para.celular === 'cpf'}" data-v="cpf">Para mim · CPF</button>

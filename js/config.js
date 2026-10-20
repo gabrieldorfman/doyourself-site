@@ -69,7 +69,7 @@ DY.planosInternet = [
       { nome: 'Paramount+', logo: 'paramount', preco: 109.99, resumo: '600 Mb + Paramount+' },
       { nome: 'GloboPlay', logo: 'globoplay', preco: 119.99, resumo: '600 Mb + GloboPlay' },
     ],
-    opcaoPadrao: 1, de: 149.99,
+    opcaoPadrao: 0, de: 149.99,
     tarja: { streaming: ['paramount', 'globoplay'] },
   },
   {
@@ -92,7 +92,7 @@ DY.planosInternet = [
       { nome: 'Paramount+', logo: 'paramount-44', preco: 149.99, resumo: '1000 Mb + Paramount+' },
       { nome: 'HBO Max', logo: 'hbo-max', preco: 159.99, resumo: '1000 Mb + HBO Max' },
     ],
-    opcaoPadrao: 1, de: 199.99,
+    opcaoPadrao: 0, de: 199.99,
     tarja: { streaming: ['paramount', 'hbo-max'] },
   },
 ];
