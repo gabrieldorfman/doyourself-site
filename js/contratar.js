@@ -364,13 +364,9 @@
   }
 
   const { dots, ligarDots } = DY.ofertas;
-  // No celular, o card escolhido desliza para o centro da tela
-  function centralizar(card) {
-    const trilho = card.parentElement;
-    if (trilho.scrollWidth > trilho.clientWidth + 4) trilho.scrollTo({ left: card.offsetLeft - (trilho.clientWidth - card.offsetWidth) / 2, behavior: reduzir ? 'auto' : 'smooth' });
-    const r = card.getBoundingClientRect();
-    if (r.top < 70 || r.bottom > innerHeight - 90) card.scrollIntoView({ block: 'center', behavior: reduzir ? 'auto' : 'smooth' });
-  }
+  const { centralizar, trazerParaMeio } = DY.ofertas;
+  // Depois de escolher: desce para a personalização (streaming ou linhas)
+  const descer = (el) => { if (el) setTimeout(() => trazerParaMeio(el), 120); };
 
   /* ----- Internet ----- */
   function htmlInternet() {
@@ -404,14 +400,13 @@
         if (!on) pintarCard(c, DY.planosInternet.find((x) => x.id === c.dataset.id), 0);
       });
       pintarCard(card, p, op);
-      if (!mesmo) {
-        box.innerHTML = DY.ofertas.personaliza(p, op);
-        const pers = $('[data-personaliza]', box);
-        if (pers) setTimeout(() => { const r = pers.getBoundingClientRect(); if (r.bottom > innerHeight - 100) window.scrollBy({ top: r.bottom - innerHeight + 110, behavior: reduzir ? 'auto' : 'smooth' }); }, 350);
-      }
-      centralizar(card); atualizarBotaoAdd(); atualizarCarrinho();
+      if (!mesmo) box.innerHTML = DY.ofertas.personaliza(p, op);
+      atualizarBotaoAdd(); atualizarCarrinho();
+      const pers = $('[data-personaliza]', box);
+      if (pers) descer(pers); else centralizar(card);
     };
-    trilho.addEventListener('click', (e) => { const card = e.target.closest('.oferta'); if (card) escolher(card); });
+    // Toque no card só centraliza; o botão "Escolher este plano" é que escolhe
+    trilho.addEventListener('click', (e) => { const card = e.target.closest('.oferta'); if (!card) return; if (e.target.closest('.oferta__escolher')) escolher(card); else centralizar(card); });
     trilho.addEventListener('keydown', (e) => { const card = e.target.closest('.oferta'); if (card && e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); escolher(card); } });
     box.addEventListener('click', (e) => {
       const b = e.target.closest('.p-op'); if (!b || !st.rasc.internet) return;
@@ -443,7 +438,7 @@
         <button type="button" role="radio" aria-checked="${st.para.celular === 'cpf'}" data-v="cpf">Para mim · CPF</button>
         <button type="button" role="radio" aria-checked="${st.para.celular === 'cnpj'}" data-v="cnpj">Empresa · CNPJ</button></div></div>
       <div><div class="ofertas ofertas--cel" data-trilho>${cards}</div>${dots(DY.planosCelular.length)}</div>
-      <div class="linhas" data-linhas-box>
+      <div class="linhas" data-linhas-box${sel ? '' : ' hidden'}>
         <p class="linhas__titulo" id="lbl-linhas">Quantas linhas você quer?</p>
         <div class="linhas__ctrl"><button type="button" data-l="-1" aria-label="Tirar uma linha">−</button><output aria-live="polite" aria-labelledby="lbl-linhas" data-l-qtd>${n}</output><button type="button" data-l="1" aria-label="Adicionar uma linha">+</button></div>
         <p class="linhas__total" data-l-total>Escolha um plano acima para ver o total.</p>
@@ -467,9 +462,11 @@
       const linhas = st.rasc.celular ? st.rasc.celular.linhas : +$('[data-l-qtd]', palco).textContent || 1;
       st.rasc.celular = { id: card.dataset.id, linhas };
       $$('.oferta', trilho).forEach((c) => { const on = c === card; c.setAttribute('aria-checked', on); c.querySelector('.oferta__escolher').textContent = on ? 'Plano escolhido' : 'Escolher este plano'; });
-      centralizar(card); atualizarLinhas(); atualizarBotaoAdd(); atualizarCarrinho();
+      const box = $('[data-linhas-box]', palco); box.hidden = false;
+      atualizarLinhas(); atualizarBotaoAdd(); atualizarCarrinho();
+      descer(box);
     };
-    trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (c) escolher(c); });
+    trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (!c) return; if (e.target.closest('.oferta__escolher')) escolher(c); else centralizar(c); });
     trilho.addEventListener('keydown', (e) => { const c = e.target.closest('.oferta'); if (c && e.target === c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); escolher(c); } });
     $('[data-linhas-box]', palco).addEventListener('click', (e) => {
       const b = e.target.closest('[data-l]'); if (!b) return;

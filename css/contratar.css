@@ -377,3 +377,5 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 [data-disp] { gap: 14px; }
 .disp-item .disp-topo { flex-direction: column; align-items: flex-start; gap: 6px; }
 .disp-item .disp-selo { align-self: flex-start; }
+.linhas[hidden] { display: none; }
+.linhas { border-color: var(--celular-primario); box-shadow: var(--sombra-2); animation: persEntra .35s var(--ease) both; }

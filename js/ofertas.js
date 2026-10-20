@@ -71,5 +71,25 @@
     requestAnimationFrame(marcar);
   }
 
-  DY.ofertas = { internet, celular, personaliza, dots, ligarDots, CHECK };
+  /* Leva um elemento para o meio da área visível (desconta o menu do topo e a barra fixa de baixo) */
+  const reduzir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function areaLivre() {
+    const topo = (document.querySelector('.header, .ct-topo') || { offsetHeight: 0 }).offsetHeight;
+    const dock = document.querySelector('[data-dock]:not([hidden])');
+    const baixo = dock && getComputedStyle(dock).display !== 'none' ? dock.getBoundingClientRect().height : 0;
+    return { topo, livre: innerHeight - topo - baixo };
+  }
+  function trazerParaMeio(el) {
+    const r = el.getBoundingClientRect(); const { topo, livre } = areaLivre();
+    const destino = r.height <= livre - 16 ? scrollY + r.top - topo - (livre - r.height) / 2 : scrollY + r.top - topo - 12;
+    if (Math.abs(destino - scrollY) > 6) window.scrollTo({ top: destino, behavior: reduzir ? 'auto' : 'smooth' });
+  }
+  // Toque no card: centraliza no trilho (arraste lateral) e na tela
+  function centralizar(card) {
+    const trilho = card.parentElement;
+    if (trilho.scrollWidth > trilho.clientWidth + 4) trilho.scrollTo({ left: card.offsetLeft - (trilho.clientWidth - card.offsetWidth) / 2, behavior: reduzir ? 'auto' : 'smooth' });
+    trazerParaMeio(card);
+  }
+
+  DY.ofertas = { internet, celular, personaliza, dots, ligarDots, centralizar, trazerParaMeio, CHECK };
 })();
