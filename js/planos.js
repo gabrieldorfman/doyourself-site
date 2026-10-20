@@ -51,7 +51,9 @@
           ${marcador}${logo}<span class="nome">${o.nome}</span>${direita}</button>`;
     }).join('');
     const det = p.detalhes.map(([ico, r, v]) => `<li class="detalhe"><img src="${img('icones/' + ico)}" alt=""><span>${r}</span><b>${v}</b></li>`).join('');
-    const apps = p.apps.map((k) => k === 'youtube-premium'
+    // Planos com escolha de streaming mostram só os apps básicos; o streaming aparece na opção escolhida
+    const basicos = p.opcoes.length > 1 ? p.apps.filter((k) => !/^(paramount|globoplay|hbo)/.test(k)) : p.apps;
+    const apps = basicos.map((k) => k === 'youtube-premium'
       ? `<img src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium" class="yt-premium" width="128" height="32">`
       : logoTag(k)).join('');
     return `
@@ -69,6 +71,7 @@
         <div class="card-plano__acao">
           <h4>${p.tituloAcao}</h4>
           <div class="opcoes-plano" role="radiogroup" aria-label="${p.tituloAcao}" style="display:flex;flex-direction:column;gap:19px">${opcoes}</div>
+          ${p.opcoes.length === 1 ? `<ul class="inclusos-acao">${[p.detalhes[2][2], 'Instalação gratuita', 'Atendimento pelo WhatsApp'].map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
           <div class="card-plano__espaco"></div>
           <hr>
           <p class="resumo-plano"><span>O seu plano:</span><b data-resumo></b></p>

@@ -7,14 +7,15 @@
 /* ---------- Topo enxuto (sem menu: foco total no pedido) ---------- */
 .ct-topo { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--fundo-elevado) 92%, transparent); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--borda-padrao); }
 .ct-topo__barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; width: min(1180px, 100% - 2 * var(--gutter)); margin-inline: auto; }
-.ct-topo__logo img { width: 200px; height: auto; }
+.ct-topo__logo img { width: 220px; height: auto; }
+@media (max-width: 1199px) { .ct-topo__logo img { width: 200px; } }
 .ct-topo__acoes { display: flex; align-items: center; gap: 10px; }
 .ct-ajuda { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px 0 12px; border-radius: 99px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 14px; color: var(--texto-corpo); transition: border-color var(--rapido); }
 .ct-ajuda b { color: var(--texto-titulo); }
 .ct-ajuda:hover { border-color: var(--app-whatsapp); }
 .btn-tema .ico-sol { font-size: 18px; line-height: 1; }
 @media (max-width: 560px) {
-  .ct-topo__logo img { width: 150px; }
+  .ct-topo__logo img { width: 168px; }
   .ct-ajuda span { display: none; }
   .ct-ajuda { padding: 0; width: 42px; justify-content: center; }
 }
@@ -309,11 +310,15 @@
 }
 /* No desktop o botão fica na tela; a barra mostra só o resumo do combo */
 @media (min-width: 768px) {
-  .dock { left: auto; right: 24px; bottom: 24px; padding: 0; background: none; border: 0; backdrop-filter: none; width: 360px; }
+  /* tablet e desktop: o resumo do combo fica logo abaixo da barra de progresso, sem cobrir nada */
+  .dock { position: relative; left: auto; right: auto; bottom: auto; z-index: 30; padding: 0; margin: -6px auto 18px; background: none; border: 0; backdrop-filter: none; width: auto; align-items: center; animation: none; }
   .dock__ir { display: none; }
-  .dock__barra { justify-content: flex-end; }
-  .dock__resumo { flex: 1; box-shadow: var(--sombra-3); min-height: 56px; }
+  .dock__barra { justify-content: center; width: auto; }
+  .dock__resumo { min-height: 48px; padding: 4px 16px 4px 4px; box-shadow: var(--sombra-1); }
+  .dock__resumo .carrinho__qtd { width: 38px; height: 38px; }
   .dock:has(.dock__resumo[hidden]) { display: none; }
+  .dock .carrinho__lista { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: min(420px, 90vw); margin: 0; z-index: 35; }
+  .com-dock .ct-rodape { padding-bottom: 32px; }
 }
 
 /* Consulta avança sozinha */
@@ -386,3 +391,49 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 .ct-rodape a { color: var(--texto-terciario); text-decoration: underline; text-underline-offset: 3px; }
 .ct-rodape a:hover { color: var(--texto-titulo); }
 @media (max-width: 767px) { .com-dock .ct-rodape { padding-bottom: 120px; } }
+
+.pag__eco { display: block; margin-top: 6px; font-size: 13px; font-weight: 800; color: var(--marca-titulo); }
+
+/* ---------- Menu da contratação (hambúrguer, celular e desktop) ---------- */
+.ct-menu-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--borda-padrao); background: var(--fundo-superficie); font: inherit; font-weight: 700; font-size: 14px; color: var(--texto-titulo); cursor: pointer; }
+.ct-menu-btn:hover { border-color: var(--texto-terciario); }
+.ct-menu-btn__ico { display: grid; gap: 3.5px; width: 16px; }
+.ct-menu-btn__ico i { display: block; height: 2px; border-radius: 2px; background: currentColor; }
+.ct-menu { position: fixed; inset: 0; z-index: 80; }
+.ct-menu[hidden] { display: none; }
+.ct-menu__fundo { position: absolute; inset: 0; background: rgba(15, 15, 15, .45); animation: menuFundo .2s ease both; }
+.ct-menu__painel { position: absolute; top: 0; right: 0; bottom: 0; width: min(360px, 88vw); display: flex; flex-direction: column; gap: 2px; padding: 18px 20px 24px; overflow-y: auto; background: var(--fundo-pagina); box-shadow: var(--sombra-3); animation: menuEntra .28s var(--ease) both; }
+.ct-menu__topo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 18px; color: var(--texto-titulo); }
+.ct-menu__x { width: 44px; height: 44px; border-radius: 99px; border: 1px solid var(--borda-padrao); background: var(--fundo-superficie); font-size: 26px; line-height: 1; color: var(--texto-titulo); cursor: pointer; }
+.ct-menu__painel > a:not(.dy-btn) { display: flex; align-items: center; min-height: 52px; padding: 0 6px; border-bottom: 1px solid var(--borda-padrao); font-weight: 700; font-size: 16px; color: var(--texto-titulo); }
+.ct-menu__painel > a:not(.dy-btn):hover { color: var(--marca-titulo); }
+.ct-menu__nota { margin: 16px 0 12px; font-size: 13px; color: var(--texto-terciario); }
+.ct-menu__zap { gap: 10px; }
+.ct-menu__rodape { margin-top: auto; padding-top: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ct-menu__tema, .ct-menu__reiniciar { min-height: 44px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--texto-terciario); text-align: left; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+@keyframes menuEntra { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes menuFundo { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 560px) {
+  .ct-topo .btn-tema { display: none; }
+  .ct-menu-btn { padding: 0 12px; }
+}
+
+.porta { display: flex; gap: 12px; align-items: flex-start; width: 100%; margin-top: 6px; padding: 14px; border-radius: 14px; background: var(--celular-tint); text-align: left; font-size: 14px; line-height: 1.45; color: var(--texto-corpo); }
+.porta img { width: 24px; height: 24px; flex: none; margin-top: 2px; }
+.porta b { display: block; font-size: 15px; color: var(--texto-titulo); }
+
+/* Disponível no endereço: 3 serviços lado a lado no desktop */
+@media (min-width: 1024px) {
+  .ct.largo-disp { width: min(1080px, 100% - 2 * var(--gutter)); }
+  .tela[data-tela="disponivel"] [data-disp] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+  .tela[data-tela="disponivel"] .disp-item { height: 100%; justify-content: space-between; }
+  .tela[data-tela="disponivel"] [data-disp] > p { grid-column: 1 / -1; }
+  .tela[data-tela="disponivel"] .form__acoes { max-width: 560px; margin-inline: auto; }
+}
+/* Resumo: Alterar vira um lápis no celular */
+@media (max-width: 560px) {
+  .item-combo:not(.item-combo--vazio) .item-combo__acao[data-editar] { font-size: 0; width: 40px; height: 40px; padding: 0; display: grid; place-items: center; }
+  .item-combo:not(.item-combo--vazio) .item-combo__acao[data-editar]::before { content: "✎"; font-size: 18px; color: var(--marca-titulo); }
+}
+/* Pedido pronto: fundo verde até o rodapé */
+.pg-fim .ct-rodape { margin-top: 0; }

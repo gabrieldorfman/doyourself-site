@@ -41,6 +41,23 @@
     if (p) st.rasc.celular = { id: p.id, linhas: Math.max(1, Math.min(99, +q.get('linhas') || 1)) };
   }
 
+  /* ---------- Pedido em andamento salvo no navegador (sem CPF, CNPJ nem e-mail) ---------- */
+  const CHAVE_ANDAMENTO = 'dy_andamento';
+  const retomar = (() => {
+    if (q.get('plano') || q.has('novo')) return null; // veio de um card da home: começa pelo plano escolhido
+    try {
+      const a = JSON.parse(sessionStorage.getItem(CHAVE_ANDAMENTO) || 'null');
+      if (!a || Date.now() - a.t > 3 * 3600e3 || ['endereco', 'consulta', 'fim'].includes(a.tela)) return null;
+      return a;
+    } catch (er) { return null; }
+  })();
+  function salvarAndamento() {
+    if (['endereco', 'consulta', 'fim'].includes(telaAtual)) return;
+    const { id, end, fibra, disp, ordem, idx, esc, rasc, para, contato } = st;
+    try { sessionStorage.setItem(CHAVE_ANDAMENTO, JSON.stringify({ t: Date.now(), tela: telaAtual, s: { id, end, fibra, disp, ordem, idx, esc, rasc, para, contato } })); } catch (er) { /* modo privado */ }
+  }
+  const limparAndamento = () => { try { sessionStorage.removeItem(CHAVE_ANDAMENTO); } catch (er) { /* */ } };
+
   /* ---------- Navegação entre telas (com o botão Voltar do celular funcionando) ---------- */
   const NOMES = { 1: 'Endereço', 2: 'Seu combo', 3: 'Seus dados', 4: 'Pagamento' };
   let telaAtual = 'endereco';
@@ -49,6 +66,7 @@
     const tela = $(`.tela[data-tela="${nome}"]`);
     telaAtual = nome;
     $('#fluxo').classList.toggle('largo', nome === 'combo');
+    $('#fluxo').classList.toggle('largo-disp', nome === 'disponivel');
     document.body.classList.toggle('pg-fim', nome === 'fim');
     $('[data-progresso]').hidden = nome === 'fim';
     atualizarProgresso();
@@ -58,6 +76,7 @@
     if (nome === 'pagamento') atualizarPagamento();
     syncDock();
     if (empurrar) history.pushState({ tela: nome, idx: st.idx }, '', '#' + nome);
+    salvarAndamento();
     window.scrollTo({ top: 0, behavior: reduzir ? 'auto' : 'smooth' });
     const foco = tela.querySelector('[tabindex="-1"]');
     if (foco) setTimeout(() => foco.focus({ preventScroll: true }), 60);
@@ -232,6 +251,7 @@
 
   // Pré-preenchimento: vindo da Home (sessionStorage) ou pela URL
   (function preencher() {
+    if (retomar) return;
     let salvo = null; try { salvo = JSON.parse(sessionStorage.getItem('dy_endereco') || 'null'); } catch (er) { /* */ }
     const cep = so(q.get('cep') || (salvo && salvo.cep) || ''); const num = q.get('numero') || (salvo && salvo.numero) || '';
     if (cep.length === 8) { inCep.value = mascara.cep(cep); if (num) { inNum.value = num; } consultarCep().then(() => { if (num) $('[data-grupo="numero"]').validarAgora(); }); }
@@ -255,7 +275,7 @@
     st.fibra = fibra; passos[1].className = 'feito';
     passos[2].classList.add('rodando'); await espera(700); passos[2].className = 'feito';
 
-    // O que existe no endereço: fibra (Supabase), celular (TIM, todo o Brasil), energia (regiões atendidas)
+    // O que existe no endereço: fibra (Supabase), celular (todo o Brasil), energia (regiões atendidas)
     st.disp = { internet: fibra, celular: 'sim', energia: DY.energia.atende(st.end.uf) ? 'sim' : 'nao' };
     st.ordem = ORDENS[origem].filter((p) => st.disp[p] !== 'nao');
     st.idx = 0;
@@ -330,7 +350,7 @@
     const qtd = st.ordem.length;
     const textos = {
       internet: primeiro
-        ? ['Escolha sua internet', 'Fibra TIM com Wi-Fi e instalação grátis. <b>50% da mensalidade volta para você.</b>']
+        ? ['Escolha sua internet', 'Fibra óptica com Wi-Fi e instalação grátis. <b>50% da mensalidade volta para você.</b>']
         : ['Quer internet fibra também?', 'Na mesma conversa. <b>50% da mensalidade volta para você.</b>'],
       celular: primeiro
         ? ['Escolha seu plano de celular', 'Ligações ilimitadas, 5G e o seu número. <b>100% das linhas volta para você.</b>']
@@ -378,7 +398,7 @@
         <button type="button" role="radio" aria-checked="${st.para.internet === 'empresa'}" data-v="empresa">Empresa</button></div></div>
       <div><div class="ofertas" data-trilho>${cards}</div>${dots(DY.planosInternet.length)}</div>
       <div data-pers-box>${pSel ? DY.ofertas.personaliza(pSel, sel.op) : ''}</div>
-      <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. No boleto, + R$ 10.</p>`;
+      <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. Pagando no boleto ou PIX, o valor aumenta apenas R$ 10,00.</p>`;
   }
   function ligarInternet() {
     const trilho = $('[data-trilho]', palco); ligarDots(trilho);
@@ -453,6 +473,7 @@
         <div class="linhas__ctrl"><button type="button" data-l="-1" aria-label="Tirar uma linha">−</button><output aria-live="polite" aria-labelledby="lbl-linhas" data-l-qtd>${n}</output><button type="button" data-l="1" aria-label="Adicionar uma linha">+</button></div>
         <p class="linhas__total" data-l-total>Escolha um plano acima para ver o total.</p>
         <small data-l-nota></small>
+        <div class="porta"><img src="${img('icones/portabilidade.svg')}" alt=""><span><b>Portabilidade grátis</b>Traga o número que você já usa, de qualquer operadora, sem pagar nada. A gente cuida do pedido por você.</span></div>
       </div>`;
   }
   function atualizarLinhas() {
@@ -507,7 +528,7 @@
       <ul class="energia-beneficios"><li><img src="${img('icones/hero-lampada.svg')}" alt="">Sem placas e sem obra</li><li><img src="${img('icones/cofrinho.svg')}" alt="">Sem investimento</li><li><img src="${img('icones/verificado.svg')}" alt="">Mesma distribuidora</li></ul>
       <div class="campo-grupo" data-grupo="conta">
         <div class="campo campo--moeda${v ? ' preenchido' : ''}">
-          <input id="f-conta" inputmode="numeric" placeholder="0,00" value="${v ? mascara.moeda(String(Math.round(v * 100))) : ''}" aria-describedby="m-conta">
+          <input id="f-conta" inputmode="decimal" placeholder="Ex.: 350" value="${v ? DY.formatarReais(String(v).replace('.', ',')) : ''}" aria-describedby="m-conta">
           <label for="f-conta">Valor médio da sua conta de luz</label>
           <span class="campo__ico" aria-hidden="true"></span>
         </div>
@@ -520,7 +541,7 @@
   function ligarEnergia() {
     const input = $('#f-conta', palco); const res = $('[data-energia-res]', palco); const g = $('[data-grupo="conta"]', palco);
     const calc = () => {
-      const reais = Number(so(input.value)) / 100;
+      const reais = DY.lerReais(input.value);
       input.closest('.campo').classList.toggle('preenchido', !!input.value);
       $$('.chip-op', palco).forEach((c) => c.setAttribute('aria-pressed', +c.dataset.v === reais));
       if (!reais) { st.rasc.energia = null; res.innerHTML = ''; limpar(g); atualizarBotaoAdd(); atualizarCarrinho(); return; }
@@ -542,8 +563,8 @@
       }
       atualizarBotaoAdd(); atualizarCarrinho();
     };
-    input.addEventListener('input', () => { input.value = mascara.moeda(input.value); calc(); });
-    $$('.chip-op', palco).forEach((c) => c.addEventListener('click', () => { input.value = mascara.moeda(String(c.dataset.v * 100)); calc(); }));
+    input.addEventListener('input', () => { input.value = DY.formatarReais(input.value); calc(); });
+    $$('.chip-op', palco).forEach((c) => c.addEventListener('click', () => { input.value = DY.formatarReais(String(c.dataset.v)); calc(); }));
     if (input.value) calc();
   }
 
@@ -731,7 +752,11 @@
   function atualizarPagamento() {
     const v = valoresPagamento();
     $$('[data-pag-valor]').forEach((e) => { e.hidden = !v.planos; e.textContent = brl(v[e.dataset.pagValor]) + '/mês'; });
-    const sm = $('[data-pag="boleto"] small'); if (sm) sm.textContent = v.planos ? 'R$ 10 a mais por plano.' : 'Você paga todo mês, até o vencimento.';
+    const eco = $('[data-pag-eco]'); if (eco) { eco.hidden = !v.planos; eco.textContent = `Você economiza ${brl(v.boleto - v.debito)} por mês`; }
+    const sm = $('[data-pag="boleto"] small');
+    if (sm) sm.textContent = v.planos ? (v.planos === 1 ? 'O valor aumenta apenas R$ 10,00.' : 'O valor aumenta apenas R$ 10,00 por plano.') : 'Você paga todo mês, até o vencimento.';
+    // Débito automático já vem marcado: é o mais barato e o mais usado
+    if (!st.pag.tipo) { const d = $('[data-pag="debito"]'); $$('[data-pag]').forEach((x) => x.setAttribute('aria-checked', x === d)); st.pag.tipo = 'debito'; revelar(blocoBancos, true); chkPag(); }
   }
   function montarPedido(etapa) {
     const l = itens();
@@ -763,8 +788,42 @@
       catch (er) { toast('Não deu para copiar. Toque em "Enviar no WhatsApp".'); }
     };
     try { sessionStorage.removeItem('dy_endereco'); } catch (er) { /* */ }
+    limparAndamento();
     mostrar('fim');
   });
+
+  /* ---------- Resumo do combo: no tablet/desktop fica dentro da página, abaixo do progresso ---------- */
+  const mqDock = matchMedia('(min-width: 768px)');
+  const posicionarDock = () => { if (mqDock.matches) $('[data-progresso]').after(dock); else document.body.appendChild(dock); };
+  posicionarDock(); mqDock.addEventListener('change', posicionarDock);
+
+  /* ---------- Menu lateral ---------- */
+  const menuBtn = $('[data-ct-menu]'); const menu = $('[data-ct-menu-painel]');
+  const abrirMenu = (abrir) => {
+    menu.hidden = !abrir; menuBtn.setAttribute('aria-expanded', abrir); document.body.style.overflow = abrir ? 'hidden' : '';
+    if (abrir) { salvarAndamento(); setTimeout(() => menu.querySelector('.ct-menu__x').focus(), 50); } else menuBtn.focus();
+  };
+  menuBtn.addEventListener('click', () => abrirMenu(true));
+  menu.addEventListener('click', (e) => { if (e.target.closest('[data-ct-menu-fechar]')) abrirMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) abrirMenu(false); });
+  $('[data-reiniciar]').addEventListener('click', () => { limparAndamento(); try { sessionStorage.removeItem('dy_endereco'); } catch (er) { /* */ } location.href = location.pathname + '?novo'; });
+  window.addEventListener('pagehide', salvarAndamento);
+
+  /* ---------- Retomar o pedido salvo ---------- */
+  if (retomar) {
+    const a = retomar.s;
+    Object.assign(st, { id: a.id || st.id, end: { ...st.end, ...a.end }, fibra: a.fibra, disp: a.disp, ordem: a.ordem || st.ordem, idx: a.idx || 0, para: { ...st.para, ...a.para }, contato: { ...st.contato, ...a.contato } });
+    Object.assign(st.esc, a.esc || {}); Object.assign(st.rasc, a.rasc || {});
+    inCep.value = mascara.cep(st.end.cep || ''); inNum.value = st.end.numero || ''; $('#f-logradouro').value = st.end.logradouro || ''; $('#f-comp').value = st.end.comp || '';
+    ['#f-nome', '#f-telefone'].forEach((sel) => { const el = $(sel); const v = sel === '#f-nome' ? st.contato.nome : st.contato.telefone; if (el && v) { el.value = sel === '#f-telefone' ? mascara.telefone(v) : v; el.dispatchEvent(new Event('input', { bubbles: true })); } });
+    let tela = retomar.tela; if (['cadastro', 'pagamento'].includes(tela)) tela = st.contato.nome ? 'cadastro' : 'contato';
+    if (tela === 'disponivel' && st.disp) renderDisponivel();
+    if (tela === 'combo') renderProduto();
+    if (tela === 'resumo') renderResumo();
+    if (!st.disp && tela !== 'contato') tela = 'endereco';
+    mostrar(tela);
+    if (tela !== 'endereco') setTimeout(() => toast('Continuando o seu pedido de onde parou.'), 400);
+  }
 
   document.querySelectorAll('[data-ano]').forEach((el) => (el.textContent = new Date().getFullYear()));
   dock.hidden = false; document.body.classList.add('com-dock'); atualizarCarrinho(); syncDock();

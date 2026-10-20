@@ -8,6 +8,16 @@
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#f4f3ee">
   <link rel="icon" href="img/marca/dy-selo-verde.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Do Yourself">
+  <meta property="og:title" content="Do Yourself — Aqui você ganha em dobro">
+  <meta property="og:description" content="Internet, celular e energia solar com cashback via PIX na sua conta bancária. Tudo numa conversa só no WhatsApp.">
+  <!-- [AO TROCAR DE DOMÍNIO] atualizar o endereço completo da imagem -->
+  <meta property="og:image" content="https://doyourself-site.vercel.app/img/og-doyourself.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Do Yourself: aqui você ganha em dobro. Cashback via PIX em internet, celular e energia solar.">
+  <meta name="twitter:card" content="summary_large_image">
   <script>
     (function () {
       var t = null;
@@ -19,11 +29,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792527554">
-  <link rel="stylesheet" href="css/base.css?v=1792527554">
-  <link rel="stylesheet" href="css/dy.css?v=1792527554">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792527554">
-  <link rel="stylesheet" href="css/contratar.css?v=1792527554">
+  <link rel="stylesheet" href="css/tokens.css?v=1792530106">
+  <link rel="stylesheet" href="css/base.css?v=1792530106">
+  <link rel="stylesheet" href="css/dy.css?v=1792530106">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792530106">
+  <link rel="stylesheet" href="css/contratar.css?v=1792530106">
 </head>
 <body class="pg-contratar">
   <a class="sr-only" href="#fluxo">Pular para o formulário</a>
@@ -42,9 +52,32 @@
         <a class="ct-ajuda" data-whatsapp="Olá! Estou no site da Do Yourself, no passo a passo de contratação, e fiquei com uma dúvida.">
           <img src="img/apps/whatsapp.svg" alt="" width="22" height="22"><span>Dúvidas? <b>Fale com a gente</b></span>
         </a>
+        <button class="ct-menu-btn" type="button" aria-expanded="false" aria-controls="ct-menu" data-ct-menu>
+          <span class="ct-menu-btn__ico" aria-hidden="true"><i></i><i></i><i></i></span><span class="ct-menu-btn__txt">Menu</span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Menu lateral: atalhos para a home; o pedido em andamento fica salvo -->
+  <div class="ct-menu" id="ct-menu" hidden data-ct-menu-painel>
+    <div class="ct-menu__fundo" data-ct-menu-fechar></div>
+    <nav class="ct-menu__painel" aria-label="Menu">
+      <div class="ct-menu__topo"><b>Menu</b><button class="ct-menu__x" type="button" aria-label="Fechar o menu" data-ct-menu-fechar>×</button></div>
+      <a href="/">Início</a>
+      <a href="/#internet">Internet Fibra</a>
+      <a href="/#celular">Planos de Celular</a>
+      <a href="/#energia">Energia Solar por Assinatura</a>
+      <a href="/#como-funciona">Como funciona</a>
+      <a href="/#duvidas">Dúvidas</a>
+      <p class="ct-menu__nota">O seu pedido fica salvo. É só voltar para continuar de onde parou.</p>
+      <a class="dy-btn dy-btn--whatsapp dy-btn--bloco ct-menu__zap" data-whatsapp="Olá! Estou no site da Do Yourself, no passo a passo de contratação, e fiquei com uma dúvida."><img src="img/icones/whatsapp-branco.svg" alt="" width="22" height="22">Falar no WhatsApp</a>
+      <div class="ct-menu__rodape">
+        <button class="ct-menu__tema" type="button" data-tema-toggle>Mudar tema claro/escuro</button>
+        <button class="ct-menu__reiniciar" type="button" data-reiniciar>Começar um pedido novo</button>
+      </div>
+    </nav>
+  </div>
 
   <main class="ct" id="fluxo">
     <!-- Progresso: 4 etapas -->
@@ -291,12 +324,12 @@
         <div class="pagamentos" role="radiogroup" aria-labelledby="h-pagamento" data-pagamentos>
           <button class="escolha escolha--radio pag" type="button" role="radio" aria-checked="false" data-pag="debito">
             <span class="pag__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10h18M5 10V8l7-4 7 4v2M6 10v7M10 10v7M14 10v7M18 10v7M3 20h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span class="pag__txt"><b>Débito automático</b><small>Paga sozinho no vencimento.</small><em class="pag__tag" data-pag-valor="debito"></em></span>
+            <span class="pag__txt"><b>Débito automático</b><small>Paga sozinho no vencimento.</small><em class="pag__tag" data-pag-valor="debito"></em><strong class="pag__eco" data-pag-eco hidden></strong></span>
             <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button class="escolha escolha--radio pag" type="button" role="radio" aria-checked="false" data-pag="boleto">
             <span class="pag__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M16 5v14M20 5v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-            <span class="pag__txt"><b>Boleto ou PIX</b><small>R$ 10 a mais por plano.</small><em class="pag__tag pag__tag--neutra" data-pag-valor="boleto"></em></span>
+            <span class="pag__txt"><b>Boleto ou PIX</b><small>O valor aumenta apenas R$ 10,00 por plano.</small><em class="pag__tag pag__tag--neutra" data-pag-valor="boleto"></em></span>
             <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
         </div>
@@ -359,10 +392,10 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
-  <script src="js/config.js?v=1792527554"></script>
-  <script src="js/main.js?v=1792527554"></script>
-  <script src="js/pedido.js?v=1792527554"></script>
-  <script src="js/ofertas.js?v=1792527554"></script>
-  <script src="js/contratar.js?v=1792527554"></script>
+  <script src="js/config.js?v=1792530106"></script>
+  <script src="js/main.js?v=1792530106"></script>
+  <script src="js/pedido.js?v=1792530106"></script>
+  <script src="js/ofertas.js?v=1792530106"></script>
+  <script src="js/contratar.js?v=1792530106"></script>
 </body>
 </html>

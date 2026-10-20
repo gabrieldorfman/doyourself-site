@@ -81,7 +81,7 @@
       const input = $('#s-conta', sim);
       const set = (k, v) => ($(`[data-s="${k}"]`, sim).textContent = v);
       const calc = () => {
-        const reais = Number(so(input.value)) / 100;
+        const reais = DY.lerReais(input.value);
         input.closest('.campo').classList.toggle('preenchido', !!input.value);
         $$('.chip-op', sim).forEach((c) => c.setAttribute('aria-pressed', +c.dataset.v === reais));
         const r = DY.energia.simular(reais);
@@ -91,18 +91,23 @@
         set('economia', brl(r.economiaMes)); set('ano', brl(r.economiaMes * 12)); set('cb', brl(r.cashback));
         set('nota', `Estimativa com ${r.pct}% de desconto: a conta passaria de ${brl(r.conta)} para cerca de ${brl(r.comDesconto)}. O valor exato depende da cidade, da distribuidora e da sua fatura.`);
       };
-      input.addEventListener('input', () => { const d = so(input.value).slice(0, 8); input.value = d ? (Number(d) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ''; calc(); });
-      $$('.chip-op', sim).forEach((c) => c.addEventListener('click', () => { input.value = (+c.dataset.v).toLocaleString('pt-BR', { minimumFractionDigits: 2 }); calc(); }));
+      input.addEventListener('input', () => { input.value = DY.formatarReais(input.value); calc(); });
+      $$('.chip-op', sim).forEach((c) => c.addEventListener('click', () => { input.value = DY.formatarReais(String(c.dataset.v)); calc(); }));
     }
 
     /* ---------- Barra fixa "Consultar meu endereço" (celular) ---------- */
     const barra = $('[data-barra-cep]'); const zap = $('.zap-flutuante');
-    const io = new IntersectionObserver(([en2]) => {
-      const mostrar = !en2.isIntersecting && en2.boundingClientRect.top < 0;
+    // Aparece depois que o formulário do topo sai da tela e some perto do fim (CTA final e rodapé já têm o botão)
+    let passouTopo = false; const fim = new Set();
+    const aplicarBarra = () => {
+      const mostrar = passouTopo && !fim.size;
       barra.classList.toggle('on', mostrar); barra.setAttribute('aria-hidden', !mostrar);
       $('[data-ir-cep]', barra).tabIndex = mostrar ? 0 : -1;
       zap.classList.toggle('subir', mostrar && matchMedia('(max-width: 767px)').matches);
-    }, { threshold: 0 });
+    };
+    const io = new IntersectionObserver(([en2]) => { passouTopo = !en2.isIntersecting && en2.boundingClientRect.top < 0; aplicarBarra(); }, { threshold: 0 });
+    const ioFim = new IntersectionObserver((ents) => { ents.forEach((e) => (e.isIntersecting ? fim.add(e.target) : fim.delete(e.target))); aplicarBarra(); }, { threshold: 0 });
+    document.querySelectorAll('.cta2, .rodape').forEach((el) => ioFim.observe(el));
     io.observe(form);
     $('[data-ir-cep]').addEventListener('click', (e) => {
       e.preventDefault();

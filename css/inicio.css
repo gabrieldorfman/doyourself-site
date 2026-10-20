@@ -217,3 +217,52 @@
   .zap-flutuante { opacity: 0; pointer-events: none; transform: translateY(20px); }
   .zap-flutuante.subir { opacity: 1; pointer-events: auto; transform: translateY(-76px); }
 }
+
+/* ===== v3 · rodada de ajustes (out/2026) ===== */
+/* Topo: slogan em 2 linhas no celular */
+@media (max-width: 767px) { .hero2 .dy-display { font-size: 38px; line-height: 1.05; } }
+/* Links do topo com área de toque de 44 px */
+.consulta-cep__rodape .dy-link { display: inline-flex; align-items: center; min-height: 44px; }
+.consulta-cep__rodape { row-gap: 0; }
+/* Tablet: topo e passos em colunas */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero2__grade { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 28px; align-items: start; }
+  .hero2 .dy-display { font-size: 46px; }
+  .consulta-cep__campos { grid-template-columns: 1.25fr 1fr; }
+  .consulta-cep__btn { grid-column: 1 / -1; }
+  .cb-pilha { width: 100%; }
+  .cb-card__txt b { font-size: 15px; }
+}
+@media (min-width: 768px) and (max-width: 860px) {
+  .passos3 { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .passo { flex-direction: column; align-items: flex-start; padding: 20px 16px; }
+  .passo:not(:last-child)::after { display: none; }
+  .passo { min-width: 0; }
+  .passo .dy-texto, .passo .dy-h3 { flex: none; width: 100%; }
+}
+/* Internet: explicação de download/upload numa linha */
+.explica-linha { max-width: 720px; margin: -8px auto 22px; text-align: center; font-size: 15px; line-height: 1.5; color: var(--texto-terciario); }
+.explica-linha b { color: var(--texto-titulo); }
+/* Celular: portabilidade */
+.porta3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-width: 1056px; margin: 28px auto 6px; }
+.porta3 li { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; border-radius: 18px; background: var(--celular-tint); font-size: 14px; line-height: 1.45; color: var(--texto-corpo); }
+.porta3 img { width: 26px; height: 26px; flex: none; margin-top: 1px; }
+.porta3 b { display: block; font-size: 15px; color: var(--texto-titulo); margin-bottom: 2px; }
+@media (max-width: 767px) { .porta3 { grid-template-columns: 1fr; gap: 8px; } }
+/* Mockup do WhatsApp mais curto no celular */
+@media (max-width: 767px) { .zap2__copy .dy-texto + .dy-texto { display: none; } }
+
+/* Cashback no celular: cards compactos (percentual + nome + link) */
+@media (max-width: 767px) {
+  .volta3 { gap: 10px; }
+  .volta { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "ico pct" "ico tit" "ico link"; column-gap: 14px; row-gap: 2px; padding: 16px 18px; align-items: center; }
+  .volta__ico { grid-area: ico; width: 52px; height: 52px; margin: 0; }
+  .volta__ico img { width: 28px; height: 28px; }
+  .volta__pct { grid-area: pct; margin: 0; }
+  .volta__pct b { font-size: 30px; }
+  .volta .dy-h3 { grid-area: tit; font-size: 16px; }
+  .volta .dy-texto { display: none; }
+  .volta__link { grid-area: link; margin-top: 2px; }
+}
+@media (max-width: 640px) { .consulta-cep__rodape > span[aria-hidden] { display: none; } .consulta-cep__rodape { flex-direction: column; align-items: flex-start; } }
+@media (min-width: 768px) and (max-width: 1023px) { .hero2 .dy-display { font-size: 40px; } }

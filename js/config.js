@@ -76,14 +76,13 @@ DY.planosInternet = [
     id: '800', variante: 'soft', selo: 'OFERTA DO MÊS', num: '800', unidade: 'MEGA',
     detalhes: [['download.svg', 'Download', '800 Mega'], ['upload.svg', 'Upload', '400 Mega'], ['modem.svg', 'Modem', 'Wi-Fi 6 incluso'], ['instalacao.svg', 'Instalação:', 'Gratuita']],
     apps: ['aya-books', 'aya-bancah', 'youtube-premium'],
-    tituloAcao: 'Escolha o app incluso no seu plano',
+    tituloAcao: 'Já vem incluso no seu plano',
     opcoes: [{ nome: 'YouTube Premium', logo: 'youtube-premium', preco: 129.99, incluso: 'sem custo extra', resumo: '800 Mb + YouTube Premium' }],
     opcaoPadrao: 0, de: 169.99,
     tarja: { streaming: ['youtube-premium'] },
   },
   {
     id: '1000', variante: 'premium', selo: 'PREMIUM', num: '1', unidade: 'GIGA', extra: '(1.000 Mega)',
-    tarjaNum: '1000', tarjaUnidade: 'MEGA',
     detalhes: [['premium-download.svg', 'Download', '1.000 Mega'], ['premium-upload.svg', 'Upload', '500 Mega'], ['premium-modem.svg', 'Modem', 'Wi-Fi 6 incluso'], ['premium-instalacao.svg', 'Instalação:', 'Gratuita']],
     apps: ['aya-books', 'aya-bancah', 'paramount-44'],
     tituloAcao: 'Personalize o seu plano',
@@ -134,5 +133,16 @@ DY.logos = {
 DY.centavos = (reais) => Math.round(reais * 100);
 DY.cashbackCentavos = (baseCentavos, pct) => Math.floor((baseCentavos * pct) / 100);
 DY.brl = (centavos) => 'R$ ' + (centavos / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+/* Valor em reais, como a pessoa digita: "800" → 800 · "1500" → 1.500 · "1500,5" → 1.500,5 */
+DY.formatarReais = (v) => {
+  const t = String(v).replace(/[^\d,]/g, ''); const i = t.indexOf(',');
+  let int = (i < 0 ? t : t.slice(0, i)).replace(/^0+(?=\d)/, '').slice(0, 6);
+  const dec = i < 0 ? null : t.slice(i + 1).replace(/,/g, '').slice(0, 2);
+  if (!int && dec === null) return '';
+  int = (int || '0').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return dec === null ? int : int + ',' + dec;
+};
+DY.lerReais = (v) => Number(String(v || '').replace(/\./g, '').replace(',', '.')) || 0;
 
 DY.linkWhatsApp = (texto) => 'https://wa.me/' + DY.config.whatsapp + (texto ? '?text=' + encodeURIComponent(texto) : '');
