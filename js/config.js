@@ -44,6 +44,59 @@ DY.bancosDebito = [
   ['341', 'Itaú', 'IT'], ['260', 'Nubank', 'NU'], ['033', 'Santander', 'SA'],
 ]
 
+/* ---------- Rotas do site (Mapa de Páginas do Figma 23:14786) ----------
+   pronta: true  → o link vai para a página.
+   pronta: false → vai para o "alt" (uma seção da home ou a contratação) ou aparece como "em breve".
+   Para publicar uma página nova: criar o arquivo e trocar pronta para true. */
+DY.rotas = {
+  inicio:            { r: 'Início', href: '/', pronta: true },
+  combo:             { r: 'Combo', href: '/combo', pronta: false, alt: 'contratar.html?origem=combo' },
+  energia:           { r: 'Energia Solar', href: '/energia', pronta: false, alt: '/#energia' },
+  'energia-casas':   { r: 'Para Casas e Apartamentos', href: '/energia/casas', pronta: false, alt: '/#energia' },
+  'energia-cond':    { r: 'Para Condomínios', href: '/energia/condominios', pronta: false, alt: '/#energia' },
+  'energia-emp':     { r: 'Para Comércios e Empresas', href: '/energia/empresas', pronta: false, alt: '/#energia' },
+  internet:          { r: 'Internet Fibra', href: '/internet-fibra', pronta: false, alt: '/#internet' },
+  'internet-casa':   { r: 'Internet para Casa', href: '/internet-fibra/casa', pronta: false, alt: '/#internet' },
+  'internet-emp':    { r: 'Internet para Empresa', href: '/internet-fibra/empresa', pronta: false, alt: '/#internet' },
+  'internet-home':   { r: 'Internet para Home Office', href: '/internet-fibra/home-office', pronta: false },
+  'internet-gamer':  { r: 'Internet Gamer', href: '/internet-fibra/gamer', pronta: false },
+  'internet-stream': { r: 'Internet com Streaming', href: '/internet-fibra/streaming', pronta: false },
+  'internet-wifi6':  { r: 'Wi-Fi 6', href: '/internet-fibra/wifi-6', pronta: false },
+  celular:           { r: 'Planos de Celular', href: '/celular', pronta: false, alt: '/#celular' },
+  'celular-cpf':     { r: 'Planos para CPF', href: '/celular/cpf', pronta: false, alt: '/#celular' },
+  'celular-cnpj':    { r: 'Planos para CNPJ (Empresas)', href: '/celular/cnpj', pronta: false, alt: '/#celular' },
+  apps:              { r: 'Como entrar nos aplicativos', href: '/aplicativos', pronta: false },
+  'app-globoplay':   { r: 'GloboPlay', href: '/aplicativos/globoplay', pronta: false },
+  'app-hbo':         { r: 'HBO Max', href: '/aplicativos/hbo-max', pronta: false },
+  'app-paramount':   { r: 'Paramount+', href: '/aplicativos/paramount', pronta: false },
+  'app-youtube':     { r: 'YouTube Premium', href: '/aplicativos/youtube-premium', pronta: false },
+  sobre:             { r: 'Sobre a Do Yourself', href: '/sobre', pronta: false },
+  contato:           { r: 'Contato', href: '/contato', pronta: false, alt: 'whatsapp' },
+  suporte:           { r: 'Suporte', href: '/suporte', pronta: false, alt: 'whatsapp' },
+  biometria:         { r: 'Como fazer a Biometria', href: '/biometria', pronta: false },
+  parceiros:         { r: 'Seja um parceiro', href: '/parceiros', pronta: false },
+  blog:              { r: 'Blog', href: '/blog', pronta: false },
+  duvidas:           { r: 'Dúvidas frequentes', href: '/#duvidas', pronta: true },
+  privacidade:       { r: 'Política de Privacidade', href: '/politica-de-privacidade', pronta: false },
+  etica:             { r: 'Ética e Integridade', href: '/etica-e-integridade', pronta: false },
+};
+/* Menu principal (wiki componente-menu-responsivo §6). Ordem: Combo → Energia → Internet → Celular */
+DY.menu = [
+  ['inicio'], ['combo'], ['energia'],
+  ['Internet', ['internet', 'internet-casa', 'internet-emp']],
+  ['Celular', ['celular', 'celular-cpf', 'celular-cnpj']],
+  ['Aplicativos', ['apps', 'app-globoplay', 'app-hbo', 'app-paramount', 'app-youtube']],
+  ['Sobre', ['sobre', 'contato', 'suporte', 'biometria', 'parceiros']],
+  ['blog'],
+];
+/* Endereço de uma rota: a página, o atalho ou null (= em breve) */
+DY.linkRota = (k) => {
+  const x = DY.rotas[k]; if (!x) return null;
+  if (x.pronta) return x.href;
+  if (x.alt === 'whatsapp') return DY.linkWhatsApp('Olá! Vim pelo site da Do Yourself e preciso de ajuda.');
+  return x.alt || null;
+};
+
 DY.img = (p) => 'img/' + p;
 
 /* ---------- Internet Fibra · vitrine da Home (4 slots) ---------- */

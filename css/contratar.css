@@ -437,3 +437,12 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 }
 /* Pedido pronto: fundo verde até o rodapé */
 .pg-fim .ct-rodape { margin-top: 0; }
+
+.ct-menu__links { display: flex; flex-direction: column; }
+.ct-menu__item { display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 6px; border-bottom: 1px solid var(--borda-padrao); font-weight: 700; font-size: 16px; color: var(--texto-titulo); cursor: pointer; list-style: none; }
+.ct-menu__item::-webkit-details-marker { display: none; }
+.ct-menu__grupo[open] > summary span { transform: rotate(45deg); }
+.ct-menu__grupo summary span { font-size: 20px; font-weight: 500; transition: transform .2s; }
+.ct-menu__sub { display: flex; flex-direction: column; padding: 6px 6px 12px 14px; border-bottom: 1px solid var(--borda-padrao); }
+.ct-menu__subitem { display: flex; align-items: center; min-height: 40px; font-size: 15px; color: var(--texto-corpo); }
+.ct-menu__sub .em-breve { min-height: 40px; font-size: 15px; color: var(--texto-corpo); }
