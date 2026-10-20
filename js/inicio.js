@@ -31,18 +31,25 @@
     // Pilha do hero: os cartões entram um a um e o total "conta" até o valor
     const pilha = $('[data-pilha]');
     if (pilha) {
-      requestAnimationFrame(() => pilha.classList.add('ativa'));
       const alvo = $('[data-contador]', pilha);
-      if (!reduzir) {
+      const contar = () => {
+        if (reduzir) return;
         // o total começa a contar depois que o cartão dele aparece (4º da fila: 0,3 s + 3 × 0,5 s)
-        const dur = 1600, ini = performance.now() + 2100;
+        const dur = 1600, ini = performance.now() + 1900;
         const passo = (t) => {
           const k = Math.min(1, Math.max(0, (t - ini) / dur)); const e = 1 - Math.pow(1 - k, 3);
           alvo.textContent = brl(Math.round(ex.total * e));
           if (k < 1) requestAnimationFrame(passo);
         };
-        alvo.textContent = brl(0); requestAnimationFrame(passo);
-      }
+        requestAnimationFrame(passo);
+      };
+      if (!reduzir) alvo.textContent = brl(0);
+      // Só anima quando a pilha entra na tela (no celular ela fica abaixo do formulário)
+      const iniciar = () => { pilha.classList.add('ativa'); contar(); };
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((ents) => { if (ents.some((e) => e.isIntersecting)) { io.disconnect(); iniciar(); } }, { threshold: 0.35 });
+        io.observe(pilha);
+      } else iniciar();
     }
 
     /* ---------- Consulta de CEP do topo → página de contratação ---------- */
