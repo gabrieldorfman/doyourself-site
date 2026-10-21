@@ -72,7 +72,7 @@
       if (!inNum.value.trim()) { marcar('num', false, true); msg.textContent = 'Agora o número do imóvel — é ele que confirma a fibra na sua rua. Sem número? Escreva S/N.'; inNum.focus(); return; }
       try { sessionStorage.setItem('dy_endereco', JSON.stringify({ cep, numero: inNum.value.trim() })); } catch (er) { /* modo privado */ }
       form.querySelector('.consulta-cep__btn').classList.add('indo');
-      location.href = DY.config.paginaConversao + '?origem=home';
+      location.href = DY.config.paginaConversao + '?origem=' + (form.dataset.origem || 'home');
     });
 
     /* ---------- Simulador de energia ---------- */

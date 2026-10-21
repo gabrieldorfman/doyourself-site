@@ -1,0 +1,100 @@
+/* ============================================================
+   Do Yourself — componentes das páginas internas
+   ============================================================ */
+/* Topo das páginas: trilha "Início › Página" e cor da vertical */
+.hero-pg .trilha { display: flex; gap: 8px; align-items: center; margin-bottom: 18px; font-size: 13px; color: var(--texto-terciario); }
+.hero-pg .trilha a { color: var(--texto-terciario); text-decoration: underline; text-underline-offset: 3px; }
+.hero-pg .trilha [aria-current] { color: var(--texto-titulo); font-weight: 700; }
+.realce--energia { background-image: linear-gradient(transparent 62%, var(--energia-tint) 62%); }
+.realce--internet { background-image: linear-gradient(transparent 62%, var(--internet-tint) 62%); }
+.realce--celular { background-image: linear-gradient(transparent 62%, var(--celular-tint) 62%); }
+.hero-pg--energia { background: radial-gradient(900px 420px at 85% 0%, color-mix(in srgb, var(--energia-tint) 70%, transparent), transparent 70%), var(--fundo-pagina); }
+.hero-pg--internet { background: radial-gradient(900px 420px at 85% 0%, color-mix(in srgb, var(--internet-tint) 70%, transparent), transparent 70%), var(--fundo-pagina); }
+.hero-pg--celular { background: radial-gradient(900px 420px at 85% 0%, color-mix(in srgb, var(--celular-tint) 70%, transparent), transparent 70%), var(--fundo-pagina); }
+.hero-pg .hero2__visual .simula { width: min(460px, 100%); }
+@media (max-width: 767px) { .hero-pg .dy-display { font-size: 32px; } }
+
+/* Lista de velocidades / GB no topo */
+.vel-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: min(420px, 100%); }
+.vel-lista li { display: flex; align-items: baseline; justify-content: center; gap: 6px; padding: 26px 12px; border-radius: 22px; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); box-shadow: var(--sombra-1); color: var(--internet-titulo); }
+.vel-lista b { font-size: 48px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.vel-lista span { font-size: 18px; font-weight: 800; }
+.vel-lista li.destaque { border-color: var(--internet-primario); background: var(--internet-tint); }
+.vel-lista li.premium { background: var(--premium-fundo); border-color: var(--premium-borda); color: var(--premium-texto); }
+.vel-lista--cel li { color: var(--celular-titulo); }
+.vel-lista--cel li.destaque { border-color: var(--celular-primario); background: var(--celular-tint); }
+@media (max-width: 1023px) { .vel-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; } .vel-lista li { padding: 16px 6px; } .vel-lista b { font-size: 30px; } .vel-lista span { font-size: 13px; } }
+
+/* Passos com a cor da vertical */
+.passos3--energia .passo__n { background: var(--energia-tint); color: var(--energia-soft-texto, var(--energia-titulo)); }
+.passos3--celular .passo__n { background: var(--celular-tint); color: var(--celular-soft-texto, var(--celular-titulo)); }
+
+/* O que muda / continua igual */
+.muda2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 960px; margin: 0 auto; }
+.muda2__col { padding: 24px; border-radius: var(--r-card); background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); }
+.muda2__col--sim { border-color: var(--energia-primario); }
+.muda2__col ul { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.muda2__col li { display: flex; gap: 10px; font-size: 15px; line-height: 1.45; color: var(--texto-corpo); }
+.muda2__col li::before { content: ""; flex: none; width: 20px; height: 20px; margin-top: 1px; border-radius: 99px; background: var(--ok-fundo) url("../img/icones/check.svg") center / 11px no-repeat; }
+@media (max-width: 767px) { .muda2 { grid-template-columns: 1fr; } }
+
+/* Tabela de economia (energia) */
+.tabela-eco { max-width: 860px; margin: 0 auto; }
+.tabela-eco table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: var(--r-card-p); background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 15px; }
+.tabela-eco th { padding: 14px 16px; text-align: left; font-size: 13px; font-weight: 700; color: var(--texto-terciario); background: var(--fundo-superficie-alt); }
+.tabela-eco td { padding: 14px 16px; border-top: 1px solid var(--borda-padrao); color: var(--texto-corpo); font-variant-numeric: tabular-nums; }
+.tabela-eco td b { color: var(--energia-titulo); }
+.tabela-eco td.cb { font-weight: 800; color: var(--marca-titulo); }
+.tabela-eco__nota { margin-top: 12px; text-align: center; font-size: 13px; color: var(--texto-terciario); }
+@media (max-width: 600px) {
+  .tabela-eco table { font-size: 13px; }
+  .tabela-eco th, .tabela-eco td { padding: 10px 8px; }
+  .tabela-eco th { font-size: 11px; }
+}
+
+/* Cards que levam às páginas filhas */
+.pg-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; max-width: 1100px; margin: 0 auto; }
+.pg-card { display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: var(--r-card); background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); color: var(--texto-corpo); font-size: 15px; transition: transform var(--medio) var(--ease), border-color var(--medio); }
+.pg-card[href]:hover { transform: translateY(-3px); border-color: var(--marca-outline); }
+.pg-card b { font-size: 17px; color: var(--texto-titulo); }
+.pg-card__ico { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 6px; background: var(--marca-tint); }
+.pg-card__ico img { width: 26px; height: 26px; }
+.pg-card--energia .pg-card__ico { background: var(--energia-tint); }
+.pg-card--internet .pg-card__ico { background: var(--internet-tint); }
+.pg-card--celular .pg-card__ico { background: var(--celular-tint); }
+.pg-card__ir { margin-top: auto; padding-top: 8px; font-weight: 800; font-size: 14px; color: var(--marca-titulo); }
+.pg-card.em-breve { opacity: 1; display: flex; }
+.pg-card.em-breve .pg-card__ir { color: var(--texto-terciario); font-weight: 700; }
+.pg-card.em-breve small { display: none; }
+
+/* Quantos Mega (internet) */
+.perfis4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.perfil { display: flex; flex-direction: column; gap: 6px; padding: 22px 20px; border-radius: var(--r-card); background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); font-size: 14px; color: var(--texto-corpo); transition: transform var(--medio) var(--ease), border-color var(--medio); }
+.perfil:hover { transform: translateY(-3px); border-color: var(--internet-primario); }
+.perfil__vel { display: flex; align-items: baseline; gap: 4px; font-weight: 800; font-size: 15px; color: var(--internet-titulo); }
+.perfil__vel b { font-size: 38px; letter-spacing: -.02em; line-height: 1; }
+.perfil__tit { font-size: 16px; color: var(--texto-titulo); }
+.perfil__ir { margin-top: auto; padding-top: 8px; font-weight: 800; color: var(--internet-titulo); }
+@media (max-width: 1023px) { .perfis4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .perfis4 { gap: 10px; } .perfil { padding: 16px 14px; } .perfil__vel b { font-size: 30px; } }
+
+/* Streaming por plano */
+.stream3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 960px; margin: 0 auto; }
+.stream { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 18px; border-radius: var(--r-card); background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); text-align: center; font-size: 14px; color: var(--texto-corpo); }
+.stream b { font-size: 18px; color: var(--internet-titulo); }
+.stream__logos { display: flex; gap: 10px; align-items: center; min-height: 52px; }
+.stream__logos img { width: 52px; height: 52px; border-radius: 12px; object-fit: cover; }
+.stream__logos img.yt { width: 140px; height: 34px; border-radius: 0; object-fit: contain; }
+@media (max-width: 767px) { .stream3 { grid-template-columns: 1fr; } .stream { flex-direction: row; justify-content: space-between; text-align: left; flex-wrap: wrap; } }
+
+/* Apps sem gastar a franquia (celular) */
+.apps2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 760px; margin: 0 auto; }
+.apps2__col { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 22px; border-radius: var(--r-card); background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); }
+.apps2__col b { font-size: 15px; color: var(--texto-titulo); }
+.apps2__col div { display: flex; gap: 10px; }
+.apps2__col img { width: 40px; height: 40px; }
+@media (max-width: 560px) { .apps2 { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .tabela-eco th:nth-child(2), .tabela-eco td:nth-child(2) { display: none; }
+  .tabela-eco td { white-space: nowrap; }
+}

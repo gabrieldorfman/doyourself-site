@@ -37,6 +37,14 @@
     return `<details class="ct-menu__grupo"><summary class="ct-menu__item">${k}<span aria-hidden="true">+</span></summary><div class="ct-menu__sub">${sub.map((s) => a(s, 'ct-menu__subitem')).join('')}</div></details>`;
   }).join('');
 
+  // Qualquer elemento com data-rota="chave" (cards das páginas) segue a mesma regra
+  document.querySelectorAll('[data-rota]').forEach((el) => {
+    let href = DY.linkRota(el.dataset.rota);
+    if (href && href.split('#')[0] === aqui && !href.includes('#')) href = null; // atalho para a própria página = em breve
+    if (href) { el.setAttribute('href', href); if (externo(href)) { el.target = '_blank'; el.rel = 'noopener'; } }
+    else { el.classList.add('em-breve'); el.removeAttribute('href'); el.setAttribute('aria-disabled', 'true'); const tag = el.querySelector('[data-rota-tag]'); if (tag) tag.textContent = 'Em breve'; }
+  });
+
   // Rodapé: cada link de rota vai para a página, para o atalho ou vira "em breve"
   const porHref = {}; Object.keys(R).forEach((k) => (porHref[R[k].href] = k));
   document.querySelectorAll('.rodape a[href^="/"], .ct-rodape a[href^="/"], .rodape a[href$="politica-de-privacidade.html"], .ct-rodape a[href$="politica-de-privacidade.html"], a.dy-link[href$="politica-de-privacidade.html"]').forEach((el) => {
