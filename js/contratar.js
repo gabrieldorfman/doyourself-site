@@ -238,7 +238,7 @@
   btnNaoSei.addEventListener('click', () => abrirBuscaCep(busca.hidden));
   selUf.addEventListener('change', async () => {
     selUf.closest('.campo').classList.add('valido'); selUf.closest('.campo').querySelector('.campo__ico').innerHTML = CHECK;
-    inCid.disabled = false; inCid.value = ''; inRua.disabled = true; inRua.value = ''; inRuaNum.disabled = true; inRuaNum.value = ''; sug.innerHTML = '';
+    inCid.disabled = false; inCid.value = ''; inRua.disabled = true; inRua.value = ''; inRuaNum.disabled = true; inRuaNum.value = ''; sug.innerHTML = ''; ruaEscolhida = null; ultimaLista = [];
     inCid.focus();
     try {
       const r = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selUf.value}/municipios?orderBy=nome`);
@@ -265,21 +265,32 @@
     if ((m = c.match(/^de\s+(\d+)(?:\/\d+)?\s+ao fim/))) return n >= +m[1];
     return par || impar ? true : null;
   }
-  const itemSug = (d, destaque) => `<button type="button" class="sugestao${destaque ? ' sugestao--certa' : ''}" role="option" data-cep="${so(d.cep)}">${destaque ? '<span class="sugestao__selo">CEP do seu número</span>' : ''}<b>${d.logradouro}</b>${/^(até|de|lado)\b/i.test(d.complemento || '') ? `<span class="faixa">Números ${d.complemento}</span>` : ''}<span>${d.bairro} · ${d.localidade}/${d.uf} · CEP ${d.cep}</span></button>`;
-  let tRua, ultimaLista = [], pedidoRua = 0;
+  // 1º a pessoa escolhe o nome da rua (sem CEP, sem faixa); 2º digita o número; aí aparece o CEP certo
+  const semAcento = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+  let tRua, ultimaLista = [], pedidoRua = 0, ruaEscolhida = null;
+  function nomesDeRua() {
+    const m = new Map();
+    ultimaLista.forEach((d) => { const k = semAcento(d.logradouro); if (!m.has(k)) m.set(k, { nome: d.logradouro, bairros: new Set() }); m.get(k).bairros.add(d.bairro); });
+    return [...m.entries()].map(([k, v]) => ({ k, nome: v.nome, bairros: [...v.bairros].filter(Boolean) }));
+  }
   function mostrarSugestoes() {
+    if (!ultimaLista.length) return;
+    const nomes = nomesDeRua();
+    if (!ruaEscolhida && nomes.length === 1 && semAcento(tirarTipo(inRua.value)) && semAcento(nomes[0].nome).includes(semAcento(tirarTipo(inRua.value)))) {
+      // uma rua só com esse nome: já vale como escolhida quando houver número
+      if (so(inRuaNum.value)) ruaEscolhida = nomes[0].k;
+    }
+    if (!ruaEscolhida) {
+      sug.innerHTML = nomes.slice(0, 20).map((r) => `<button type="button" class="sugestao sugestao--rua" role="option" data-rua="${r.k}"><b>${r.nome}</b><span>${inCid.value.trim()}/${selUf.value}</span></button>`).join('');
+      return;
+    }
+    const daRua = ultimaLista.filter((d) => semAcento(d.logradouro) === ruaEscolhida);
     const n = parseInt(so(inRuaNum.value), 10);
-    const lista = ultimaLista;
-    if (!lista.length) return;
-    if (!n) { sug.innerHTML = (lista.length > 1 ? '<p class="dy-apoio sug-dica">Essa rua tem mais de um CEP. Digite o número para acharmos o seu.</p>' : '') + lista.slice(0, 25).map((d) => itemSug(d)).join(''); return; }
-    const certos = lista.filter((d) => faixaInclui(d.complemento, n) === true);
-    const unicos = lista.filter((d) => faixaInclui(d.complemento, n) === null);
-    const melhor = certos.length ? certos : unicos;
-    if (melhor.length) {
-      const resto = lista.filter((d) => !melhor.includes(d));
-      sug.innerHTML = melhor.slice(0, 5).map((d) => itemSug(d, melhor.length === 1)).join('')
-        + (resto.length ? `<details class="sug-outros"><summary>Ver outros CEPs dessa rua (${resto.length})</summary>${resto.slice(0, 25).map((d) => itemSug(d)).join('')}</details>` : '');
-    } else sug.innerHTML = '<p class="dy-apoio sug-dica">Nenhum CEP dessa rua cobre esse número. Confira o número ou escolha abaixo.</p>' + lista.slice(0, 25).map((d) => itemSug(d)).join('');
+    if (!n) { sug.innerHTML = '<p class="dy-apoio sug-dica">Agora digite o <b>número do imóvel</b> para encontrarmos o seu CEP.</p>'; return; }
+    const certos = daRua.filter((d) => faixaInclui(d.complemento, n) === true);
+    const melhor = certos.length ? certos : daRua.filter((d) => faixaInclui(d.complemento, n) === null);
+    if (!melhor.length) { sug.innerHTML = '<p class="dy-apoio sug-dica">Não encontramos um CEP para esse número nessa rua. Confira o número digitado.</p>'; return; }
+    sug.innerHTML = melhor.slice(0, 5).map((d) => `<button type="button" class="sugestao sugestao--certa" role="option" data-cep="${so(d.cep)}"><span class="sugestao__selo">CEP do seu endereço</span><b>${d.logradouro}, ${n}</b><span>${d.bairro} · ${d.localidade}/${d.uf}</span><span class="sugestao__cep">CEP ${d.cep}</span><span class="sugestao__usar">Usar este CEP →</span></button>`).join('');
   }
   async function buscarRua() {
     separarNumero();
@@ -294,11 +305,18 @@
       mostrarSugestoes();
     } catch (er) { if (meu === pedidoRua) sug.innerHTML = '<p class="dy-apoio sug-dica">Não conseguimos buscar agora. Tente de novo em instantes.</p>'; }
   }
-  inRua.addEventListener('input', () => { clearTimeout(tRua); tRua = setTimeout(buscarRua, 380); });
+  inRua.addEventListener('input', () => { ruaEscolhida = null; clearTimeout(tRua); tRua = setTimeout(buscarRua, 380); });
   inRua.addEventListener('blur', () => { const antes = inRuaNum.value; separarNumero(); if (inRuaNum.value !== antes) mostrarSugestoes(); });
   inRuaNum.addEventListener('input', () => { inRuaNum.value = so(inRuaNum.value).slice(0, 6); const c = inRuaNum.closest('.campo'); c.classList.toggle('valido', !!inRuaNum.value); c.querySelector('.campo__ico').innerHTML = CHECK; mostrarSugestoes(); });
-  inRuaNum.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const b = $('.sugestao--certa', sug); if (b) b.click(); } });
+  inRuaNum.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const nomes = nomesDeRua(); if (!ruaEscolhida && nomes.length === 1) { ruaEscolhida = nomes[0].k; mostrarSugestoes(); } const b = $('.sugestao--certa', sug); if (b) b.click(); } });
   sug.addEventListener('click', (e) => {
+    const r = e.target.closest('[data-rua]');
+    if (r) {
+      ruaEscolhida = r.dataset.rua; inRua.value = r.querySelector('b').textContent;
+      inRua.closest('.campo').classList.add('valido'); inRua.closest('.campo').querySelector('.campo__ico').innerHTML = CHECK;
+      mostrarSugestoes(); if (!so(inRuaNum.value)) inRuaNum.focus();
+      return;
+    }
     const b = e.target.closest('[data-cep]'); if (!b) return;
     const num = so(inRuaNum.value);
     abrirBuscaCep(false);

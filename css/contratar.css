@@ -684,3 +684,8 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 }
 .busca-rua .campo-grupo:last-child .campo label { max-width: calc(100% - 28px); }
 @media (max-width: 420px) { .busca-rua .campo-grupo:last-child .campo label { left: 14px; } .busca-rua .campo-grupo:last-child input { padding-left: 14px; } }
+
+.sugestao--rua { flex-direction: row; justify-content: space-between; align-items: center; gap: 12px; }
+.sugestao--rua span { white-space: nowrap; }
+.sugestao__cep { font-size: 18px !important; font-weight: 800; color: var(--marca-soft-texto) !important; margin-top: 4px; }
+.sugestao__usar { margin-top: 6px; font-size: 14px !important; font-weight: 800; color: var(--marca-titulo) !important; }
