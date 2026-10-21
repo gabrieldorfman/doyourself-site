@@ -303,18 +303,14 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
       requestAnimationFrame(posicionar);
     });
 
-    // Seletor "Preços para: <estado>"
-    document.querySelectorAll('[data-uf]').forEach((sel) => {
-      if (!sel.options.length) sel.innerHTML = Object.entries(DY.UFS).map(([uf, n]) => `<option value="${uf}">${n}</option>`).join('');
-      sel.value = DY.uf;
-    });
+    // "Exibindo ofertas para <cidade - UF>"
+    document.querySelectorAll('[data-local]').forEach((el) => (el.textContent = DY.textoLocal()));
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     renderPlanos();
     document.addEventListener('dy:planos', renderPlanos);
     DY.detectarUF();
-    document.addEventListener('change', (e) => { const sel = e.target.closest('[data-uf]'); if (sel) DY.escolherUF(sel.value); });
 
     // Abas "Para a sua casa / empresa" (troca a lista de planos) e "Para você / empresa" (troca o botão)
     document.addEventListener('click', (e) => {

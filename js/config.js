@@ -174,20 +174,22 @@ DY.definirPlanos = ({ uf, tipo } = {}) => {
   DY.celularPadrao = 3; // 50 GB — oferta foco de outubro
   if (document.readyState !== 'loading') document.dispatchEvent(new CustomEvent('dy:planos'));
 };
-DY.uf = 'PR'; DY.tipoInternet = 'casa';
-try { const salva = localStorage.getItem('dy_uf'); if (salva && DY.UFS[salva]) DY.uf = salva; } catch (e) { /* sem storage */ }
+DY.uf = 'PR'; DY.cidade = ''; DY.tipoInternet = 'casa';
+/* Onde o cliente está: 1) o endereço que ele já consultou na contratação; 2) a conexão (/api/uf); 3) Paraná */
+try { const l = JSON.parse(localStorage.getItem('dy_local') || 'null'); if (l && DY.UFS[l.uf]) { DY.uf = l.uf; DY.cidade = l.cidade || ''; DY.localDoCep = true; } } catch (e) { /* sem storage */ }
 DY.definirPlanos({});
-/* Detecta o estado pela conexão (função /api/uf do Vercel), só se o cliente ainda não escolheu */
 DY.detectarUF = async () => {
-  try { if (localStorage.getItem('dy_uf')) return; } catch (e) { return; }
+  if (DY.localDoCep) return;
   try {
     const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 2500);
     const r = await fetch('/api/uf', { cache: 'no-store', signal: ctl.signal }); clearTimeout(t);
-    const { uf } = await r.json();
-    if (uf && DY.UFS[uf] && uf !== DY.uf) DY.definirPlanos({ uf });
-  } catch (e) { /* fica no PR */ }
+    const { uf, cidade } = await r.json();
+    if (uf && DY.UFS[uf]) { DY.cidade = cidade || ''; DY.definirPlanos({ uf }); }
+  } catch (e) { /* fica no Paraná */ }
 };
-DY.escolherUF = (uf) => { try { localStorage.setItem('dy_uf', uf); } catch (e) { /* */ } DY.definirPlanos({ uf }); };
+/* Guardado quando o cliente consulta o endereço: a home passa a mostrar as ofertas da cidade dele */
+DY.salvarLocal = (uf, cidade) => { try { localStorage.setItem('dy_local', JSON.stringify({ uf, cidade })); } catch (e) { /* */ } };
+DY.textoLocal = () => (DY.cidade ? `${DY.cidade} - ${DY.uf}` : DY.UFS[DY.uf]);
 
 /* Logos de aplicativo (pasta img/apps) */
 DY.logos = {

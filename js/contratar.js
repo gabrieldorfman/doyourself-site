@@ -267,6 +267,7 @@
   async function rodarConsulta() {
     // Preços do estado do endereço (internet muda por bloco de estados; celular no PR/SC)
     DY.definirPlanos({ uf: st.end.uf, tipo: st.para.internet });
+    DY.salvarLocal(st.end.uf, st.end.cidade);
     ['internet', 'celular'].forEach((k) => { const lista = k === 'internet' ? DY.planosInternet : DY.planosCelular; if (st.rasc[k] && !lista.some((p) => p.id === st.rasc[k].id)) st.rasc[k] = null; if (st.esc[k] && !lista.some((p) => p.id === st.esc[k].id)) st.esc[k] = undefined; });
     mostrar('consulta');
     const box = $('.consulta'); box.classList.remove('ok', 'alerta');
@@ -361,8 +362,8 @@
         ? ['Escolha seu plano de celular', 'Ligações ilimitadas, 5G e o seu número. <b>100% das linhas volta para você.</b>']
         : ['Quer incluir celular?', 'Ligações ilimitadas e 5G. <b>100% das linhas volta para você.</b>'],
       energia: primeiro
-        ? ['Quanto vem sua conta de luz?', 'Sem obra e sem placas. <b>10% da nova conta volta para você.</b>']
-        : ['E a conta de luz?', 'Pague menos, sem obra. <b>10% da nova conta volta para você.</b>'],
+        ? ['Quanto vem sua conta de luz?', 'Até 20% menos na conta, sem obra e sem placas. <b>10% da nova conta volta para você.</b>']
+        : ['E a conta de luz?', 'Até 20% menos na conta, sem obra. <b>10% da nova conta volta para você.</b>'],
     };
     const [t, s] = textos[prod];
     return `<header class="produto__cab">
@@ -544,7 +545,7 @@
           <label for="f-conta">Valor médio da sua conta de luz</label>
           <span class="campo__ico" aria-hidden="true"></span>
         </div>
-        <p class="campo__msg dica" id="m-conta">Olhe uma conta recente. Se o valor muda muito, use a média dos últimos meses.</p>
+        <p class="campo__msg dica" id="m-conta">Use uma conta recente ou a média de gastos dos últimos 3 meses.</p>
       </div>
       <div class="chips" role="group" aria-label="Valores comuns">${[200, 350, 500, 800, 1500].map((x) => `<button type="button" class="chip-op" data-v="${x}" aria-pressed="false">R$ ${x.toLocaleString('pt-BR')}</button>`).join('')}</div>
       <div data-energia-res></div>

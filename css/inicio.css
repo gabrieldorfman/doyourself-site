@@ -275,3 +275,21 @@
 .secao--planos .porta3 { margin: 0 auto 28px; }
 /* Seletor de estado nos preços */
 .uf-escolha select { font: inherit; font-weight: 800; color: var(--texto-titulo); background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); border-radius: 8px; padding: 2px 26px 2px 8px; min-height: 32px; appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 13px) 55%, calc(100% - 8px) 55%; background-size: 5px 5px; background-repeat: no-repeat; cursor: pointer; }
+
+/* v5 · "Exibindo ofertas para" + aviso de região */
+.local-ofertas { display: flex; align-items: center; justify-content: center; gap: 8px; margin: -6px auto 22px; font-size: 15px; color: var(--texto-corpo); text-align: center; }
+.local-ofertas b { color: var(--texto-titulo); font-weight: 800; }
+.local-ofertas__pin { width: 20px; height: 20px; flex: none; color: var(--internet-titulo); }
+.local-ofertas--celular .local-ofertas__pin { color: var(--celular-titulo); }
+.local-aviso { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 560px; margin: 24px auto 0; text-align: center; }
+.local-aviso p { font-size: 13px; color: var(--texto-terciario); }
+.local-aviso .dy-btn { min-height: 46px; padding: 0 22px; }
+.porta3--baixo { margin: 32px auto 6px !important; }
+/* Cashback: total do combo e exemplos visíveis também no celular */
+.volta-total { margin-top: 20px; text-align: center; font-size: 16px; color: var(--texto-corpo); }
+.volta-total strong { color: var(--marca-titulo); font-size: 18px; }
+@media (max-width: 767px) {
+  .volta { grid-template-areas: "ico pct" "ico tit" "ex ex" "link link"; }
+  .volta .dy-texto.volta__ex { display: block; grid-area: ex; margin-top: 8px; font-size: 14px; }
+  .volta__link { margin-top: 6px; }
+}
