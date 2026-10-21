@@ -25,9 +25,7 @@
     $$('[data-ex="celular"]').forEach((e) => (e.textContent = brl(ex.celular)));
     $$('[data-ex="celular-desc"]').forEach((e) => (e.textContent = brl(pCel) + '/mês'));
     $$('[data-ex="energia"]').forEach((e) => (e.textContent = brl(ex.energia)));
-    $$('[data-ex="energia-desc"]').forEach((e) => (e.textContent = 'conta de ' + brl(en.conta) + ' → ' + brl(en.comDesconto) + '/mês'));
-    // Quanto o cliente paga por mês no combo do exemplo (para não confundir com o cashback)
-    $$('[data-ex="mensal"]').forEach((e) => (e.textContent = brl(pInt + pCel + en.comDesconto)));
+    $$('[data-ex="energia-desc"]').forEach((e) => (e.textContent = 'conta de ' + brl(en.conta)));
     $$('[data-ex="total"]').forEach((e) => (e.textContent = brl(ex.total)));
 
     // Pilha do hero: os cartões entram um a um e o total "conta" até o valor
@@ -36,8 +34,8 @@
       const alvo = $('[data-contador]', pilha);
       const contar = () => {
         if (reduzir) return;
-        // o total começa a contar depois que o cartão dele aparece (5º da fila: 0,3 s + 4 × 0,5 s)
-        const dur = 1600, ini = performance.now() + 2400;
+        // o total começa a contar depois que o cartão dele aparece (4º da fila: 0,3 s + 3 × 0,5 s)
+        const dur = 1600, ini = performance.now() + 1900;
         const passo = (t) => {
           const k = Math.min(1, Math.max(0, (t - ini) / dur)); const e = 1 - Math.pow(1 - k, 3);
           alvo.textContent = brl(Math.round(ex.total * e));

@@ -639,8 +639,8 @@
   function totaisHTML(l, cls) {
     const en = l.find((i) => i.produto === 'energia');
     const nota = 'Valores no débito automático.' + (en ? ` Inclui cerca de ${brl(en.mensal)} da conta de luz com desconto (estimativa).` : '');
-    return `<div class="${cls}__mes"><div><span>Total do seu pedido por mês</span><b>${brl(somaMes(l))}</b></div><small>${nota}</small></div>
-      <div class="${cls}__total"><div><span>Cashback total: volta para você</span><b>${brl(somaCb(l))}</b></div><small>Uma única vez, via PIX na sua conta bancária, quando o contrato fecha.</small></div>`;
+    return `<div class="${cls}__mes"><div><span>Valor do seu pedido</span><b>${brl(somaMes(l))}<i>/mês</i></b></div><small>${nota}</small></div>
+      <div class="${cls}__total"><div><span>Volta para você (cashback)</span><b>${brl(somaCb(l))}</b></div><small>Uma única vez, via PIX na sua conta bancária, quando o contrato fecha.</small></div>`;
   }
 
   /* ---------- Barra do combo ---------- */
@@ -666,7 +666,7 @@
     $('[data-carrinho-cb]').textContent = brl(somaCb(l));
     $('[data-carrinho-mensal]').textContent = brl(somaMes(l));
     $('[data-carrinho-lista]').innerHTML = l.length
-      ? '<p class="car-tit">Seu pedido até agora</p><ul class="car-itens">' + l.map((i) => `<li><span><b>${i.titulo}</b><br>${i.detalhe}</span><span class="car-val"><b>${i.produto === 'energia' ? 'cerca de ' : ''}${brl(i.mensal)}/mês</b><em>volta ${brl(i.cashback)}</em></span></li>`).join('') + '</ul>' + totaisHTML(l, 'car')
+      ? '<p class="car-tit">Seu pedido até agora</p><ul class="car-itens">' + l.map((i) => `<li><span><b>${i.titulo}</b><br>${i.detalhe}</span><span class="car-val"><b>${i.produto === 'energia' ? 'cerca de ' : ''}${brl(i.mensal)}/mês</b><em>Volta para você ${brl(i.cashback)}</em></span></li>`).join('') + '</ul>' + totaisHTML(l, 'car')
       : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
     car.hidden = !l.length;
     if (!l.length) { $('[data-carrinho-lista]').hidden = true; car.setAttribute('aria-expanded', 'false'); }
