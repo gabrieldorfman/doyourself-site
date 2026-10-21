@@ -22,7 +22,7 @@
       <ul class="oferta__lista">${det}</ul>
       <div class="oferta__apps">${apps}</div>
       <div class="oferta__espaco"></div>
-      <div class="oferta__preco"><s>De ${brl(centavos(p.de))}</s><div><b data-preco>${brl(preco)}</b><span>/mês</span></div><small data-preco-obs>${extra || 'no débito automático'}</small></div>
+      <div class="oferta__preco"><s data-de>De ${brl(centavos(o.de || p.de))}</s><div><b data-preco>${brl(preco)}</b><span>/mês</span></div><small data-preco-obs>${extra || 'no débito automático'}</small></div>
       <div class="oferta__cb"><span>Volta para você<br><small>cashback de 50%</small></span><b data-cb>${brl(cashbackCentavos(preco, 50))}</b></div>
       <span class="oferta__escolher" aria-hidden="true">${rotulo || (on ? 'Plano escolhido' : 'Escolher este plano')}</span>
     </div>`;

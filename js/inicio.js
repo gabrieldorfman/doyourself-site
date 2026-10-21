@@ -81,7 +81,7 @@
       const input = $('#s-conta', sim);
       const set = (k, v) => ($(`[data-s="${k}"]`, sim).textContent = v);
       const calc = () => {
-        const reais = DY.lerReais(input.value);
+        const reais = Number(so(input.value)) / 100;
         input.closest('.campo').classList.toggle('preenchido', !!input.value);
         $$('.chip-op', sim).forEach((c) => c.setAttribute('aria-pressed', +c.dataset.v === reais));
         const r = DY.energia.simular(reais);
@@ -91,8 +91,8 @@
         set('economia', brl(r.economiaMes)); set('ano', brl(r.economiaMes * 12)); set('cb', brl(r.cashback));
         set('nota', `Estimativa com ${r.pct}% de desconto: a conta passaria de ${brl(r.conta)} para cerca de ${brl(r.comDesconto)}. O valor exato depende da cidade, da distribuidora e da sua fatura.`);
       };
-      input.addEventListener('input', () => { input.value = DY.formatarReais(input.value); calc(); });
-      $$('.chip-op', sim).forEach((c) => c.addEventListener('click', () => { input.value = DY.formatarReais(String(c.dataset.v)); calc(); }));
+      input.addEventListener('input', () => { const d = so(input.value).slice(0, 8); input.value = d ? (Number(d) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : ''; calc(); });
+      $$('.chip-op', sim).forEach((c) => c.addEventListener('click', () => { input.value = (+c.dataset.v).toLocaleString('pt-BR', { minimumFractionDigits: 2 }); calc(); }));
     }
 
     /* ---------- Barra fixa "Consultar meu endereço" (celular) ---------- */

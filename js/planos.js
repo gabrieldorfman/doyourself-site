@@ -6,6 +6,7 @@
 (function () {
   const { img, logos, brl, centavos, cashbackCentavos, config } = DY;
 
+const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const logoTag = (chave, classe = '') => {
     const l = logos[chave];
     return `<img src="${img(l.src)}" alt="${l.alt}" class="${classe}" loading="lazy" width="44" height="44">`;
@@ -57,7 +58,7 @@
       ? `<img src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium" class="yt-premium" width="128" height="32">`
       : logoTag(k)).join('');
     return `
-      <article class="card-plano" aria-label="Plano de ${p.num} ${p.unidade}">
+      <article class="card-plano" aria-label="Plano de ${p.num} ${p.unidade}"><span class="card-plano__check" aria-hidden="true">${CHECK_CP}</span>
         <div class="card-plano__id">
           <span class="selo selo--cheio">${p.selo}</span>
           <p class="velocidade"><b>${p.num}</b><span>${p.unidade}</span>${p.extra ? `<i>${p.extra}</i>` : ''}</p>
@@ -71,11 +72,10 @@
         <div class="card-plano__acao">
           <h4>${p.tituloAcao}</h4>
           <div class="opcoes-plano" role="radiogroup" aria-label="${p.tituloAcao}" style="display:flex;flex-direction:column;gap:19px">${opcoes}</div>
-          ${p.opcoes.length === 1 ? `<ul class="inclusos-acao">${[p.detalhes[2][2], 'Instalação gratuita', 'Atendimento pelo WhatsApp'].map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
           <div class="card-plano__espaco"></div>
           <hr>
           <p class="resumo-plano"><span>O seu plano:</span><b data-resumo></b></p>
-          <div class="preco-plano"><s>De ${brl(centavos(p.de))}</s><div><b data-preco></b><span>/mês</span></div></div>
+          <div class="preco-plano"><s data-de>De ${brl(centavos(p.de))}</s><div><b data-preco></b><span>/mês</span></div></div>
           <p class="obs-plano">no débito automático</p>
           <div class="faixa-cashback"><span>Cashback de 50%</span><b data-cashback></b></div>
           <a class="btn-plano" data-cta href="#">Consultar meu endereço</a>
@@ -88,6 +88,7 @@
     const preco = centavos(sel.preco);
     el.querySelector('[data-resumo]').textContent = sel.resumo;
     el.querySelector('[data-preco]').textContent = brl(preco);
+    const de = el.querySelector('[data-de]'); if (de) de.textContent = 'De ' + brl(centavos(sel.de || p.de));
     el.querySelector('[data-cashback]').textContent = 'Você recebe ' + brl(cashbackCentavos(preco, 50));
     const tipo = el.closest('[data-acordeao]').dataset.tipo || 'casa';
     const q = new URLSearchParams({ origem: 'internet', plano: p.id, opcao: sel.nome, para: tipo });
@@ -110,7 +111,7 @@
     const det = p.detalhes.map(([ico, r, v]) => `<li class="detalhe"><img src="${img('icones/' + ico)}" alt=""><span>${r}</span><b>${v}</b></li>`).join('');
     const apps = p.apps.map((k) => logoTag(k)).join('');
     return `
-      <article class="card-plano" aria-label="Plano de ${p.num} GB">
+      <article class="card-plano" aria-label="Plano de ${p.num} GB"><span class="card-plano__check" aria-hidden="true">${CHECK_CP}</span>
         <div class="card-plano__id">
           <span class="selo selo--cheio">${p.selo}</span>
           <p class="velocidade"><b>${p.num}</b><span>${p.unidade}</span></p>
@@ -268,11 +269,20 @@
     abrir(padrao);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const ri = document.querySelector('[data-acordeao="internet"]');
-    if (ri) montar(ri, { planos: DY.planosInternet, padrao: DY.internetPadrao, vertical: 'internet', larguraCard: 936, tarja: tarjaInternet, card: cardInternet, atualizar: atualizarInternet });
-    const rc = document.querySelector('[data-acordeao="celular"]');
-    if (rc) montar(rc, { planos: DY.planosCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 936, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
+  /* ---------- Monta (ou remonta) acordeões e vitrines com os planos do estado/aba atuais ---------- */
+  function renovar(el) { const n = el.cloneNode(false); [...el.attributes].forEach((a) => n.setAttribute(a.name, a.value)); el.replaceWith(n); return n; }
+  function renderPlanos() {
+    ['internet', 'celular'].forEach((tipo) => {
+      let raiz = document.querySelector(`[data-acordeao="${tipo}"]`); if (!raiz) return;
+      const secao = raiz.closest('.planos-bloco');
+      // tira os ouvintes antigos (setas, pontos e o próprio acordeão) antes de montar de novo
+      secao.querySelectorAll('[data-seta], .pontos').forEach((el) => { const n = el.cloneNode(true); el.replaceWith(n); });
+      raiz = renovar(raiz);
+      const net = tipo === 'internet';
+      montar(raiz, net
+        ? { planos: DY.planosInternet, padrao: DY.internetPadrao, vertical: 'internet', larguraCard: 936, tarja: tarjaInternet, card: cardInternet, atualizar: atualizarInternet }
+        : { planos: DY.planosCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 936, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
+    });
 
     // Celular e tablet: os mesmos cards compactos da contratação, arrastando para o lado
     document.querySelectorAll('[data-vitrine]').forEach((box) => {
@@ -286,22 +296,35 @@
         const q = net ? { origem: 'internet', plano: card.dataset.id, para } : { origem: 'celular', plano: card.dataset.id, linhas: 1, para };
         location.href = config.paginaConversao + '?' + new URLSearchParams(q);
       };
+      // Toque no card marca (com o check) e centraliza; o botão confirma
       trilho.addEventListener('click', (e) => { const c = e.target.closest('.oferta'); if (!c) return; if (e.target.closest('.oferta__escolher')) ir(c); else { trilho.querySelectorAll('.oferta').forEach((x) => x.classList.toggle('marcado', x === c)); DY.ofertas.centralizar(c); } });
       trilho.addEventListener('keydown', (e) => { const c = e.target.closest('.oferta'); if (c && e.target === c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(c); } });
       const posicionar = () => { const c = trilho.children[destaque]; if (c && trilho.scrollWidth > trilho.clientWidth + 4) trilho.scrollLeft = c.offsetLeft - (trilho.clientWidth - c.offsetWidth) / 2; };
       requestAnimationFrame(posicionar);
     });
 
-    // Abas "Para a sua casa / empresa" e "Para você / empresa"
-    document.querySelectorAll('[data-abas-planos]').forEach((lista) => {
-      const alvo = document.querySelector(`[data-acordeao="${lista.dataset.abasPlanos}"]`);
-      lista.addEventListener('click', (e) => {
-        const aba = e.target.closest('[role="tab"]');
-        if (!aba) return;
-        lista.querySelectorAll('[role="tab"]').forEach((t) => t.setAttribute('aria-selected', t === aba));
-        alvo.dataset.tipo = aba.dataset.tipo;
-        alvo.atualizarTodos();
-      });
+    // Seletor "Preços para: <estado>"
+    document.querySelectorAll('[data-uf]').forEach((sel) => {
+      if (!sel.options.length) sel.innerHTML = Object.entries(DY.UFS).map(([uf, n]) => `<option value="${uf}">${n}</option>`).join('');
+      sel.value = DY.uf;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderPlanos();
+    document.addEventListener('dy:planos', renderPlanos);
+    DY.detectarUF();
+    document.addEventListener('change', (e) => { const sel = e.target.closest('[data-uf]'); if (sel) DY.escolherUF(sel.value); });
+
+    // Abas "Para a sua casa / empresa" (troca a lista de planos) e "Para você / empresa" (troca o botão)
+    document.addEventListener('click', (e) => {
+      const aba = e.target.closest('[data-abas-planos] [role="tab"]'); if (!aba) return;
+      const lista = aba.closest('[data-abas-planos]'); const tipo = lista.dataset.abasPlanos;
+      lista.querySelectorAll('[role="tab"]').forEach((t) => t.setAttribute('aria-selected', t === aba));
+      const alvo = document.querySelector(`[data-acordeao="${tipo}"]`);
+      alvo.dataset.tipo = aba.dataset.tipo;
+      if (tipo === 'internet') DY.definirPlanos({ tipo: aba.dataset.tipo });
+      else alvo.atualizarTodos();
     });
   });
 })();

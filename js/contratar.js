@@ -31,6 +31,8 @@
     contato: { nome: '', telefone: '' }, cad: { email: '', cpf: '', cnpj: '', consent: false },
     pag: { tipo: '', banco: '' },
   };
+  // Planos de internet: casa ou empresa (o estado é confirmado pelo CEP na consulta)
+  DY.definirPlanos({ tipo: st.para.internet });
   // Plano vindo do card da Home já chega pré-selecionado
   if (origem === 'internet' && q.get('plano')) {
     const p = DY.planosInternet.find((x) => x.id === q.get('plano'));
@@ -263,6 +265,9 @@
      2 · CONSULTANDO
      ========================================================= */
   async function rodarConsulta() {
+    // Preços do estado do endereço (internet muda por bloco de estados; celular no PR/SC)
+    DY.definirPlanos({ uf: st.end.uf, tipo: st.para.internet });
+    ['internet', 'celular'].forEach((k) => { const lista = k === 'internet' ? DY.planosInternet : DY.planosCelular; if (st.rasc[k] && !lista.some((p) => p.id === st.rasc[k].id)) st.rasc[k] = null; if (st.esc[k] && !lista.some((p) => p.id === st.esc[k].id)) st.esc[k] = undefined; });
     mostrar('consulta');
     const box = $('.consulta'); box.classList.remove('ok', 'alerta');
     const titulo = $('[data-consulta-titulo]'); const res = $('[data-consulta-resultado]');
@@ -407,6 +412,7 @@
     const pintarCard = (card, p, op) => {
       const o = p.opcoes[op]; const preco = centavos(o.preco);
       card.querySelector('[data-preco]').textContent = brl(preco);
+      const de = card.querySelector('[data-de]'); if (de) de.textContent = 'De ' + brl(centavos(o.de || p.de));
       card.querySelector('[data-cb]').textContent = brl(cashbackCentavos(preco, 50));
       card.querySelector('[data-preco-obs]').innerHTML = op > 0 && o.logo ? `<span class="oferta__extra">+ ${o.nome}</span>` : 'no débito automático';
     };
@@ -456,6 +462,12 @@
       $$('[role="radio"]', seg).forEach((x) => x.setAttribute('aria-checked', x === b));
       st.para[prod] = b.dataset.v;
       if (prod === 'celular') atualizarLinhas();
+      if (prod === 'internet') {
+        // casa e empresa têm planos diferentes: troca a lista e limpa a escolha
+        DY.definirPlanos({ tipo: st.para.internet });
+        if (st.rasc.internet && !DY.planosInternet.some((p) => p.id === st.rasc.internet.id)) st.rasc.internet = null;
+        renderProduto();
+      }
     });
   }
 
@@ -528,7 +540,7 @@
       <ul class="energia-beneficios"><li><img src="${img('icones/hero-lampada.svg')}" alt="">Sem placas e sem obra</li><li><img src="${img('icones/cofrinho.svg')}" alt="">Sem investimento</li><li><img src="${img('icones/verificado.svg')}" alt="">Mesma distribuidora</li></ul>
       <div class="campo-grupo" data-grupo="conta">
         <div class="campo campo--moeda${v ? ' preenchido' : ''}">
-          <input id="f-conta" inputmode="decimal" placeholder="Ex.: 350" value="${v ? DY.formatarReais(String(v).replace('.', ',')) : ''}" aria-describedby="m-conta">
+          <input id="f-conta" inputmode="numeric" placeholder="0,00" value="${v ? mascara.moeda(String(Math.round(v * 100))) : ''}" aria-describedby="m-conta">
           <label for="f-conta">Valor médio da sua conta de luz</label>
           <span class="campo__ico" aria-hidden="true"></span>
         </div>
@@ -541,7 +553,7 @@
   function ligarEnergia() {
     const input = $('#f-conta', palco); const res = $('[data-energia-res]', palco); const g = $('[data-grupo="conta"]', palco);
     const calc = () => {
-      const reais = DY.lerReais(input.value);
+      const reais = Number(so(input.value)) / 100;
       input.closest('.campo').classList.toggle('preenchido', !!input.value);
       $$('.chip-op', palco).forEach((c) => c.setAttribute('aria-pressed', +c.dataset.v === reais));
       if (!reais) { st.rasc.energia = null; res.innerHTML = ''; limpar(g); atualizarBotaoAdd(); atualizarCarrinho(); return; }
@@ -563,8 +575,8 @@
       }
       atualizarBotaoAdd(); atualizarCarrinho();
     };
-    input.addEventListener('input', () => { input.value = DY.formatarReais(input.value); calc(); });
-    $$('.chip-op', palco).forEach((c) => c.addEventListener('click', () => { input.value = DY.formatarReais(String(c.dataset.v)); calc(); }));
+    input.addEventListener('input', () => { input.value = mascara.moeda(input.value); calc(); });
+    $$('.chip-op', palco).forEach((c) => c.addEventListener('click', () => { input.value = mascara.moeda(String(c.dataset.v * 100)); calc(); }));
     if (input.value) calc();
   }
 
@@ -814,6 +826,7 @@
     const a = retomar.s;
     Object.assign(st, { id: a.id || st.id, end: { ...st.end, ...a.end }, fibra: a.fibra, disp: a.disp, ordem: a.ordem || st.ordem, idx: a.idx || 0, para: { ...st.para, ...a.para }, contato: { ...st.contato, ...a.contato } });
     Object.assign(st.esc, a.esc || {}); Object.assign(st.rasc, a.rasc || {});
+    DY.definirPlanos({ uf: st.end.uf, tipo: st.para.internet });
     inCep.value = mascara.cep(st.end.cep || ''); inNum.value = st.end.numero || ''; $('#f-logradouro').value = st.end.logradouro || ''; $('#f-comp').value = st.end.comp || '';
     ['#f-nome', '#f-telefone'].forEach((sel) => { const el = $(sel); const v = sel === '#f-nome' ? st.contato.nome : st.contato.telefone; if (el && v) { el.value = sel === '#f-telefone' ? mascara.telefone(v) : v; el.dispatchEvent(new Event('input', { bubbles: true })); } });
     let tela = retomar.tela; if (['cadastro', 'pagamento'].includes(tela)) tela = st.contato.nome ? 'cadastro' : 'contato';

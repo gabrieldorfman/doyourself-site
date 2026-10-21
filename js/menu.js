@@ -10,23 +10,27 @@
   const a = (k, cls) => {
     const href = DY.linkRota(k); const x = R[k];
     if (!href) return `<span class="${cls} em-breve" aria-disabled="true">${x.r}<small>em breve</small></span>`;
-    return `<a class="${cls}" href="${href}"${externo(href) ? ' target="_blank" rel="noopener"' : ''}${ehAqui(k) ? ' aria-current="page"' : ''}>${x.r}</a>`;
+    return `<a class="${cls}${dentro(k) && x.pronta ? ' ' + cls + '--ativo' : ''}" href="${href}"${externo(href) ? ' target="_blank" rel="noopener"' : ''}${ehAqui(k) ? ' aria-current="page"' : ''}>${x.r}</a>`;
   };
   const curto = { inicio: 'Início', combo: 'Combo', energia: 'Energia', blog: 'Blog' };
+  // Item do menu ativo: a própria página ou qualquer página filha (ex.: /internet-fibra/casa → Internet)
+  const dentro = (k) => { const x = R[k]; return !!x && x.href !== '/' && !x.href.includes('#') && (aqui === x.href || aqui.startsWith(x.href + '/')); };
+  const grupoAtivo = (sub) => sub.some((s) => dentro(s));
+  const itemAtivo = (k) => (k === 'inicio' ? aqui === '/' : dentro(k));
 
   // Desktop
   const nav = document.querySelector('.header .nav');
   if (nav) nav.innerHTML = DY.menu.map(([k, sub], i) => {
-    if (!sub) { const href = DY.linkRota(k); if (!href) return ''; return `<li><a class="nav__link" href="${href}"${ehAqui(k) ? ' aria-current="page"' : ''}>${curto[k] || R[k].r}</a></li>`; }
-    return `<li><button class="nav__link" type="button" aria-expanded="false" aria-controls="sub-${i}">${k} <span class="nav__seta" aria-hidden="true">▾</span></button>
+    if (!sub) { const href = DY.linkRota(k); if (!href) return ''; return `<li><a class="nav__link${itemAtivo(k) ? ' nav__link--ativo' : ''}" href="${href}"${ehAqui(k) ? ' aria-current="page"' : ''}>${curto[k] || R[k].r}</a></li>`; }
+    return `<li><button class="nav__link${grupoAtivo(sub) ? ' nav__link--ativo' : ''}" type="button" aria-expanded="false" aria-controls="sub-${i}">${k} <span class="nav__seta" aria-hidden="true">▾</span></button>
       <div class="submenu" id="sub-${i}">${sub.map((s) => a(s, 'submenu__item')).join('')}</div></li>`;
   }).join('');
 
   // Drawer (tablet e celular): acordeão
   const lista = document.querySelector('#drawer .drawer__lista');
   if (lista) lista.innerHTML = DY.menu.map(([k, sub], i) => {
-    if (!sub) { const href = DY.linkRota(k); if (!href) return ''; return `<li><a class="drawer__item" href="${href}"${ehAqui(k) ? ' aria-current="page"' : ''}>${k === 'energia' ? 'Energia Solar' : curto[k] || R[k].r}</a></li>`; }
-    return `<li><button class="drawer__item" type="button" aria-expanded="false" data-sub="dsub-${i}">${k}<span class="drawer__glifo" aria-hidden="true">+</span></button>
+    if (!sub) { const href = DY.linkRota(k); if (!href) return ''; return `<li><a class="drawer__item${itemAtivo(k) ? ' drawer__item--ativo' : ''}" href="${href}"${ehAqui(k) ? ' aria-current="page"' : ''}>${k === 'energia' ? 'Energia Solar' : curto[k] || R[k].r}</a></li>`; }
+    return `<li><button class="drawer__item${grupoAtivo(sub) ? ' drawer__item--ativo' : ''}" type="button" aria-expanded="false" data-sub="dsub-${i}">${k}<span class="drawer__glifo" aria-hidden="true">+</span></button>
       <div class="drawer__sub" id="dsub-${i}" hidden>${sub.map((s) => a(s, 'drawer__subitem')).join('')}</div></li>`;
   }).join('');
 

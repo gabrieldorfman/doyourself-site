@@ -290,3 +290,10 @@ body.menu-aberto { overflow: hidden; }
 .drawer__subitem { display: flex; align-items: center; min-height: 32px; font-size: 14px; color: var(--texto-corpo); }
 .drawer__sub .em-breve { min-height: 32px; font-size: 14px; color: var(--texto-corpo); }
 .rodape .em-breve small { background: rgba(255,255,255,.1); color: inherit; }
+
+/* v4 · item ativo do menu mais forte (página atual ou página filha) */
+.nav__link--ativo, .nav__link[aria-current="page"] { color: var(--marca-titulo); font-weight: 800; }
+.nav__link--ativo { position: relative; }
+.nav > li > .nav__link--ativo::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--marca-titulo); }
+.drawer__item--ativo { color: var(--marca-titulo); font-weight: 800; }
+.submenu__item--ativo, .drawer__subitem--ativo { color: var(--marca-titulo); font-weight: 800; }

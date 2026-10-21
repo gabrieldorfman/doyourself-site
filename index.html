@@ -28,12 +28,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792541602">
-  <link rel="stylesheet" href="css/base.css?v=1792541602">
-  <link rel="stylesheet" href="css/dy.css?v=1792541602">
-  <link rel="stylesheet" href="css/planos.css?v=1792541602">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792541602">
-  <link rel="stylesheet" href="css/inicio.css?v=1792541602">
+  <link rel="stylesheet" href="css/tokens.css?v=1792544795">
+  <link rel="stylesheet" href="css/base.css?v=1792544795">
+  <link rel="stylesheet" href="css/dy.css?v=1792544795">
+  <link rel="stylesheet" href="css/planos.css?v=1792544795">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792544795">
+  <link rel="stylesheet" href="css/inicio.css?v=1792544795">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"Do Yourself","description":"Marca 100% digital que reúne Internet Fibra, Planos de Celular e Energia Solar por Assinatura, com cashback para o cliente na contratação.","logo":"img/marca/dy-selo-verde.svg"}
   </script>
@@ -94,7 +94,7 @@
         <div class="hero2__copy">
           <span class="dy-eyebrow">Internet · Celular · Energia solar</span>
           <h1 class="dy-display" id="hero-titulo">Aqui você ganha <span class="realce">em dobro.</span></h1>
-          <p class="dy-lead">Contrate internet fibra, celular ou energia solar e ainda receba um <strong>cashback via PIX na sua conta bancária</strong>. Tudo numa conversa só no WhatsApp.</p>
+          <p class="dy-lead">Contrate internet fibra, celular ou energia solar e ainda receba um <strong>cashback via PIX na sua conta bancária</strong>. Resolva tudo pelo WhatsApp.</p>
 
           <form class="consulta-cep" data-hero-cep novalidate aria-labelledby="cep-titulo">
             <p class="consulta-cep__titulo" id="cep-titulo">Veja o que chega no seu endereço</p>
@@ -205,7 +205,7 @@
           <p class="simula__titulo">Quanto você paga de luz por mês?</p>
           <div class="campo-grupo">
             <div class="campo campo--moeda">
-              <input id="s-conta" inputmode="decimal" placeholder="Ex.: 350" aria-describedby="s-dica">
+              <input id="s-conta" inputmode="numeric" placeholder="0,00" aria-describedby="s-dica">
               <label for="s-conta">Valor médio da conta</label>
               <span class="campo__ico" aria-hidden="true"></span>
             </div>
@@ -230,14 +230,18 @@
 
 
     <!-- ============ INTERNET FIBRA ============ -->
-    <section class="secao secao--alt secao--planos" id="internet" aria-labelledby="int-titulo">
+    <section class="secao secao--internet secao--planos" id="internet" aria-labelledby="int-titulo">
       <div class="container">
         <header class="cab surgir">
           <span class="dy-eyebrow dy-eyebrow--internet">Internet Fibra</span>
           <h2 class="dy-h2" id="int-titulo">Fibra do poste até o modem, dentro da sua casa</h2>
           <p class="dy-lead">Fibra até dentro de casa, com Wi-Fi e instalação grátis.</p>
         </header>
-        <p class="explica-linha surgir"><b>Download</b> é a velocidade para assistir e baixar. <b>Upload</b> é a de envio, que pesa em chamadas de vídeo e jogos.</p>
+        <ul class="porta3 porta3--internet surgir" aria-label="O que significa cada coisa">
+          <li><img src="img/icones/download.svg" alt=""><span><b>Download</b>É a velocidade para assistir, baixar e navegar, mesmo com a família toda conectada.</span></li>
+          <li><img src="img/icones/upload.svg" alt=""><span><b>Upload</b>É a velocidade de envio. Faz diferença em chamadas de vídeo, jogos e para mandar fotos.</span></li>
+          <li><img src="img/icones/modem.svg" alt=""><span><b>Wi-Fi 6</b>Mais rápido e estável que o Wi-Fi 5, mesmo com muitos aparelhos ao mesmo tempo. Vem nos planos de 800 Mega e 1 Giga.</span></li>
+        </ul>
         <div class="planos-escolha">
           <div class="abas abas--internet" role="tablist" aria-label="Para quem é a internet" data-abas-planos="internet">
             <button class="aba" role="tab" aria-selected="true" data-tipo="casa"><span class="icone-mask" style="--src:url(../img/icones/aba-casa.svg)"></span>Para a sua casa</button>
@@ -254,18 +258,23 @@
             <p class="dica-arraste">Toque em um plano para abrir, ou arraste para os lados</p>
           </div>
         </div>
-        <p class="planos-nota">Valores no débito automático. O preço e a disponibilidade do seu endereço aparecem na consulta de CEP.</p>
+        <p class="planos-nota">Preços para <label class="uf-escolha"><select data-uf aria-label="Estado"></select></label>, no débito automático. A disponibilidade do seu endereço aparece na consulta de CEP.</p>
       </div>
     </section>
 
     <!-- ============ CELULAR ============ -->
-    <section class="secao secao--planos" id="celular" aria-labelledby="cel-titulo">
+    <section class="secao secao--celular secao--planos" id="celular" aria-labelledby="cel-titulo">
       <div class="container">
         <header class="cab surgir">
           <span class="dy-eyebrow dy-eyebrow--celular">Planos de Celular</span>
           <h2 class="dy-h2" id="cel-titulo">Uma linha ou várias, com o número que você já usa</h2>
           <p class="dy-lead">Ligações ilimitadas para todo o Brasil, 4G e 5G, e WhatsApp sem gastar a sua internet.</p>
         </header>
+        <ul class="porta3 surgir" aria-label="Portabilidade">
+          <li><img src="img/icones/portabilidade.svg" alt=""><span><b>Portabilidade grátis</b>Traga o seu número de qualquer operadora, sem pagar nada.</span></li>
+          <li><img src="img/icones/ligacoes.svg" alt=""><span><b>O mesmo número de sempre</b>Seus contatos continuam falando com você no número que já conhecem.</span></li>
+          <li><img src="img/icones/verificado.svg" alt=""><span><b>A gente cuida do pedido</b>Você só confirma os dados no WhatsApp. O resto é com a gente.</span></li>
+        </ul>
         <div class="planos-escolha">
           <div class="abas abas--celular" role="tablist" aria-label="Para quem é o plano" data-abas-planos="celular">
             <button class="aba" role="tab" aria-selected="false" data-tipo="cpf"><span class="icone-mask" style="--src:url(../img/icones/aba-pessoa.svg)"></span>Para você</button>
@@ -282,12 +291,7 @@
             <p class="dica-arraste">Toque em um plano para abrir, ou arraste para os lados</p>
           </div>
         </div>
-        <ul class="porta3 surgir" aria-label="Portabilidade">
-          <li><img src="img/icones/portabilidade.svg" alt=""><span><b>Portabilidade grátis</b>Traga o seu número de qualquer operadora, sem pagar nada.</span></li>
-          <li><img src="img/icones/ligacoes.svg" alt=""><span><b>O mesmo número de sempre</b>Seus contatos continuam falando com você no número que já conhecem.</span></li>
-          <li><img src="img/icones/verificado.svg" alt=""><span><b>A gente cuida do pedido</b>Você só confirma os dados no WhatsApp. O resto é com a gente.</span></li>
-        </ul>
-        <p class="planos-nota">Valores por linha, no débito automático. A oferta válida para você aparece na consulta de CEP.</p>
+        <p class="planos-nota">Preços por linha para <label class="uf-escolha"><select data-uf aria-label="Estado"></select></label>, no débito automático.</p>
       </div>
     </section>
 
@@ -474,11 +478,11 @@
   </div>
   <a class="zap-flutuante" data-whatsapp="Olá! Vim pelo site da Do Yourself." aria-label="Falar no WhatsApp"><img src="img/icones/whatsapp-branco.svg" alt=""></a>
 
-  <script src="js/config.js?v=1792541602"></script>
-  <script src="js/menu.js?v=1792541602"></script>
-  <script src="js/main.js?v=1792541602"></script>
-  <script src="js/ofertas.js?v=1792541602"></script>
-  <script src="js/planos.js?v=1792541602"></script>
-  <script src="js/inicio.js?v=1792541602"></script>
+  <script src="js/config.js?v=1792544795"></script>
+  <script src="js/menu.js?v=1792544795"></script>
+  <script src="js/main.js?v=1792544795"></script>
+  <script src="js/ofertas.js?v=1792544795"></script>
+  <script src="js/planos.js?v=1792544795"></script>
+  <script src="js/inicio.js?v=1792544795"></script>
 </body>
 </html>

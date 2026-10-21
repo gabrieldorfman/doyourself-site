@@ -123,3 +123,10 @@
 .oferta.premium.marcado:not([aria-checked="true"]) { border-color: var(--premium-acento); box-shadow: 0 0 0 5px rgba(212,175,90,.25), var(--sombra-2); }
 .oferta.marcado:not([aria-checked="true"]) .oferta__check { border-color: var(--cor-v); }
 .pz-tiles + .personaliza__sub { margin-top: 12px; }
+
+/* v4 · plano tocado já mostra o check (o botão continua confirmando) */
+.oferta.marcado .oferta__check { background: var(--cor-v); border-color: var(--cor-v); color: #fff; transform: scale(1.08); }
+.oferta.premium.marcado .oferta__check { background: var(--premium-acento); border-color: var(--premium-acento); color: var(--acao-dourado-texto); }
+.oferta[aria-checked="true"] .oferta__check { background: var(--ok); border-color: var(--ok); color: #fff; }
+/* listas com menos de 4 planos (ex.: internet de empresa em SC) ficam centralizadas */
+@media (min-width: 1101px) { .ofertas { grid-template-columns: repeat(auto-fit, minmax(0, 290px)); justify-content: center; } }

@@ -266,3 +266,12 @@
 }
 @media (max-width: 640px) { .consulta-cep__rodape > span[aria-hidden] { display: none; } .consulta-cep__rodape { flex-direction: column; align-items: flex-start; } }
 @media (min-width: 768px) and (max-width: 1023px) { .hero2 .dy-display { font-size: 40px; } }
+
+/* v4 · fundo leve com a cor de cada serviço (mesma pegada da energia) */
+.secao--internet { background: linear-gradient(180deg, var(--internet-tint), var(--fundo-pagina)); }
+.secao--celular { background: linear-gradient(180deg, var(--celular-tint), var(--fundo-pagina)); }
+.porta3--internet li { background: var(--fundo-superficie); border: 1px solid var(--internet-soft, var(--borda-padrao)); }
+.secao--celular .porta3 li { background: var(--fundo-superficie); border: 1px solid var(--celular-soft, var(--borda-padrao)); }
+.secao--planos .porta3 { margin: 0 auto 28px; }
+/* Seletor de estado nos preços */
+.uf-escolha select { font: inherit; font-weight: 800; color: var(--texto-titulo); background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); border-radius: 8px; padding: 2px 26px 2px 8px; min-height: 32px; appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 13px) 55%, calc(100% - 8px) 55%; background-size: 5px 5px; background-repeat: no-repeat; cursor: pointer; }
