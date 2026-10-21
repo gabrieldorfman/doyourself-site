@@ -192,6 +192,11 @@
 .resumo__total div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .resumo__total b { font-weight: 800; font-size: 28px; }
 .resumo__total small { font-size: 14px; opacity: .9; line-height: 1.5; }
+.resumo__mes { display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: var(--r-card); background: var(--fundo-superficie); border: 2px solid var(--texto-titulo); color: var(--texto-titulo); }
+.resumo__mes div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.resumo__mes span { font-weight: 700; }
+.resumo__mes b { font-weight: 800; font-size: 26px; white-space: nowrap; }
+.resumo__mes small { font-size: 13px; color: var(--texto-terciario); line-height: 1.5; }
 .resumo__zap { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 16px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 15px; color: var(--texto-corpo); }
 .resumo__zap img { width: 34px; height: 34px; flex: none; }
 .resumo__zap b { color: var(--texto-titulo); }
@@ -239,6 +244,8 @@
 .fim__sub b { color: #fff; }
 .fim__zap { margin-top: 8px; }
 .fim__cartao { width: 100%; margin-top: 10px; padding: 18px; border-radius: var(--r-card); background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); text-align: left; }
+.fim__mes { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, .12); font-size: 15px; color: #e8faf1; }
+.fim__mes b { font-size: 22px; font-weight: 800; color: #fff; white-space: nowrap; }
 .fim__cb { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, .12); font-size: 15px; color: #c6f2dd; }
 .fim__cb b { font-size: 26px; font-weight: 800; color: #5dd9a0; white-space: nowrap; }
 .fim__itens { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; font-size: 15px; color: #e8faf1; }
@@ -446,3 +453,23 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 .ct-menu__sub { display: flex; flex-direction: column; padding: 6px 6px 12px 14px; border-bottom: 1px solid var(--borda-padrao); }
 .ct-menu__subitem { display: flex; align-items: center; min-height: 40px; font-size: 15px; color: var(--texto-corpo); }
 .ct-menu__sub .em-breve { min-height: 40px; font-size: 15px; color: var(--texto-corpo); }
+
+/* Barra do combo: mensalidade + cashback */
+.dock__resumo .carrinho__cb b i { font-style: normal; font-size: 11px; font-weight: 600; opacity: .75; color: var(--fundo-pagina); }
+[data-tema="escuro"] .dock__resumo .carrinho__cb b i { color: #fff; }
+.dock__resumo .carrinho__cb b { color: var(--fundo-pagina); }
+[data-tema="escuro"] .dock__resumo .carrinho__cb b { color: #fff; }
+.dock__resumo .carrinho__cb em { font-style: normal; font-size: 12px; font-weight: 700; color: #5dd9a0; white-space: nowrap; }
+.carrinho__lista .car-tit { font-weight: 800; font-size: 15px; color: var(--texto-titulo); }
+.carrinho__lista .car-itens { display: flex; flex-direction: column; gap: 10px; }
+.dock .carrinho__lista li span.car-val { display: flex; flex-direction: column; align-items: flex-end; text-align: right; white-space: nowrap; color: var(--texto-titulo); font-weight: 700; }
+.car-val em { font-style: normal; font-size: 13px; font-weight: 800; color: var(--marca-titulo); }
+.car__mes, .car__total { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; }
+.car__mes div, .car__total div { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.car__mes { border: 2px solid var(--texto-titulo); color: var(--texto-titulo); }
+.car__mes span, .car__total span { font-weight: 700; }
+.car__mes b, .car__total b { font-weight: 800; font-size: 20px; white-space: nowrap; }
+.car__mes small { font-size: 12px; color: var(--texto-terciario); line-height: 1.45; }
+.car__total { background: var(--marca-primario); color: var(--marca-primario-texto); }
+.car__total small { font-size: 12px; opacity: .9; line-height: 1.45; }
+.dock .carrinho__lista { max-height: min(70vh, 560px); overflow-y: auto; }

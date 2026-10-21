@@ -614,7 +614,7 @@
       if (!v) return;
       if (prod === 'internet') {
         const p = DY.planosInternet.find((x) => x.id === v.id); const o = p.opcoes[v.op];
-        const preco = centavos(o.preco); const nome = p.unidade === 'GIGA' ? '1 Giga' : p.num + ' Mega';
+        const preco = centavos(o.preco); const nome = p.num + ' Mega';
         const extra = o.nome !== 'Somente Internet' ? ' + ' + o.nome : '';
         lista.push({ produto: 'internet', titulo: 'Internet Fibra ' + nome + extra, detalhe: brl(preco) + '/mês · ' + (v.para === 'empresa' ? 'para empresa' : 'para casa'), mensal: preco, cashback: cashbackCentavos(preco, 50), plano: p.id, opcao: o.nome, para: v.para || st.para.internet,
           linhaZap: `Internet Fibra ${nome}${extra} no valor de ${brl(preco)}/mês${v.para === 'empresa' ? ' (para empresa)' : ''}` });
@@ -634,6 +634,14 @@
     return lista;
   }
   const somaCb = (l) => l.reduce((a, i) => a + i.cashback, 0);
+  const somaMes = (l) => l.reduce((a, i) => a + i.mensal, 0);
+  // Bloco "quanto você paga por mês" + "quanto volta" (barra do combo e resumo)
+  function totaisHTML(l, cls) {
+    const en = l.find((i) => i.produto === 'energia');
+    const nota = 'Valores no débito automático.' + (en ? ` Inclui cerca de ${brl(en.mensal)} da conta de luz com desconto (estimativa).` : '');
+    return `<div class="${cls}__mes"><div><span>Total do seu pedido por mês</span><b>${brl(somaMes(l))}</b></div><small>${nota}</small></div>
+      <div class="${cls}__total"><div><span>Cashback total: volta para você</span><b>${brl(somaCb(l))}</b></div><small>Uma única vez, via PIX na sua conta bancária, quando o contrato fecha.</small></div>`;
+  }
 
   /* ---------- Barra do combo ---------- */
   const car = $('[data-carrinho]');
@@ -656,7 +664,10 @@
     const l = itens(telaAtual === 'combo' ? 'misto' : 'esc');
     $('[data-carrinho-qtd]').textContent = l.length;
     $('[data-carrinho-cb]').textContent = brl(somaCb(l));
-    $('[data-carrinho-lista]').innerHTML = l.length ? '<ul style="display:flex;flex-direction:column;gap:10px">' + l.map((i) => `<li><span><b>${i.titulo}</b><br>${i.detalhe}</span><span>${brl(i.cashback)}</span></li>`).join('') + '</ul>' : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
+    $('[data-carrinho-mensal]').textContent = brl(somaMes(l));
+    $('[data-carrinho-lista]').innerHTML = l.length
+      ? '<p class="car-tit">Seu pedido até agora</p><ul class="car-itens">' + l.map((i) => `<li><span><b>${i.titulo}</b><br>${i.detalhe}</span><span class="car-val"><b>${i.produto === 'energia' ? 'cerca de ' : ''}${brl(i.mensal)}/mês</b><em>volta ${brl(i.cashback)}</em></span></li>`).join('') + '</ul>' + totaisHTML(l, 'car')
+      : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
     car.hidden = !l.length;
     if (!l.length) { $('[data-carrinho-lista]').hidden = true; car.setAttribute('aria-expanded', 'false'); }
   }
@@ -673,7 +684,6 @@
     const l = itens();
     const faltam = ['internet', 'celular', 'energia'].filter((p) => !st.esc[p] && (st.disp || {})[p] !== 'nao');
     const ico = { internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg', energia: 'hero-lampada.svg' };
-    const mensal = l.filter((i) => i.produto !== 'energia').reduce((a, i) => a + i.mensal, 0);
     $('[data-resumo]').innerHTML = (l.length ? '' : '<div class="aviso aviso--info"><img src="img/icones/aviso-info.svg" alt=""><span>O seu combo está vazio. Para seguir, escolha <b>pelo menos um serviço</b> abaixo.</span></div>')
       + l.map((i) => `<div class="item-combo"><span class="item-combo__ico i-${i.produto}"><img src="${img('icones/' + ico[i.produto])}" alt=""></span>
         <span class="item-combo__txt"><b>${i.titulo}</b><span>${i.detalhe}</span><em>Cashback: ${brl(i.cashback)}</em></span>
@@ -681,7 +691,7 @@
       + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
         <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Energia Solar por Assinatura' }[p]}</b><span>${{ internet: '50% da mensalidade volta para você', celular: '100% do valor das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
         <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('')
-      + (l.length ? `<div class="resumo__total"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Uma vez, via PIX na sua conta bancária, quando o contrato fecha.</small></div>` : '');
+      + (l.length ? totaisHTML(l, 'resumo') : '');
     $('[data-ir-dados]').disabled = !l.length;
     atualizarCarrinho();
   }
@@ -795,6 +805,9 @@
     $('[data-zap-pedido]').href = DY.linkWhatsApp(msg);
     $('[data-num-pedido]').textContent = st.id;
     $('[data-fim-cb]').textContent = brl(somaCb(l));
+    const enFim = l.find((i) => i.produto === 'energia');
+    $('[data-fim-mes]').textContent = brl((valoresPagamento()[st.pag.tipo] || 0) + (enFim ? enFim.mensal : 0));
+    $('.fim__mes span').textContent = enFim ? 'Você paga por mês (energia estimada)' : 'Você paga por mês';
     $('[data-fim-itens]').innerHTML = l.map((i) => `<li><span>${i.titulo}</span><span>${brl(i.cashback)}</span></li>`).join('');
     $('[data-copiar]').onclick = async () => {
       try { await navigator.clipboard.writeText(msg); toast('Mensagem copiada. Cole no WhatsApp.'); }
