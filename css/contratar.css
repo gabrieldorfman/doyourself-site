@@ -585,3 +585,37 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
   .dock__ir { padding: 0 14px; }
   .dock__ir .seta-dir { display: none; }
 }
+
+/* ============ v10 · Um card por serviço + Alterar / Remover ============ */
+.rz-sec--internet { background: color-mix(in srgb, var(--internet-tint) 75%, var(--fundo-superficie)); border-color: var(--internet-tint); }
+.rz-sec--celular { background: color-mix(in srgb, var(--celular-tint) 75%, var(--fundo-superficie)); border-color: var(--celular-tint); }
+.rz-sec .rz-item { padding-top: 2px; border-top: 0; }
+.rz-sec__cab { align-items: flex-start; }
+.rz-sec__cab h3 { padding-top: 4px; }
+.rz-acoes { display: flex; gap: 6px; flex: none; }
+.rz-btn { padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--borda-forte, rgba(0,0,0,.18)); background: var(--fundo-superficie); color: var(--texto-titulo); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; line-height: 1.2; }
+.rz-btn:hover { border-color: var(--texto-titulo); }
+.rz-btn--remover { color: #b3261e; border-color: rgba(179, 38, 30, .35); }
+.rz-btn--remover:hover { border-color: #b3261e; background: rgba(179, 38, 30, .06); }
+[data-tema="escuro"] .rz-btn--remover { color: #ff8a80; border-color: rgba(255, 138, 128, .4); }
+.rz-confirma { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 20px; background: rgba(12, 24, 18, .5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.rz-confirma[hidden] { display: none; }
+.rz-confirma__caixa { width: min(400px, 100%); padding: 24px; border-radius: 22px; background: var(--fundo-superficie); box-shadow: 0 24px 60px rgba(0, 0, 0, .3); display: flex; flex-direction: column; gap: 10px; }
+.rz-confirma__caixa h2 { font-size: 20px; font-weight: 800; color: var(--texto-titulo); }
+.rz-confirma__caixa p { font-size: 15px; color: var(--texto-corpo); line-height: 1.5; }
+.rz-confirma__caixa p b { color: var(--texto-titulo); }
+.rz-confirma__acoes { display: flex; gap: 10px; margin-top: 8px; }
+.rz-confirma__acoes .dy-btn { flex: 1; min-height: 48px; }
+.rz-confirma__sim { background: #b3261e; color: #fff; border: 0; }
+.rz-confirma__sim:hover { background: #8f1d17; }
+
+.rz-btn { display: inline-flex; align-items: center; gap: 6px; }
+.rz-btn svg { width: 15px; height: 15px; flex: none; }
+.rz-sec__cab h3 { min-width: 0; }
+@media (max-width: 480px) {
+  .rz-btn { width: 36px; height: 36px; padding: 0; justify-content: center; border-radius: 50%; }
+  .rz-btn span { display: none; }
+  .rz-btn svg { width: 17px; height: 17px; }
+  .rz-sec__cab h3 { font-size: 15px; gap: 8px; padding-top: 6px; }
+  .rz-ico { width: 30px; height: 30px; }
+}

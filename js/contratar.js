@@ -646,18 +646,26 @@
   const somaMes = (l) => l.reduce((a, i) => a + i.mensal, 0);
   const MES = '<i>/mês</i>';
   // Resumo organizado: energia separada dos serviços de telecom, depois cashback e valor total
-  function blocosResumo(l, editar) {
-    const en = l.find((i) => i.produto === 'energia'); const tel = l.filter((i) => i.produto !== 'energia');
-    const alt = (p) => (editar ? `<button class="rz-alterar" type="button" data-editar="${p}" aria-label="Alterar ${ROTULO[p]}">Alterar</button>` : '');
+  // Um card por serviço (energia laranja, internet azul, celular verde) com Alterar e Remover
+  const TIT = { energia: 'Desconto na Energia', internet: 'Internet Fibra', celular: 'Plano de Celular' };
+  const ICO = { energia: 'hero-lampada.svg', internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg' };
+  const ICO_LAPIS = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.7 3.3a1.6 1.6 0 0 1 2.3 0l1.7 1.7a1.6 1.6 0 0 1 0 2.3L7.5 16.5 3.5 17.5l1-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  const ICO_LIXO = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M8 6V4.5h4V6M5.5 6l.8 10h7.4l.8-10M8.5 9v4.5M11.5 9v4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function blocosResumo(l) {
     const chip = (v) => `<span class="rz-chip">Cashback <b>${brl(v)}</b></span>`;
+    const cab = (p) => `<div class="rz-sec__cab"><h3><span class="rz-ico"><img src="${img('icones/' + ICO[p])}" alt=""></span>${TIT[p]}</h3>
+      <div class="rz-acoes"><button class="rz-btn" type="button" data-editar="${p}" aria-label="Alterar ${TIT[p]}" title="Alterar">${ICO_LAPIS}<span>Alterar</span></button><button class="rz-btn rz-btn--remover" type="button" data-remover="${p}" aria-label="Remover ${TIT[p]}" title="Remover">${ICO_LIXO}<span>Remover</span></button></div></div>`;
     let h = '';
-    if (en) h += `<section class="rz-sec rz-sec--energia"><div class="rz-sec__cab"><h3><span class="rz-ico i-energia"><img src="${img('icones/hero-lampada.svg')}" alt=""></span>Desconto na Energia</h3>${alt('energia')}</div>
-      <div class="rz-linha rz-linha--antiga"><span>Fatura antiga</span><s>${brl(en.conta_luz)}</s></div>
-      <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Estimativa com ${en.estimativa_desconto_pct}% de desconto</small></span><b>${brl(en.mensal)}${MES}</b></div>
-      <div class="rz-linha rz-linha--cb"><span></span>${chip(en.cashback)}</div></section>`;
-    if (tel.length) h += `<section class="rz-sec"><div class="rz-sec__cab"><h3><span class="rz-ico i-telecom"><img src="${img('icones/hero-wifi.svg')}" alt=""></span>Serviços de Telecom</h3></div>`
-      + tel.map((i) => `<div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span>${alt(i.produto)}</div><div class="rz-item__val"><b>${brl(i.mensal)}${MES}</b>${chip(i.cashback)}</div></div>`).join('')
-      + '</section>';
+    ['energia', 'internet', 'celular'].forEach((p) => {
+      const i = l.find((x) => x.produto === p); if (!i) return;
+      if (p === 'energia') h += `<section class="rz-sec rz-sec--energia">${cab(p)}
+        <div class="rz-linha rz-linha--antiga"><span>Fatura antiga</span><s>${brl(i.conta_luz)}</s></div>
+        <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Estimativa com ${i.estimativa_desconto_pct}% de desconto</small></span><b>${brl(i.mensal)}${MES}</b></div>
+        <div class="rz-linha rz-linha--cb"><span></span>${chip(i.cashback)}</div></section>`;
+      else h += `<section class="rz-sec rz-sec--${p}">${cab(p)}
+        <div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span></div><div class="rz-item__val"><b>${brl(i.mensal)}${MES}</b>${chip(i.cashback)}</div></div></section>`;
+    });
+    const tel = l.filter((i) => i.produto !== 'energia'); const en = l.find((i) => i.produto === 'energia');
     const n = l.length;
     h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Esse é o valor que você recebe de volta ao finalizar esse pedido. Será enviado via PIX para a sua conta bancária.</small></div>`;
     h += `<div class="rz-total"><div><span>Valor total ${n === 1 ? 'do serviço' : `dos ${n} serviços`}</span><b>${brl(somaMes(l))}${MES}</b></div><small>${tel.length ? 'Internet e celular no débito automático.' : ''}${en ? ' A conta de luz é uma estimativa e depende da sua fatura.' : ''}</small></div>`;
@@ -688,7 +696,7 @@
     car.setAttribute('aria-label', `Ver resumo do pedido: ${l.length} ${l.length === 1 ? 'serviço' : 'serviços'}, ${brl(somaMes(l))} por mês, cashback de ${brl(somaCb(l))}`);
     car.hidden = !l.length;
     const corpo = $('[data-rz-corpo]');
-    corpo.innerHTML = l.length ? blocosResumo(l, false) : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
+    corpo.innerHTML = l.length ? blocosResumo(l) : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
     if (!l.length) fecharResumo(false);
   }
   function pulsar() { const q2 = $('[data-carrinho-qtd]'); q2.classList.remove('pulsar'); void q2.offsetWidth; q2.classList.add('pulsar'); }
@@ -722,7 +730,7 @@
   $('[data-carrinho-toggle]').addEventListener('click', abrirResumo);
   modal.addEventListener('click', (e) => { if (e.target.closest('[data-rz-fechar]')) fecharResumo(); });
   document.addEventListener('keydown', (e) => {
-    if (modal.hidden) return;
+    if (modal.hidden || !$('[data-rz-confirma]').hidden) return;
     if (e.key === 'Escape') fecharResumo();
     if (e.key === 'Tab') { // foco preso dentro da janela
       const f = $$('button, [href], [tabindex]:not([tabindex="-1"])', janela); if (!f.length) return;
@@ -739,20 +747,48 @@
     const faltam = ['energia', 'internet', 'celular'].filter((p) => !st.esc[p] && (st.disp || {})[p] !== 'nao');
     const ico = { internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg', energia: 'hero-lampada.svg' };
     $('[data-resumo]').innerHTML = (l.length ? '' : '<div class="aviso aviso--info"><img src="img/icones/aviso-info.svg" alt=""><span>O seu combo está vazio. Para seguir, escolha <b>pelo menos um serviço</b> abaixo.</span></div>')
-      + (l.length ? blocosResumo(l, true) : '')
+      + (l.length ? blocosResumo(l) : '')
       + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
         <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Energia Solar por Assinatura' }[p]}</b><span>${{ internet: '50% da mensalidade volta para você', celular: '100% do valor das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
         <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('');
     $('[data-ir-dados]').disabled = !l.length;
     atualizarCarrinho();
   }
-  $('[data-resumo]').addEventListener('click', (e) => {
-    const b = e.target.closest('[data-editar]'); if (!b) return;
-    const p = b.dataset.editar;
+  /* Alterar / Remover (tela Seu combo e janela do resumo) */
+  function editarProduto(p) {
+    fecharResumo(false);
     if (!st.ordem.includes(p)) st.ordem.push(p);
     st.idx = st.ordem.indexOf(p); if (st.esc[p]) st.rasc[p] = { ...st.esc[p] };
-    st.editando = true;
-    renderProduto(); mostrar('combo');
+    // no meio do combo, só pula para o produto; depois do resumo, volta para o resumo ao terminar
+    st.editando = telaAtual !== 'combo';
+    renderProduto(); if (telaAtual === 'combo') { history.pushState({ tela: 'combo', idx: st.idx }, '', '#combo'); window.scrollTo({ top: 0, behavior: reduzir ? 'auto' : 'smooth' }); atualizarProgresso(); } else mostrar('combo');
+  }
+  const confirma = $('[data-rz-confirma]');
+  let removendo = null;
+  function pedirRemocao(p) {
+    const i = itens(telaAtual === 'combo' ? 'misto' : 'esc').find((x) => x.produto === p); if (!i) return;
+    removendo = p;
+    $('[data-confirma-txt]').innerHTML = `Você deseja remover <b>${i.titulo}</b> do seu pedido?`;
+    confirma.hidden = false;
+    if (gs) gs.fromTo('.rz-confirma__caixa', { scale: 0.92, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.25, ease: 'back.out(1.6)' });
+    setTimeout(() => $('[data-confirma-nao]').focus(), 30);
+  }
+  function fecharConfirma() { confirma.hidden = true; const p = removendo; removendo = null; const b = p && $(`[data-remover="${p}"]`); if (b && b.offsetParent) b.focus(); }
+  function remover(p) {
+    if (st.esc[p]) st.esc[p] = null; st.rasc[p] = null;
+    toast(`${TIT[p]} removido do pedido.`);
+    if (telaAtual === 'combo' && st.ordem[st.idx] === p) renderProduto();
+    if (telaAtual === 'resumo') renderResumo();
+    atualizarCarrinho();
+    if (!modal.hidden && !itens(telaAtual === 'combo' ? 'misto' : 'esc').length) fecharResumo();
+  }
+  $('[data-confirma-nao]').addEventListener('click', fecharConfirma);
+  $('[data-confirma-sim]').addEventListener('click', () => { const p = removendo; confirma.hidden = true; removendo = null; if (p) remover(p); });
+  confirma.addEventListener('click', (e) => { if (e.target === confirma) fecharConfirma(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !confirma.hidden) { e.stopImmediatePropagation(); fecharConfirma(); } }, true);
+  document.addEventListener('click', (e) => {
+    const ed = e.target.closest('[data-resumo] [data-editar], [data-rz-modal] [data-editar]'); if (ed) { editarProduto(ed.dataset.editar); return; }
+    const rm = e.target.closest('[data-remover]'); if (rm) pedirRemocao(rm.dataset.remover);
   });
   $('[data-ir-dados]').addEventListener('click', () => {
     if (!temItens()) { toast('Escolha pelo menos um serviço para continuar.'); return; }
