@@ -309,10 +309,8 @@
 .dock .carrinho__lista li span:last-child { font-weight: 800; color: var(--marca-titulo); white-space: nowrap; }
 .com-dock .ct { padding-bottom: 120px; }
 .com-dock .ct-rodape { padding-bottom: 110px; }
-/* No celular o botão da tela vira o botão fixo: sem botão duplicado */
+/* No celular o botão da tela continua aparecendo (além do botão fixo da barra) */
 @media (max-width: 767px) {
-  .com-dock .tela [data-continuar], .com-dock .tela [data-add], .com-dock .tela [data-ir-dados], .com-dock .tela [data-finalizar] { display: none; }
-  .com-dock .form__acoes { display: none; }
   .produto__acoes { margin-top: 14px; }
 }
 /* No desktop o botão fica na tela; a barra mostra só o resumo do combo */
@@ -625,3 +623,41 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 .rz-sec--internet { border-color: color-mix(in srgb, var(--internet-primario) 35%, var(--internet-tint)); }
 .rz-sec--celular { border-color: color-mix(in srgb, var(--celular-primario) 35%, var(--celular-tint)); }
 .rz-cbtotal { border: 1.5px solid color-mix(in srgb, var(--marca-soft-texto) 30%, var(--marca-soft)); }
+
+/* ============ v11 · Separador entre serviços e totais ============ */
+.rz-separador { display: flex; align-items: center; gap: 12px; margin: 6px 0 2px; color: var(--texto-terciario); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.rz-separador::before, .rz-separador::after { content: ''; flex: 1; height: 1.5px; background: var(--borda-padrao); }
+
+/* ============ v11 · Barra do celular: botão sempre à direita, meio a meio ============ */
+@media (max-width: 767px) {
+  .dock__barra { justify-content: flex-end; }
+  .dock__resumo:not([hidden]) { flex: 1 1 0; min-width: 0; justify-content: center; gap: 8px; padding: 6px 8px; }
+  .dock__resumo:not([hidden]) ~ .dock__ir { flex: 1 1 0; }
+  .dock__ir { flex: 0 1 50%; min-width: 0; padding: 0 12px; justify-content: center; }
+  .dock__qtd small { font-size: 10px; }
+  .dock__resumo .dock__qtd .carrinho__qtd { width: 30px; height: 30px; border-radius: 10px; font-size: 15px; }
+  .dock__valor { min-width: 0; }
+  .dock__valor small { font-size: 10px; white-space: nowrap; }
+  .dock__valor b { font-size: clamp(13px, 3.9vw, 16px); }
+  .dock__valor b i { font-size: 10px; }
+  .dock__valor em { font-size: clamp(10.5px, 3.1vw, 12.5px); }
+  .dock__resumo .carrinho__seta { display: none; }
+}
+
+.dock__valor .t-curto { display: none; }
+@media (max-width: 430px) {
+  .dock__qtd small { display: none; }
+  .dock__resumo:not([hidden]) { gap: 8px; padding: 6px 8px; }
+}
+@media (max-width: 400px) {
+  .dock__valor .t-longo { display: none; }
+  .dock__valor .t-curto { display: inline; }
+  .dock__valor small { font-size: 11px; }
+}
+@media (max-width: 340px) {
+  .dock__resumo:not([hidden]) { gap: 6px; padding: 6px; }
+  .dock__resumo .dock__qtd .carrinho__qtd { width: 26px; height: 26px; font-size: 14px; }
+  .dock__valor b { font-size: 13px; }
+  .dock__valor b i { font-size: 9px; }
+  .dock__ir { font-size: 14px; padding: 0 8px; }
+}

@@ -667,6 +667,7 @@
     });
     const tel = l.filter((i) => i.produto !== 'energia'); const en = l.find((i) => i.produto === 'energia');
     const n = l.length;
+    h += '<div class="rz-separador" role="separator"><span>Cashback e valor total</span></div>';
     h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Esse é o valor que você recebe de volta ao finalizar esse pedido. Será enviado via PIX para a sua conta bancária.</small></div>`;
     h += `<div class="rz-total"><div><span>Valor total ${n === 1 ? 'do serviço' : `dos ${n} serviços`}</span><b>${brl(somaMes(l))}${MES}</b></div><small>${tel.length ? 'Internet e celular no débito automático.' : ''}${en ? ' A conta de luz é uma estimativa e depende da sua fatura.' : ''}</small></div>`;
     return h;
