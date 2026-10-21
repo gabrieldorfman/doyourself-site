@@ -293,3 +293,13 @@
   .volta .dy-texto.volta__ex { display: block; grid-area: ex; margin-top: 8px; font-size: 14px; }
   .volta__link { margin-top: 6px; }
 }
+
+/* v6 · região maior e botão da região na cor do serviço */
+.local-ofertas { font-size: 17px; margin-bottom: 24px; }
+.local-ofertas__pin { width: 22px; height: 22px; }
+.planos-nota + .local-aviso { margin-top: 10px; }
+.local-aviso--internet .dy-btn { border-color: var(--internet-primario); color: var(--internet-titulo); }
+.local-aviso--internet .dy-btn:hover { background: var(--internet-tint); }
+.local-aviso--celular .dy-btn { border-color: var(--celular-primario); color: var(--celular-titulo); }
+.local-aviso--celular .dy-btn:hover { background: var(--celular-tint); }
+.secao--planos .planos-nota { margin-top: 24px; }

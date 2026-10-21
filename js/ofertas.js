@@ -7,9 +7,24 @@
   const CHECK = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const unid = (p) => (p.unidade === 'GIGA' ? 'Giga' : 'Mega');
 
+  /* Dicas dos detalhes do plano (Download, Upload, Modem, Instalação, Dados móveis) */
+  function dica(rotulo, valor) {
+    const r = String(rotulo || '').toLowerCase(); const v = String(valor || '');
+    if (r.startsWith('download')) return 'Download é a velocidade para <b>assistir</b>, <b>baixar</b> e <b>navegar</b>, mesmo com a família toda conectada.';
+    if (r.startsWith('upload')) return 'Upload é a velocidade de <b>envio</b>. Faz diferença em chamadas de vídeo, jogos e para mandar fotos.';
+    if (r.startsWith('modem')) {
+      if (/wi-?fi 6/i.test(v)) return 'O <b>Wi-Fi 6</b> é a geração mais nova: mais velocidade, mais alcance e estabilidade mesmo com muitos aparelhos conectados ao mesmo tempo.';
+      return 'O <b>Wi-Fi 5</b> é rápido e estável para o dia a dia: séries, redes sociais e home office, em casas e apartamentos.';
+    }
+    if (r.startsWith('instala')) return 'A instalação é <b>gratuita</b>, sem taxas e em até 48 horas.';
+    if (r.startsWith('dados')) { const gb = (v.match(/(\d+)\s*GB/i) || [])[1]; return `Franquia de <b>${gb ? gb + ' GB' : 'internet'}</b> de internet <b>móvel</b>, renovada todos os meses.`; }
+    return '';
+  }
+  const attrDica = (r, v) => { const d = dica(r, v); return d ? ` data-dica="${d.replace(/"/g, '&quot;')}" tabindex="0"` : ''; };
+
   // Card de internet: velocidade, download/upload/modem, apps básicos e preço (sem a personalização)
   function internet(p, { on = false, op = 0, rotulo } = {}) {
-    const det = p.detalhes.slice(0, 3).map(([ico, r, v]) => `<li><img src="${img('icones/' + ico)}" alt=""><span>${r} <b>${v}</b></span></li>`).join('');
+    const det = p.detalhes.slice(0, 4).map(([ico, r, v]) => `<li${attrDica(r, v)}><img src="${img('icones/' + ico)}" alt=""><span><i class="dica-rot">${r}</i> <b>${v}</b></span></li>`).join('');
     // Planos com personalização mostram só os apps básicos; o streaming aparece depois de escolher
     const basicos = p.opcoes.length > 1 ? p.apps.filter((k) => !/^(paramount|globoplay|hbo)/.test(k)) : p.apps;
     const apps = basicos.map((k) => k === 'youtube-premium' ? `<img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium">` : `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
@@ -30,7 +45,7 @@
 
   function celular(p, { on = false, rotulo } = {}) {
     const ic = (k) => img('icones/' + p.detalhes[k][0]);
-    const det = `<li><img src="${ic(0)}" alt=""><span><b>${p.num} GB</b> de internet por mês</span></li><li><img src="${ic(1)}" alt=""><span><b>Ligações ilimitadas</b> para todo o Brasil</span></li><li><img src="${ic(3)}" alt=""><span><b>5G</b> e portabilidade grátis</span></li>`;
+    const det = `<li${attrDica('Dados móveis', p.num + ' GB')}><img src="${ic(0)}" alt=""><span><b>${p.num} GB</b> <i class="dica-rot">de internet por mês</i></span></li><li><img src="${ic(1)}" alt=""><span><b>Ligações ilimitadas</b> para todo o Brasil</span></li><li><img src="${ic(3)}" alt=""><span><b>5G</b> e portabilidade grátis</span></li>`;
     const apps = p.apps.map((k) => `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
     return `<div class="oferta oferta--cel${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="Plano de ${p.num} GB" data-id="${p.id}">
       <div class="oferta__topo"><span class="oferta__selo">${p.selo}</span><span class="oferta__check" aria-hidden="true">${CHECK}</span></div>
@@ -104,5 +119,37 @@
     trazerParaMeio(card);
   }
 
-  DY.ofertas = { internet, celular, personaliza, dots, ligarDots, centralizar, trazerParaMeio, CHECK };
+  /* Balão das dicas: 0,5 s com o mouse em cima, ou ao tocar com o dedo */
+  let bolha = null, timer = null, atual = null, desde = 0;
+  const esconder = () => { clearTimeout(timer); if (bolha) bolha.classList.remove('on'); atual = null; };
+  function mostrar(el) {
+    if (!bolha) { bolha = document.createElement('div'); bolha.className = 'dica-bolha'; bolha.setAttribute('role', 'tooltip'); document.body.appendChild(bolha); }
+    if (atual !== el) desde = Date.now();
+    bolha.innerHTML = el.dataset.dica; bolha.classList.add('on'); atual = el;
+    const r = el.getBoundingClientRect(); const b = bolha.getBoundingClientRect();
+    let x = r.left + Math.min(r.width, 160) / 2 - b.width / 2; x = Math.max(10, Math.min(x, innerWidth - b.width - 10));
+    const cima = r.top - b.height - 10 > 70; const y = cima ? r.top - b.height - 10 : r.bottom + 10;
+    bolha.style.left = x + 'px'; bolha.style.top = y + 'px'; bolha.classList.toggle('embaixo', !cima);
+  }
+  const fino = matchMedia('(hover: hover) and (pointer: fine)');
+  document.addEventListener('mouseover', (e) => {
+    if (!fino.matches) return; const el = e.target.closest('[data-dica]'); if (!el || el === atual) return;
+    clearTimeout(timer); timer = setTimeout(() => mostrar(el), 500);
+  });
+  document.addEventListener('mouseout', (e) => { if (!fino.matches) return; const el = e.target.closest('[data-dica]'); if (el && !el.contains(e.relatedTarget)) esconder(); });
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-dica]');
+    if (!el) { esconder(); return; }
+    // no toque: o foco já pode ter aberto o balão; um segundo toque (depois de um instante) fecha
+    if (!fino.matches) { if (atual === el && Date.now() - desde > 400) esconder(); else mostrar(el); }
+  });
+  document.addEventListener('focusin', (e) => { const el = e.target.closest('[data-dica]'); if (el) mostrar(el); });
+  document.addEventListener('focusout', () => { if (fino.matches) esconder(); });
+  // ao rolar (ou quando o card centraliza), o balão acompanha o item; some só se o item sair da tela
+  window.addEventListener('scroll', () => requestAnimationFrame(() => {
+    if (!atual) return; const r = atual.getBoundingClientRect();
+    if (r.bottom < 60 || r.top > innerHeight) esconder(); else mostrar(atual);
+  }), { passive: true });
+
+  DY.ofertas = { internet, celular, personaliza, dots, ligarDots, centralizar, trazerParaMeio, CHECK, dica, attrDica };
 })();

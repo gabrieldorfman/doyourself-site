@@ -130,3 +130,15 @@
 .oferta[aria-checked="true"] .oferta__check { background: var(--ok); border-color: var(--ok); color: #fff; }
 /* listas com menos de 4 planos (ex.: internet de empresa em SC) ficam centralizadas */
 @media (min-width: 1101px) { .ofertas { grid-template-columns: repeat(auto-fit, minmax(0, 290px)); justify-content: center; } }
+
+/* v5 · dicas (tooltips) dos detalhes do plano */
+[data-dica] { cursor: help; }
+[data-dica] .dica-rot { font-style: normal; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); }
+[data-dica]:focus-visible { outline: 2px solid var(--marca-outline); outline-offset: 2px; border-radius: 6px; }
+.dica-bolha { position: fixed; z-index: 200; max-width: 280px; padding: 12px 14px; border-radius: 12px; background: var(--texto-ink, #1f1f1f); color: #fff; font-size: 13.5px; line-height: 1.45; font-weight: 500; box-shadow: 0 12px 30px rgba(0, 0, 0, .22); opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
+.dica-bolha b { font-weight: 800; color: #b5ffdc; }
+.dica-bolha.on { opacity: 1; transform: none; }
+.dica-bolha::after { content: ""; position: absolute; left: 24px; bottom: -6px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-radius: 2px; }
+.dica-bolha.embaixo::after { bottom: auto; top: -6px; }
+[data-tema="escuro"] .dica-bolha { background: #f4f3ee; color: #1f1f1f; }
+[data-tema="escuro"] .dica-bolha b { color: #40745c; }

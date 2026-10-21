@@ -51,7 +51,7 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
       return `<button type="button" class="opcao-plano" role="radio" aria-checked="${sel}" data-opcao="${i}" ${unica ? 'tabindex="-1"' : ''}>
           ${marcador}${logo}<span class="nome">${o.nome}</span>${direita}</button>`;
     }).join('');
-    const det = p.detalhes.map(([ico, r, v]) => `<li class="detalhe"><img src="${img('icones/' + ico)}" alt=""><span>${r}</span><b>${v}</b></li>`).join('');
+    const det = p.detalhes.map(([ico, r, v]) => `<li class="detalhe"${DY.ofertas.attrDica(r, v)}><img src="${img('icones/' + ico)}" alt=""><span class="dica-rot">${r}</span><b>${v}</b></li>`).join('');
     // Planos com escolha de streaming mostram só os apps básicos; o streaming aparece na opção escolhida
     const basicos = p.opcoes.length > 1 ? p.apps.filter((k) => !/^(paramount|globoplay|hbo)/.test(k)) : p.apps;
     const apps = basicos.map((k) => k === 'youtube-premium'
@@ -108,7 +108,7 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
   }
 
   function cardCelular(p) {
-    const det = p.detalhes.map(([ico, r, v]) => `<li class="detalhe"><img src="${img('icones/' + ico)}" alt=""><span>${r}</span><b>${v}</b></li>`).join('');
+    const det = p.detalhes.map(([ico, r, v]) => `<li class="detalhe"${DY.ofertas.attrDica(r, v)}><img src="${img('icones/' + ico)}" alt=""><span class="dica-rot">${r}</span><b>${v}</b></li>`).join('');
     const apps = p.apps.map((k) => logoTag(k)).join('');
     return `
       <article class="card-plano" aria-label="Plano de ${p.num} GB"><span class="card-plano__check" aria-hidden="true">${CHECK_CP}</span>

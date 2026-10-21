@@ -304,9 +304,9 @@
   .faixa-cashback b { font-size: 17px; }
 }
 
-/* Celular e tablet: vitrine de cards compactos (arrastar para o lado) no lugar do acordeão */
+/* Até 1440px: cards compactos lado a lado no lugar do acordeão (o acordeão completo só cabe bem acima disso) */
 .vitrine-movel { display: none; }
-@media (max-width: 1239px) {
+@media (max-width: 1440px) {
   .vitrine-movel { display: block; width: 100%; }
   .planos-bloco .acordeao, .planos-bloco .controles, .planos-bloco .dica-arraste { display: none; }
   .planos-bloco { gap: 0; }
