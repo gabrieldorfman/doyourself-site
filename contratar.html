@@ -29,11 +29,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792551292">
-  <link rel="stylesheet" href="css/base.css?v=1792551292">
-  <link rel="stylesheet" href="css/dy.css?v=1792551292">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792551292">
-  <link rel="stylesheet" href="css/contratar.css?v=1792551292">
+  <link rel="stylesheet" href="css/tokens.css?v=1792609499">
+  <link rel="stylesheet" href="css/base.css?v=1792609499">
+  <link rel="stylesheet" href="css/dy.css?v=1792609499">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792609499">
+  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792609499">
+  <link rel="stylesheet" href="css/contratar.css?v=1792609499">
 </head>
 <body class="pg-contratar">
   <a class="sr-only" href="#fluxo">Pular para o formulário</a>
@@ -375,24 +376,36 @@
 
   <!-- Barra fixa: resumo do combo + botão de avançar da tela (sempre à mão no celular) -->
   <div class="dock" data-dock hidden>
-    <div class="carrinho__lista" data-carrinho-lista hidden></div>
     <div class="dock__barra">
-      <button class="dock__resumo" type="button" aria-expanded="false" data-carrinho-toggle data-carrinho hidden>
-        <span class="carrinho__qtd" data-carrinho-qtd>0</span>
-        <span class="carrinho__cb"><small>Valor do seu pedido</small><b><span data-carrinho-mensal>R$ 0,00</span><i>/mês</i></b><em>Volta para você <span data-carrinho-cb>R$ 0,00</span></em></span>
+      <button class="dock__resumo" type="button" aria-haspopup="dialog" aria-controls="resumo-janela" data-carrinho-toggle data-carrinho hidden>
+        <span class="dock__qtd"><small>Serviços</small><span class="carrinho__qtd" data-carrinho-qtd>0</span></span>
+        <span class="dock__valor"><small>Valor do seu pedido</small><b><span data-carrinho-mensal>R$ 0,00</span><i>/mês</i></b><em>Confira o Cashback</em></span>
         <span class="carrinho__seta" aria-hidden="true">▴</span>
       </button>
       <button class="dy-btn dy-btn--primario dock__ir" type="button" data-dock-ir disabled><span class="spinner" aria-hidden="true"></span><span data-dock-rot>Continuar</span> <span class="seta-dir" aria-hidden="true">→</span></button>
     </div>
   </div>
 
+  <!-- Janela do resumo do pedido (abre pela barra do combo) -->
+  <div class="rz-modal" data-rz-modal hidden>
+    <div class="rz-modal__fundo" data-rz-fechar></div>
+    <div class="rz-modal__janela" id="resumo-janela" role="dialog" aria-modal="true" aria-labelledby="rz-titulo" tabindex="-1">
+      <header class="rz-modal__cab">
+        <h2 id="rz-titulo">Seu pedido até agora</h2>
+        <button class="rz-modal__x" type="button" data-rz-fechar aria-label="Fechar resumo">✕</button>
+      </header>
+      <div class="rz-modal__corpo" data-rz-corpo></div>
+    </div>
+  </div>
+
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
-  <script src="js/config.js?v=1792551292"></script>
-  <script src="js/menu.js?v=1792551292"></script>
-  <script src="js/main.js?v=1792551292"></script>
-  <script src="js/pedido.js?v=1792551292"></script>
-  <script src="js/ofertas.js?v=1792551292"></script>
-  <script src="js/contratar.js?v=1792551292"></script>
+  <script src="js/config.js?v=1792609499"></script>
+  <script src="js/menu.js?v=1792609499"></script>
+  <script src="js/main.js?v=1792609499"></script>
+  <script src="js/pedido.js?v=1792609499"></script>
+  <script src="js/ofertas.js?v=1792609499"></script>
+  <script src="js/vendor/gsap.min.js?v=1792609499"></script>
+  <script src="js/contratar.js?v=1792609499"></script>
 </body>
 </html>

@@ -45,27 +45,34 @@
 
   /* ---------- Pedido em andamento salvo no navegador (sem CPF, CNPJ nem e-mail) ---------- */
   const CHAVE_ANDAMENTO = 'dy_andamento';
-  const retomar = (() => {
-    if (q.get('plano') || q.has('novo')) return null; // veio de um card da home: começa pelo plano escolhido
-    try {
-      const a = JSON.parse(sessionStorage.getItem(CHAVE_ANDAMENTO) || 'null');
-      if (!a || Date.now() - a.t > 3 * 3600e3 || ['endereco', 'consulta', 'fim'].includes(a.tela)) return null;
-      return a;
-    } catch (er) { return null; }
-  })();
-  function salvarAndamento() {
-    if (['endereco', 'consulta', 'fim'].includes(telaAtual)) return;
-    const { id, end, fibra, disp, ordem, idx, esc, rasc, para, contato } = st;
-    try { sessionStorage.setItem(CHAVE_ANDAMENTO, JSON.stringify({ t: Date.now(), tela: telaAtual, s: { id, end, fibra, disp, ordem, idx, esc, rasc, para, contato } })); } catch (er) { /* modo privado */ }
-  }
+  // O pedido sempre recomeça ao atualizar a página (nada do combo fica salvo no navegador)
   const limparAndamento = () => { try { sessionStorage.removeItem(CHAVE_ANDAMENTO); } catch (er) { /* */ } };
+  limparAndamento();
+  const retomar = null;
+  const salvarAndamento = () => {};
+  // Voltar até o endereço também zera o combo
+  function zerarPedido() {
+    Object.assign(st.esc, { internet: undefined, celular: undefined, energia: undefined });
+    Object.assign(st.rasc, { internet: null, celular: null, energia: null });
+    st.pag = { tipo: '', banco: '' }; st.idx = 0; st.editando = false; st.ordem = ORDENS[origem].slice();
+    $$('[data-banco], [data-pag]').forEach((x) => x.setAttribute('aria-checked', 'false'));
+  }
 
   /* ---------- Navegação entre telas (com o botão Voltar do celular funcionando) ---------- */
   const NOMES = { 1: 'Endereço', 2: 'Seu combo', 3: 'Seus dados', 4: 'Pagamento' };
   let telaAtual = 'endereco';
+  const gs = !reduzir && window.gsap ? window.gsap : null;
+  if (gs) document.documentElement.classList.add('com-gsap');
+  function entrar(el, voltando) {
+    if (!gs || !el) return;
+    gs.fromTo(el, { x: voltando ? -64 : 64, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.45, ease: 'power3.out', clearProps: 'transform,opacity,visibility' });
+  }
   function mostrar(nome, { voltando = false, empurrar = true } = {}) {
+    if (nome === 'endereco' && voltando) zerarPedido();
+    fecharResumo(false);
     $$('.tela').forEach((t) => { t.hidden = t.dataset.tela !== nome; t.classList.toggle('voltando', voltando); });
     const tela = $(`.tela[data-tela="${nome}"]`);
+    entrar(tela, voltando);
     telaAtual = nome;
     $('#fluxo').classList.toggle('largo', nome === 'combo');
     $('#fluxo').classList.toggle('largo-disp', nome === 'disponivel');
@@ -303,11 +310,12 @@
   function renderDisponivel() {
     $('[data-disp-end]').textContent = `${st.end.logradouro}, ${st.end.numero} — ${st.end.cidade}/${st.end.uf}`;
     const info = {
-      internet: ['Internet Fibra', 'hero-wifi.svg', 'Cashback de 50% do plano'],
-      celular: ['Celular', 'hero-celular-5g.svg', 'Cashback de 100% das linhas'],
-      energia: ['Energia Solar', 'hero-lampada.svg', 'Cashback de 10% da nova conta'],
+      energia: ['Desconto de até 20% na Conta de Luz', 'hero-lampada.svg', 'Cashback de 10% da nova conta'],
+      internet: ['Internet Fibra Óptica', 'hero-wifi.svg', 'Cashback de 50% do plano'],
+      celular: ['Plano de Celular', 'hero-celular-5g.svg', 'Cashback de 100% das linhas'],
     };
-    const ordem = ORDENS[origem];
+    const ordem = ['energia', 'internet', 'celular'];
+    const anim = (k) => `animate__animated animate__zoomIn" style="animation-delay:${0.25 + k * 0.22}s`;
     $('[data-disp]').innerHTML = ordem.map((p, k) => {
       const [nome, ico, cb] = info[p]; const d = st.disp[p];
       const selo = d === 'nao' ? '<span class="disp-selo disp-selo--nao">Indisponível</span>' : d === 'talvez' ? '<span class="disp-selo disp-selo--talvez">Disponível*</span>' : '<span class="disp-selo">Disponível</span>';
@@ -315,8 +323,8 @@
       const rotBtn = p === 'energia' ? 'Ver desconto' : 'Ver planos';
       const corpo = `<div class="disp-linha"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico)}" alt=""></span>
         <span class="item-combo__txt"><span class="disp-topo"><b>${nome}</b>${selo}</span><span>${txt}</span></span></div>`;
-      if (d === 'nao') return `<div class="item-combo disp-item i-${p} disp-item--nao" style="animation-delay:${k * 0.12}s">${corpo}</div>`;
-      return `<button class="item-combo disp-item i-${p}" type="button" data-ver="${p}" style="animation-delay:${k * 0.12}s">${corpo}<span class="disp-ver">${rotBtn} <span class="seta-dir" aria-hidden="true">→</span></span></button>`;
+      if (d === 'nao') return `<div class="item-combo disp-item i-${p} disp-item--nao ${anim(k)}">${corpo}</div>`;
+      return `<button class="item-combo disp-item i-${p} ${anim(k)}" type="button" data-ver="${p}">${corpo}<span class="disp-ver">${rotBtn} <span class="seta-dir" aria-hidden="true">→</span></span></button>`;
     }).join('');
     if (st.disp.internet === 'talvez') $('[data-disp]').insertAdjacentHTML('beforeend', '<p class="dy-apoio" style="text-align:center">* A fibra no seu endereço é confirmada no WhatsApp.</p>');
     const algum = st.ordem.length > 0;
@@ -384,6 +392,7 @@
     renderPassos();
     const fn = { internet: htmlInternet, celular: htmlCelular, energia: htmlEnergia }[prod];
     palco.innerHTML = `<div class="produto${voltando ? ' voltando' : ''}" data-prod="${prod}">${cabecalho(prod)}${fn()}${acoes(prod)}</div>`;
+    if (telaAtual === 'combo') entrar(palco.firstElementChild, voltando);
     ({ internet: ligarInternet, celular: ligarCelular, energia: ligarEnergia }[prod])();
     atualizarBotaoAdd();
     atualizarCarrinho();
@@ -616,13 +625,13 @@
         const p = DY.planosInternet.find((x) => x.id === v.id); const o = p.opcoes[v.op];
         const preco = centavos(o.preco); const nome = p.num + ' Mega';
         const extra = o.nome !== 'Somente Internet' ? ' + ' + o.nome : '';
-        lista.push({ produto: 'internet', titulo: 'Internet Fibra ' + nome + extra, detalhe: brl(preco) + '/mês · ' + (v.para === 'empresa' ? 'para empresa' : 'para casa'), mensal: preco, cashback: cashbackCentavos(preco, 50), plano: p.id, opcao: o.nome, para: v.para || st.para.internet,
+        lista.push({ produto: 'internet', titulo: 'Internet Fibra ' + nome + extra, detalhe: brl(preco) + '/mês · ' + (v.para === 'empresa' ? 'para empresa' : 'para casa'), mensal: preco, cashback: cashbackCentavos(preco, 50), sub: (o.nome !== 'Somente Internet' ? o.nome + ' incluso · ' : '') + ((v.para || st.para.internet) === 'empresa' ? 'Para empresa' : 'Para casa'), plano: p.id, opcao: o.nome, para: v.para || st.para.internet,
           linhaZap: `Internet Fibra ${nome}${extra} no valor de ${brl(preco)}/mês${v.para === 'empresa' ? ' (para empresa)' : ''}` });
       }
       if (prod === 'celular') {
         const p = DY.planosCelular.find((x) => x.id === v.id); const unit = centavos(p.preco); const total = unit * v.linhas;
         const para = v.para || st.para.celular;
-        lista.push({ produto: 'celular', titulo: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular ${p.num} GB`, detalhe: `${brl(unit)} por linha · ${brl(total)}/mês · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}`, mensal: total, cashback: cashbackCentavos(total, 100), plano: p.id, linhas: v.linhas, para,
+        lista.push({ produto: 'celular', titulo: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular ${p.num} GB`, detalhe: `${brl(unit)} por linha · ${brl(total)}/mês · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}`, mensal: total, cashback: cashbackCentavos(total, 100), sub: `${brl(unit)} por linha · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}`, plano: p.id, linhas: v.linhas, para,
           linhaZap: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular de ${p.num} GB (${brl(unit)} cada, total de ${brl(total)}/mês)${para === 'cnpj' ? ' para a minha empresa' : ''}` });
       }
       if (prod === 'energia') {
@@ -635,12 +644,24 @@
   }
   const somaCb = (l) => l.reduce((a, i) => a + i.cashback, 0);
   const somaMes = (l) => l.reduce((a, i) => a + i.mensal, 0);
-  // Bloco "quanto você paga por mês" + "quanto volta" (barra do combo e resumo)
-  function totaisHTML(l, cls) {
-    const en = l.find((i) => i.produto === 'energia');
-    const nota = 'Valores no débito automático.' + (en ? ` Inclui cerca de ${brl(en.mensal)} da conta de luz com desconto (estimativa).` : '');
-    return `<div class="${cls}__mes"><div><span>Valor do seu pedido</span><b>${brl(somaMes(l))}<i>/mês</i></b></div><small>${nota}</small></div>
-      <div class="${cls}__total"><div><span>Volta para você (cashback)</span><b>${brl(somaCb(l))}</b></div><small>Uma única vez, via PIX na sua conta bancária, quando o contrato fecha.</small></div>`;
+  const MES = '<i>/mês</i>';
+  // Resumo organizado: energia separada dos serviços de telecom, depois cashback e valor total
+  function blocosResumo(l, editar) {
+    const en = l.find((i) => i.produto === 'energia'); const tel = l.filter((i) => i.produto !== 'energia');
+    const alt = (p) => (editar ? `<button class="rz-alterar" type="button" data-editar="${p}" aria-label="Alterar ${ROTULO[p]}">Alterar</button>` : '');
+    const chip = (v) => `<span class="rz-chip">Cashback <b>${brl(v)}</b></span>`;
+    let h = '';
+    if (en) h += `<section class="rz-sec rz-sec--energia"><div class="rz-sec__cab"><h3><span class="rz-ico i-energia"><img src="${img('icones/hero-lampada.svg')}" alt=""></span>Desconto na Energia</h3>${alt('energia')}</div>
+      <div class="rz-linha rz-linha--antiga"><span>Fatura antiga</span><s>${brl(en.conta_luz)}</s></div>
+      <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Estimativa com ${en.estimativa_desconto_pct}% de desconto</small></span><b>${brl(en.mensal)}${MES}</b></div>
+      <div class="rz-linha rz-linha--cb"><span></span>${chip(en.cashback)}</div></section>`;
+    if (tel.length) h += `<section class="rz-sec"><div class="rz-sec__cab"><h3><span class="rz-ico i-telecom"><img src="${img('icones/hero-wifi.svg')}" alt=""></span>Serviços de Telecom</h3></div>`
+      + tel.map((i) => `<div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span>${alt(i.produto)}</div><div class="rz-item__val"><b>${brl(i.mensal)}${MES}</b>${chip(i.cashback)}</div></div>`).join('')
+      + '</section>';
+    const n = l.length;
+    h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Esse é o valor que você recebe de volta ao finalizar esse pedido. Será enviado via PIX para a sua conta bancária.</small></div>`;
+    h += `<div class="rz-total"><div><span>Valor total ${n === 1 ? 'do serviço' : `dos ${n} serviços`}</span><b>${brl(somaMes(l))}${MES}</b></div><small>${tel.length ? 'Internet e celular no débito automático.' : ''}${en ? ' A conta de luz é uma estimativa e depende da sua fatura.' : ''}</small></div>`;
+    return h;
   }
 
   /* ---------- Barra do combo ---------- */
@@ -663,18 +684,51 @@
   function atualizarCarrinho() {
     const l = itens(telaAtual === 'combo' ? 'misto' : 'esc');
     $('[data-carrinho-qtd]').textContent = l.length;
-    $('[data-carrinho-cb]').textContent = brl(somaCb(l));
     $('[data-carrinho-mensal]').textContent = brl(somaMes(l));
-    $('[data-carrinho-lista]').innerHTML = l.length
-      ? '<p class="car-tit">Seu pedido até agora</p><ul class="car-itens">' + l.map((i) => `<li><span><b>${i.titulo}</b><br>${i.detalhe}</span><span class="car-val"><b>${i.produto === 'energia' ? 'cerca de ' : ''}${brl(i.mensal)}/mês</b><em>Volta para você ${brl(i.cashback)}</em></span></li>`).join('') + '</ul>' + totaisHTML(l, 'car')
-      : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
+    car.setAttribute('aria-label', `Ver resumo do pedido: ${l.length} ${l.length === 1 ? 'serviço' : 'serviços'}, ${brl(somaMes(l))} por mês, cashback de ${brl(somaCb(l))}`);
     car.hidden = !l.length;
-    if (!l.length) { $('[data-carrinho-lista]').hidden = true; car.setAttribute('aria-expanded', 'false'); }
+    const corpo = $('[data-rz-corpo]');
+    corpo.innerHTML = l.length ? blocosResumo(l, false) : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
+    if (!l.length) fecharResumo(false);
   }
   function pulsar() { const q2 = $('[data-carrinho-qtd]'); q2.classList.remove('pulsar'); void q2.offsetWidth; q2.classList.add('pulsar'); }
-  $('[data-carrinho-toggle]').addEventListener('click', (e) => {
-    const b = e.currentTarget; const abrir = b.getAttribute('aria-expanded') !== 'true';
-    b.setAttribute('aria-expanded', abrir); $('[data-carrinho-lista]').hidden = !abrir;
+
+  /* ---------- Janela do resumo (fundo desfocado) ---------- */
+  const modal = $('[data-rz-modal]'), janela = $('.rz-modal__janela', modal);
+  let tlResumo = null;
+  function abrirResumo() {
+    atualizarCarrinho();
+    if (tlResumo) tlResumo.kill();
+    modal.hidden = false; document.body.classList.add('rz-aberto');
+    car.setAttribute('aria-expanded', 'true');
+    if (gs) {
+      tlResumo = gs.timeline({ defaults: { ease: 'power3.out' } })
+        .fromTo('.rz-modal__fundo', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25 })
+        .fromTo(janela, { y: 40, autoAlpha: 0, scale: 0.97 }, { y: 0, autoAlpha: 1, scale: 1, duration: 0.4 }, 0)
+        .fromTo('.rz-modal__corpo > *', { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35, stagger: 0.06, clearProps: 'transform,opacity,visibility' }, 0.1);
+    }
+    setTimeout(() => janela.focus(), 30);
+  }
+  function fecharResumo(devolverFoco = true) {
+    if (!modal || modal.hidden) return;
+    if (tlResumo) tlResumo.kill();
+    const fim = () => { modal.hidden = true; document.body.classList.remove('rz-aberto'); car.setAttribute('aria-expanded', 'false'); gs && gs.set([janela, '.rz-modal__fundo'], { clearProps: 'all' }); if (devolverFoco && !car.hidden) car.focus(); };
+    if (gs && devolverFoco) {
+      tlResumo = gs.timeline({ defaults: { duration: 0.22, ease: 'power2.in' }, onComplete: fim })
+        .to(janela, { y: 30, autoAlpha: 0 })
+        .to('.rz-modal__fundo', { autoAlpha: 0 }, 0);
+    } else fim();
+  }
+  $('[data-carrinho-toggle]').addEventListener('click', abrirResumo);
+  modal.addEventListener('click', (e) => { if (e.target.closest('[data-rz-fechar]')) fecharResumo(); });
+  document.addEventListener('keydown', (e) => {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') fecharResumo();
+    if (e.key === 'Tab') { // foco preso dentro da janela
+      const f = $$('button, [href], [tabindex]:not([tabindex="-1"])', janela); if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { f[f.length - 1].focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { f[0].focus(); e.preventDefault(); }
+    }
   });
 
   /* =========================================================
@@ -682,16 +736,13 @@
      ========================================================= */
   function renderResumo() {
     const l = itens();
-    const faltam = ['internet', 'celular', 'energia'].filter((p) => !st.esc[p] && (st.disp || {})[p] !== 'nao');
+    const faltam = ['energia', 'internet', 'celular'].filter((p) => !st.esc[p] && (st.disp || {})[p] !== 'nao');
     const ico = { internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg', energia: 'hero-lampada.svg' };
     $('[data-resumo]').innerHTML = (l.length ? '' : '<div class="aviso aviso--info"><img src="img/icones/aviso-info.svg" alt=""><span>O seu combo está vazio. Para seguir, escolha <b>pelo menos um serviço</b> abaixo.</span></div>')
-      + l.map((i) => `<div class="item-combo"><span class="item-combo__ico i-${i.produto}"><img src="${img('icones/' + ico[i.produto])}" alt=""></span>
-        <span class="item-combo__txt"><b>${i.titulo}</b><span>${i.detalhe}</span><em>Cashback: ${brl(i.cashback)}</em></span>
-        <button class="item-combo__acao" type="button" data-editar="${i.produto}" aria-label="Alterar ${ROTULO[i.produto]}">Alterar</button></div>`).join('')
+      + (l.length ? blocosResumo(l, true) : '')
       + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
         <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Energia Solar por Assinatura' }[p]}</b><span>${{ internet: '50% da mensalidade volta para você', celular: '100% do valor das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
-        <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('')
-      + (l.length ? totaisHTML(l, 'resumo') : '');
+        <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('');
     $('[data-ir-dados]').disabled = !l.length;
     atualizarCarrinho();
   }

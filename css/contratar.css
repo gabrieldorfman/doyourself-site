@@ -358,7 +358,6 @@
 @media (max-width: 767px) { .com-dock .rodape { padding-bottom: 120px; } }
 
 /* Tela "Disponível no seu endereço" */
-.disp-item { animation: telaEntra .4s var(--ease) both; }
 .disp-selo { flex: none; align-self: center; padding: 5px 10px; border-radius: 99px; background: var(--ok-fundo); color: var(--ok); border: 1px solid var(--aviso-positivo-borda); font-weight: 800; font-size: 12px; white-space: nowrap; }
 .disp-selo--talvez { background: var(--aviso-informativo-fundo); color: var(--acao-atencao); border-color: var(--aviso-informativo-borda); white-space: normal; max-width: 120px; text-align: center; line-height: 1.25; }
 .disp-selo--nao { background: var(--fundo-superficie-alt); color: var(--texto-terciario); border-color: var(--borda-padrao); }
@@ -494,4 +493,95 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
   .dock__ir { min-width: 0; padding: 0 12px; }
   .dock .carrinho__lista li { flex-direction: column; gap: 4px; }
   .dock .carrinho__lista li span.car-val { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 8px; width: 100%; white-space: normal; }
+}
+
+/* ============ v9 · Transições (GSAP) ============ */
+.com-gsap .tela, .com-gsap .produto { animation: none; }
+.disp-item.animate__animated { --animate-duration: .6s; }
+
+/* ============ v9 · Barra do pedido (Figma 457:145 / 457:146) ============ */
+.dock__resumo { gap: 14px; min-height: 62px; padding: 8px 14px 8px 12px; border-radius: 18px; }
+.dock__qtd { display: flex; flex-direction: column; align-items: center; gap: 3px; line-height: 1; }
+.dock__qtd small { font-size: 11px; font-weight: 700; color: #5dd9a0; opacity: 1; }
+.dock__resumo .dock__qtd .carrinho__qtd { width: 34px; height: 34px; border-radius: 11px; font-size: 17px; }
+.dock__valor { display: flex; flex-direction: column; align-items: center; line-height: 1.2; min-width: 0; }
+.dock__valor small { font-size: 11px; opacity: .7; }
+.dock__valor b { font-size: 17px; font-weight: 800; white-space: nowrap; color: inherit; }
+.dock__valor b i { font-style: normal; font-size: 11px; font-weight: 600; opacity: .75; margin-left: 2px; }
+.dock__valor em { font-style: normal; font-size: 12.5px; font-weight: 700; color: #5dd9a0; white-space: nowrap; margin-top: 2px; padding-top: 3px; border-top: 1px solid rgba(255, 255, 255, .2); align-self: stretch; text-align: center; }
+.dock__resumo .carrinho__seta { display: inline; }
+@media (min-width: 768px) {
+  .dock__resumo { min-height: 68px; padding: 10px 20px 10px 14px; gap: 16px; }
+  .dock__resumo .dock__qtd .carrinho__qtd { width: 38px; height: 38px; }
+  .dock__valor b { font-size: 19px; }
+  .dock__valor em { font-size: 13px; }
+}
+@media (max-width: 767px) {
+  .dock__barra { gap: 8px; }
+  .dock__resumo { flex: 1 1 auto; justify-content: space-between; padding: 6px 12px 6px 10px; min-height: 60px; gap: 10px; }
+  .dock__ir { flex: 0 0 auto; min-width: 0; padding: 0 16px; font-size: 15px; min-height: 60px; }
+}
+@media (max-width: 359px) { .dock__ir { padding: 0 12px; } .dock__valor b { font-size: 15px; } }
+
+/* ============ v9 · Janela do resumo ============ */
+.rz-aberto { overflow: hidden; }
+.rz-modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; }
+.rz-modal[hidden] { display: none; }
+.rz-modal__fundo { position: absolute; inset: 0; background: rgba(12, 24, 18, .45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.rz-modal__janela { position: relative; width: min(540px, 100%); max-height: min(88vh, 780px); overflow-y: auto; overscroll-behavior: contain; background: var(--fundo-superficie); border-radius: 24px; box-shadow: 0 24px 60px rgba(0, 0, 0, .25); outline: none; }
+.rz-modal__cab { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 24px 14px; background: var(--fundo-superficie); }
+.rz-modal__cab h2 { font-size: 20px; font-weight: 800; color: var(--texto-titulo); }
+.rz-modal__x { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--fundo-pagina); color: var(--texto-titulo); font-size: 16px; font-weight: 700; }
+.rz-modal__corpo { display: flex; flex-direction: column; gap: 14px; padding: 0 24px 24px; }
+@media (max-width: 767px) {
+  .rz-modal { place-items: end center; padding: 0; }
+  .rz-modal__janela { width: 100%; max-height: 90vh; border-radius: 24px 24px 0 0; padding-bottom: env(safe-area-inset-bottom); }
+  .rz-modal__cab { padding: 18px 18px 12px; }
+  .rz-modal__corpo { padding: 0 18px 20px; gap: 12px; }
+}
+
+/* Blocos do resumo (janela e tela Seu combo) */
+.rz-sec { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 18px; background: var(--fundo-pagina); border: 1px solid var(--borda-padrao); }
+.rz-sec--energia { background: color-mix(in srgb, var(--energia-tint) 70%, var(--fundo-superficie)); border-color: var(--energia-tint); }
+.rz-sec__cab { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.rz-sec__cab h3 { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; color: var(--texto-titulo); }
+.rz-ico { flex: none; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--fundo-superficie); }
+.rz-ico img { width: 18px; height: 18px; }
+.rz-linha { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.rz-linha--antiga { font-size: 14px; color: var(--texto-terciario); }
+.rz-linha--antiga s { white-space: nowrap; }
+.rz-linha--nova span { display: flex; flex-direction: column; font-weight: 700; color: var(--texto-titulo); line-height: 1.3; }
+.rz-linha--nova small { font-size: 12px; font-weight: 500; color: var(--texto-terciario); }
+.rz-linha--nova b, .rz-item__val b { font-size: 19px; font-weight: 800; color: var(--texto-titulo); white-space: nowrap; }
+.rz-modal b i, .resumo b i { font-style: normal; font-size: .62em; font-weight: 700; opacity: .7; margin-left: 2px; }
+.rz-linha--cb { justify-content: flex-end; }
+.rz-chip { display: inline-flex; align-items: baseline; gap: 4px; padding: 4px 10px; border-radius: 999px; background: var(--marca-soft); color: var(--marca-soft-texto); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.rz-chip b { font-weight: 800; }
+.rz-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding-top: 12px; border-top: 1px solid var(--borda-padrao); }
+.rz-sec__cab + .rz-item { padding-top: 4px; border-top: 0; }
+.rz-item__nome { display: flex; flex-direction: column; gap: 2px; min-width: 0; line-height: 1.35; }
+.rz-item__nome b { font-size: 15px; color: var(--texto-titulo); }
+.rz-item__nome span { font-size: 13px; color: var(--texto-terciario); }
+.rz-item__val { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.rz-item__val b { font-size: 17px; }
+.rz-alterar { align-self: flex-start; padding: 4px 0; background: none; border: 0; font: inherit; font-size: 13px; font-weight: 700; color: var(--marca-titulo); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.rz-cbtotal { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 18px; background: var(--marca-soft); color: var(--marca-soft-texto); }
+.rz-cbtotal div, .rz-total div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.rz-cbtotal span { font-size: 16px; font-weight: 800; }
+.rz-cbtotal b { font-size: 26px; font-weight: 800; white-space: nowrap; }
+.rz-cbtotal small { font-size: 13px; line-height: 1.5; }
+.rz-total { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 18px; border: 2px solid var(--texto-titulo); color: var(--texto-titulo); }
+.rz-total span { font-size: 16px; font-weight: 800; }
+.rz-total b { font-size: 24px; font-weight: 800; white-space: nowrap; }
+.rz-total small { font-size: 12.5px; color: var(--texto-terciario); line-height: 1.5; }
+.rz-total small:empty { display: none; }
+@media (max-width: 380px) { .rz-item { flex-direction: column; gap: 6px; } .rz-item__val { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; } }
+@media (max-width: 767px) {
+  .dock__ir { flex: 0 1 auto; overflow: hidden; }
+}
+@media (max-width: 420px) {
+  .dock__resumo { gap: 8px; padding: 6px 10px 6px 8px; }
+  .dock__resumo .carrinho__seta { display: none; }
+  .dock__ir { padding: 0 14px; }
+  .dock__ir .seta-dir { display: none; }
 }
