@@ -619,3 +619,9 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
   .rz-sec__cab h3 { font-size: 15px; gap: 8px; padding-top: 6px; }
   .rz-ico { width: 30px; height: 30px; }
 }
+/* Linha fina na cor de cada card, um pouco mais escura */
+.rz-sec { border-width: 1.5px; border-style: solid; }
+.rz-sec--energia { border-color: color-mix(in srgb, var(--energia-solido) 40%, var(--energia-tint)); }
+.rz-sec--internet { border-color: color-mix(in srgb, var(--internet-primario) 35%, var(--internet-tint)); }
+.rz-sec--celular { border-color: color-mix(in srgb, var(--celular-primario) 35%, var(--celular-tint)); }
+.rz-cbtotal { border: 1.5px solid color-mix(in srgb, var(--marca-soft-texto) 30%, var(--marca-soft)); }
