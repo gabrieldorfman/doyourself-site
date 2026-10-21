@@ -189,19 +189,12 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
     function abrir(i, foco, doUsuario) {
       const alvo = Math.max(0, Math.min(planos.length - 1, i));
       if (doUsuario && alvo === atual) return;
-      // GSAP Flip: o card aberto e as tarjas deslizam até o novo lugar (cada largura anima de verdade)
-      if (doUsuario && window.gsap && window.Flip && !semMovimento) {
-        if (!window.__flipOk) { gsap.registerPlugin(Flip); window.__flipOk = true; }
-        if (raiz.__flip) raiz.__flip.progress(1); // clique rápido: termina a troca anterior antes
-        const estado = Flip.getState(els);
+      // Troca suave: o card novo entra deslizando do lado de onde veio
+      if (doUsuario && window.gsap && !semMovimento) {
+        const dir = alvo > atual ? 1 : -1;
         aplicar(alvo, foco);
         const card = els[alvo].querySelector('.card-plano');
-        raiz.classList.add('flipando');
-        gsap.set(card, { autoAlpha: 0 });
-        const tl = gsap.timeline({ onComplete: () => { raiz.classList.remove('flipando'); raiz.__flip = null; centralizar(); } });
-        tl.add(Flip.from(estado, { duration: 0.5, ease: 'power3.inOut', scale: false }))
-          .to(card, { autoAlpha: 1, duration: 0.3, ease: 'power1.out', clearProps: 'opacity,visibility' }, 0.15);
-        raiz.__flip = tl;
+        gsap.fromTo(card, { x: 36 * dir, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out', clearProps: 'transform,opacity,visibility', onComplete: centralizar });
         return;
       }
       if (doUsuario && document.startViewTransition && !semMovimento) {

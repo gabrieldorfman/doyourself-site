@@ -27,13 +27,15 @@
     // undefined = ainda não decidiu · null = pulou · objeto = adicionou
     esc: { internet: undefined, celular: undefined, energia: undefined },
     rasc: { internet: null, celular: null, energia: null },   // seleção em andamento na tela do produto
-    para: { internet: q.get('para') === 'empresa' ? 'empresa' : 'casa', celular: q.get('para') === 'cnpj' ? 'cnpj' : 'cpf' },
+    // casa/empresa e CPF/CNPJ: o cliente escolhe em cada produto (só vem marcado quando a página de origem já disse)
+    para: { internet: ['casa', 'empresa'].includes(q.get('para')) ? q.get('para') : (origem === 'internet' && q.get('plano') ? 'casa' : ''), celular: ['cpf', 'cnpj'].includes(q.get('para')) ? q.get('para') : '', energia: '' },
     contato: { nome: '', telefone: '' }, cad: { email: '', cpf: '', cnpj: '', consent: false },
     pag: { tipo: '', banco: '' },
     sel: [],   // serviços marcados na tela "Disponível no seu endereço"
   };
   // Planos de internet: casa ou empresa (o estado é confirmado pelo CEP na consulta)
-  DY.definirPlanos({ tipo: st.para.internet });
+  const PARA0 = { ...st.para };
+  DY.definirPlanos({ tipo: st.para.internet || 'casa' });
   // Plano vindo do card da Home já chega pré-selecionado
   if (origem === 'internet' && q.get('plano')) {
     const p = DY.planosInternet.find((x) => x.id === q.get('plano'));
@@ -55,7 +57,7 @@
   function zerarPedido() {
     Object.assign(st.esc, { internet: undefined, celular: undefined, energia: undefined });
     Object.assign(st.rasc, { internet: null, celular: null, energia: null });
-    st.pag = { tipo: '', banco: '' }; st.idx = 0; st.editando = false; st.ordem = ORDENS[origem].slice(); st.sel = [];
+    st.pag = { tipo: '', banco: '' }; st.idx = 0; st.editando = false; st.ordem = ORDENS[origem].slice(); st.sel = []; st.para = { ...PARA0 };
     $$('[data-banco], [data-pag]').forEach((x) => x.setAttribute('aria-checked', 'false'));
   }
 
@@ -137,6 +139,12 @@
     const msg = g.querySelector('.campo__msg:not(.dica)'); if (msg) msg.textContent = '';
   }
   // Campo com máscara + validação: mostra erro ao sair do campo; mostra ✓ assim que fica certo
+  // "gabriel DORFMAN da silva" → "Gabriel Dorfman da Silva" (de, da, do, das, dos, e ficam minúsculos)
+  const MINUSC = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
+  function nomeProprio(v) {
+    let k = 0;
+    return v.replace(/\s{2,}/g, ' ').replace(/^\s+/, '').replace(/[^\s]+/g, (w) => { const l = w.toLocaleLowerCase('pt-BR'); const i = k++; return i > 0 && MINUSC.has(l) ? l : l.charAt(0).toLocaleUpperCase('pt-BR') + l.slice(1); });
+  }
   function ligarCampo(nome, { masc, val, depois }) {
     const g = $(`[data-grupo="${nome}"]`); const input = g.querySelector('input');
     let tocado = false;
@@ -148,7 +156,7 @@
       depois && depois(!erro);
       return !erro;
     };
-    input.addEventListener('input', () => { if (masc) input.value = masc(input.value); rodar(false); });
+    input.addEventListener('input', () => { if (masc) { const a = input.selectionStart, n0 = input.value.length; input.value = masc(input.value); const d = input.value.length - n0; try { input.setSelectionRange(a + d, a + d); } catch (er) { /* tipos sem seleção */ } } rodar(false); });
     input.addEventListener('blur', () => { if (input.value) tocado = true; rodar(false); });
     g.validarAgora = () => { tocado = true; return rodar(true); };
     return g;
@@ -366,7 +374,7 @@
      ========================================================= */
   async function rodarConsulta() {
     // Preços do estado do endereço (internet muda por bloco de estados; celular no PR/SC)
-    DY.definirPlanos({ uf: st.end.uf, tipo: st.para.internet });
+    DY.definirPlanos({ uf: st.end.uf, tipo: st.para.internet || 'casa' });
     DY.salvarLocal(st.end.uf, st.end.cidade);
     ['internet', 'celular'].forEach((k) => { const lista = k === 'internet' ? DY.planosInternet : DY.planosCelular; if (st.rasc[k] && !lista.some((p) => p.id === st.rasc[k].id)) st.rasc[k] = null; if (st.esc[k] && !lista.some((p) => p.id === st.esc[k].id)) st.esc[k] = undefined; });
     mostrar('consulta');
@@ -528,21 +536,33 @@
   // Depois de escolher: desce para a personalização (streaming ou linhas)
   const descer = (el) => { if (el) setTimeout(() => trazerParaMeio(el), 120); };
 
+  const PERGUNTA = {
+    // CPF mostra os planos residenciais; CNPJ, os empresariais (plano de CPF não vai para CNPJ)
+    internet: ['A internet vai ficar no seu CPF ou no CNPJ?', [['casa', 'No meu CPF', 'Planos residenciais'], ['empresa', 'No CNPJ', 'Planos para empresas']]],
+    celular: ['As linhas são para você ou para a sua empresa?', [['cpf', 'Para mim', 'No seu CPF'], ['cnpj', 'Para minha empresa', 'No CNPJ da empresa']]],
+    energia: ['A sua conta de luz hoje está no CPF ou no CNPJ?', [['cpf', 'No meu CPF', 'Casa ou apartamento'], ['cnpj', 'No CNPJ', 'Empresa ou comércio']]],
+  };
+  function htmlQuem(prod) {
+    const [tit, ops] = PERGUNTA[prod]; const v = st.para[prod];
+    return `<div class="ct-quem${v ? ' ct-quem--ok' : ''}"><p class="ct-quem__tit" id="q-${prod}">${tit}</p>
+      <div class="ct-quem__ops" role="radiogroup" aria-labelledby="q-${prod}" data-para="${prod}">${ops.map(([k, a, b]) => `<button type="button" class="ct-quem__op" role="radio" aria-checked="${v === k}" data-v="${k}"><span class="ct-quem__marca" aria-hidden="true"></span><span><b>${a}</b><small>${b}</small></span></button>`).join('')}</div></div>`;
+  }
+  const faltaQuem = (prod) => !st.para[prod];
+
   /* ----- Internet ----- */
   function htmlInternet() {
+    if (faltaQuem('internet')) return htmlQuem('internet');
     const sel = st.rasc.internet || (st.esc.internet && { ...st.esc.internet });
     const cards = DY.planosInternet.map((p) => { const on = !!(sel && sel.id === p.id); return DY.ofertas.internet(p, { on, op: on ? sel.op : 0 }); }).join('');
     const pSel = sel && DY.planosInternet.find((x) => x.id === sel.id);
-    return `<div class="ct-abas"><div class="segmento" role="radiogroup" aria-label="Para onde é a internet" data-para="internet">
-        <button type="button" role="radio" aria-checked="${st.para.internet === 'casa'}" data-v="casa">Casa</button>
-        <button type="button" role="radio" aria-checked="${st.para.internet === 'empresa'}" data-v="empresa">Empresa</button></div></div>
+    return `${htmlQuem('internet')}
       <div><div class="ofertas" data-trilho>${cards}</div>${dots(DY.planosInternet.length)}</div>
       <div data-pers-box>${pSel ? DY.ofertas.personaliza(pSel, sel.op) : ''}</div>
       <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. Pagando no boleto ou PIX, o valor aumenta apenas R$ 10,00.</p>`;
   }
   function ligarInternet() {
+    ligarPara('internet'); if (faltaQuem('internet')) return;
     const trilho = $('[data-trilho]', palco); ligarDots(trilho);
-    ligarPara('internet');
     const box = $('[data-pers-box]', palco);
     const pintarCard = (card, p, op) => {
       const o = p.opcoes[op]; const preco = centavos(o.preco);
@@ -595,25 +615,28 @@
     seg.addEventListener('click', (e) => {
       const b = e.target.closest('[role="radio"]'); if (!b) return;
       $$('[role="radio"]', seg).forEach((x) => x.setAttribute('aria-checked', x === b));
-      st.para[prod] = b.dataset.v;
-      if (prod === 'celular') atualizarLinhas();
+      const antes = st.para[prod]; st.para[prod] = b.dataset.v;
       if (prod === 'internet') {
         // casa e empresa têm planos diferentes: troca a lista e limpa a escolha
         DY.definirPlanos({ tipo: st.para.internet });
         if (st.rasc.internet && !DY.planosInternet.some((p) => p.id === st.rasc.internet.id)) st.rasc.internet = null;
-        renderProduto();
       }
+      if (!antes || prod === 'internet') {
+        // primeira escolha: mostra os planos (ou o campo da conta) logo abaixo da pergunta
+        const y = window.scrollY; renderProduto(); window.scrollTo(0, y);
+        const alvo = $(prod === 'energia' ? '[data-grupo="conta"]' : '[data-trilho]', palco);
+        if (alvo && !antes) { if (gs) gs.from(alvo.parentElement, { y: 16, autoAlpha: 0, duration: 0.4, ease: 'power2.out', clearProps: 'all' }); if (prod === 'energia') setTimeout(() => $('#f-conta', palco)?.focus({ preventScroll: true }), 80); }
+      } else if (prod === 'celular') atualizarLinhas();
     });
   }
 
   /* ----- Celular ----- */
   function htmlCelular() {
+    if (faltaQuem('celular')) return htmlQuem('celular');
     const sel = st.rasc.celular || (st.esc.celular && { ...st.esc.celular });
     const cards = DY.planosCelular.map((p) => DY.ofertas.celular(p, { on: !!(sel && sel.id === p.id) })).join('');
     const n = sel ? sel.linhas : 1;
-    return `<div class="ct-abas"><div class="segmento" role="radiogroup" aria-label="Para quem são as linhas" data-para="celular">
-        <button type="button" role="radio" aria-checked="${st.para.celular === 'cpf'}" data-v="cpf">Para mim · CPF</button>
-        <button type="button" role="radio" aria-checked="${st.para.celular === 'cnpj'}" data-v="cnpj">Empresa · CNPJ</button></div></div>
+    return `${htmlQuem('celular')}
       <div><div class="ofertas ofertas--cel" data-trilho>${cards}</div>${dots(DY.planosCelular.length)}</div>
       <div class="linhas" data-linhas-box${sel ? '' : ' hidden'}>
         <p class="linhas__titulo" id="lbl-linhas">Quantas linhas você quer?</p>
@@ -635,7 +658,8 @@
     }
   }
   function ligarCelular() {
-    const trilho = $('[data-trilho]', palco); ligarDots(trilho); ligarPara('celular');
+    ligarPara('celular'); if (faltaQuem('celular')) return;
+    const trilho = $('[data-trilho]', palco); ligarDots(trilho);
     const escolher = (card) => {
       const linhas = st.rasc.celular ? st.rasc.celular.linhas : +$('[data-l-qtd]', palco).textContent || 1;
       st.rasc.celular = { id: card.dataset.id, linhas };
@@ -671,8 +695,10 @@
   /* ----- Energia ----- */
   function htmlEnergia() {
     const v = (st.rasc.energia || st.esc.energia || {}).conta;
+    const benef = `<ul class="energia-beneficios"><li><img src="${img('icones/hero-lampada.svg')}" alt="">Sem placas e sem obra</li><li><img src="${img('icones/cofrinho.svg')}" alt="">Sem investimento</li><li><img src="${img('icones/verificado.svg')}" alt="">Mesma distribuidora</li></ul>`;
+    if (faltaQuem('energia')) return `<div class="energia-sim">${benef}${htmlQuem('energia')}</div>`;
     return `<div class="energia-sim">
-      <ul class="energia-beneficios"><li><img src="${img('icones/hero-lampada.svg')}" alt="">Sem placas e sem obra</li><li><img src="${img('icones/cofrinho.svg')}" alt="">Sem investimento</li><li><img src="${img('icones/verificado.svg')}" alt="">Mesma distribuidora</li></ul>
+      ${benef}${htmlQuem('energia')}
       <div class="campo-grupo" data-grupo="conta">
         <div class="campo campo--moeda${v ? ' preenchido' : ''}">
           <input id="f-conta" inputmode="numeric" placeholder="0,00" value="${v ? mascara.moeda(String(Math.round(v * 100))) : ''}" aria-describedby="m-conta">
@@ -686,6 +712,7 @@
     </div>`;
   }
   function ligarEnergia() {
+    ligarPara('energia'); if (faltaQuem('energia')) return;
     const input = $('#f-conta', palco); const res = $('[data-energia-res]', palco); const g = $('[data-grupo="conta"]', palco);
     const calc = () => {
       const reais = Number(so(input.value)) / 100;
@@ -727,6 +754,7 @@
       st.esc[prod] = { ...st.rasc[prod] };
       if (prod === 'celular') st.esc.celular.para = st.para.celular;
       if (prod === 'internet') st.esc.internet.para = st.para.internet;
+      if (prod === 'energia') st.esc.energia.para = st.para.energia;
       pulsar(); avancarProduto();
     } else if (e.target.closest('[data-pular]')) {
       st.esc[prod] = null; st.rasc[prod] = null; avancarProduto();
@@ -750,8 +778,8 @@
         const p = DY.planosInternet.find((x) => x.id === v.id); const o = p.opcoes[v.op];
         const preco = centavos(o.preco); const nome = p.num + ' Mega';
         const extra = o.nome !== 'Somente Internet' ? ' + ' + o.nome : '';
-        lista.push({ produto: 'internet', titulo: 'Internet Fibra ' + nome + extra, detalhe: brl(preco) + '/mês · ' + (v.para === 'empresa' ? 'para empresa' : 'para casa'), mensal: preco, cashback: cashbackCentavos(preco, 50), sub: (o.nome !== 'Somente Internet' ? o.nome + ' incluso · ' : '') + ((v.para || st.para.internet) === 'empresa' ? 'Para empresa' : 'Para casa'), plano: p.id, opcao: o.nome, para: v.para || st.para.internet,
-          linhaZap: `Internet Fibra ${nome}${extra} no valor de ${brl(preco)}/mês${v.para === 'empresa' ? ' (para empresa)' : ''}` });
+        lista.push({ produto: 'internet', titulo: 'Internet Fibra ' + nome + extra, detalhe: brl(preco) + '/mês · ' + (v.para === 'empresa' ? 'no CNPJ' : 'no CPF'), mensal: preco, cashback: cashbackCentavos(preco, 50), sub: (o.nome !== 'Somente Internet' ? o.nome + ' incluso · ' : '') + ((v.para || st.para.internet) === 'empresa' ? 'No CNPJ' : 'No CPF'), plano: p.id, opcao: o.nome, para: v.para || st.para.internet, titular: (v.para || st.para.internet) === 'empresa' ? 'cnpj' : 'cpf',
+          linhaZap: `Internet Fibra ${nome}${extra} no valor de ${brl(preco)}/mês${v.para === 'empresa' ? ' (no CNPJ)' : ''}` });
       }
       if (prod === 'celular') {
         const p = DY.planosCelular.find((x) => x.id === v.id); const unit = centavos(p.preco); const total = unit * v.linhas;
@@ -761,7 +789,7 @@
       }
       if (prod === 'energia') {
         const s = DY.energia.simular(v.conta);
-        lista.push({ produto: 'energia', titulo: 'Energia Solar por Assinatura', detalhe: `Conta de ${brl(s.conta)} → cerca de ${brl(s.comDesconto)}`, mensal: s.comDesconto, cashback: s.cashback, conta_luz: s.conta, estimativa_desconto_pct: s.pct,
+        lista.push({ produto: 'energia', titulo: 'Energia Solar por Assinatura', detalhe: `Conta de ${brl(s.conta)} → cerca de ${brl(s.comDesconto)}`, mensal: s.comDesconto, cashback: s.cashback, conta_luz: s.conta, estimativa_desconto_pct: s.pct, titular: v.para || st.para.energia || 'cpf',
           linhaZap: `Energia Solar para uma conta de luz de ${brl(s.conta)}` });
       }
     });
@@ -792,7 +820,7 @@
     ['energia', 'internet', 'celular'].forEach((p) => {
       const i = l.find((x) => x.produto === p); if (!i) return;
       if (p === 'energia') h += `<section class="rz-sec rz-sec--energia">${cab(p)}
-        <div class="rz-linha rz-linha--antiga"><span>Fatura antiga</span><s>${brl(i.conta_luz)}</s></div>
+        <div class="rz-linha rz-linha--antiga"><span>Fatura antiga${i.titular === 'cnpj' ? ' · no CNPJ' : ' · no CPF'}</span><s>${brl(i.conta_luz)}</s></div>
         <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Estimativa com ${i.estimativa_desconto_pct}% de desconto</small></span><b>${brl(i.mensal)}${MES}</b></div>
         <div class="rz-linha rz-linha--cb"><span></span>${chip(i.cashback)}</div></section>`;
       else h += `<section class="rz-sec rz-sec--${p}">${cab(p)}
@@ -935,9 +963,9 @@
      ========================================================= */
   const fCont = $('[data-form="contato"]'), fCad = $('[data-form="cadastro"]');
   const okCont = () => !validar.nome($('#f-nome').value) && !validar.telefone($('#f-telefone').value);
-  const precisaCnpj = () => !!((st.esc.celular && st.esc.celular.para === 'cnpj') || (st.esc.internet && st.esc.internet.para === 'empresa'));
+  const precisaCnpj = () => !!((st.esc.celular && st.esc.celular.para === 'cnpj') || (st.esc.internet && st.esc.internet.para === 'empresa') || (st.esc.energia && st.esc.energia.para === 'cnpj'));
   const okCad = () => !validar.email($('#f-email').value) && !validar.cpf($('#f-cpf').value) && (!precisaCnpj() || !validar.cnpj($('#f-cnpj').value)) && st.cad.consent;
-  ligarCampo('nome', { val: validar.nome, depois: () => (fCont.querySelector('[data-continuar]').disabled = !okCont()) });
+  ligarCampo('nome', { masc: nomeProprio, val: validar.nome, depois: () => (fCont.querySelector('[data-continuar]').disabled = !okCont()) });
   ligarCampo('telefone', { masc: mascara.telefone, val: validar.telefone, depois: () => (fCont.querySelector('[data-continuar]').disabled = !okCont()) });
   const chkCad = () => (fCad.querySelector('[data-continuar]').disabled = !okCad());
   ligarCampo('email', { val: validar.email, depois: chkCad });

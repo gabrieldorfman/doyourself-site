@@ -737,3 +737,19 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 /* Tela final: o fundo verde não cria rolagem lateral (barra de rolagem do Windows) */
 .pg-contratar { overflow-x: clip; }
 @media (min-width: 768px) { .dock .dock__resumo { box-shadow: 0 10px 28px rgba(0, 0, 0, .22); } }
+
+/* ============ v15 · Pergunta CPF/CNPJ em cada produto ============ */
+.ct-quem { max-width: 560px; margin: 0 auto 22px; display: flex; flex-direction: column; gap: 10px; }
+.ct-quem__tit { text-align: center; font-size: 17px; font-weight: 800; color: var(--texto-titulo); }
+.ct-quem__ops { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ct-quem__op { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); text-align: left; font: inherit; color: inherit; cursor: pointer; transition: border-color var(--rapido), box-shadow var(--rapido), background var(--rapido); }
+.ct-quem__op:hover { border-color: var(--marca-outline); }
+.ct-quem__op b { display: block; font-size: 15px; color: var(--texto-titulo); }
+.ct-quem__op small { display: block; font-size: 13px; color: var(--texto-terciario); }
+.ct-quem__marca { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--borda-forte, #b9b6ad); display: grid; place-items: center; }
+.ct-quem__op[aria-checked="true"] { border-color: var(--marca-outline); background: var(--marca-tint); box-shadow: 0 0 0 3px var(--marca-tint); }
+.ct-quem__op[aria-checked="true"] .ct-quem__marca { border-color: var(--marca-primario); }
+.ct-quem__op[aria-checked="true"] .ct-quem__marca::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--marca-primario); }
+.ct-quem:not(.ct-quem--ok) .ct-quem__ops { animation: telaEntra .4s var(--ease) both; }
+@media (max-width: 380px) { .ct-quem__ops { grid-template-columns: 1fr; } }
+.energia-sim .ct-quem { margin: 4px 0 0; max-width: none; }
