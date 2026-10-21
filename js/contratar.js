@@ -201,7 +201,8 @@
     checarEnd();
   }
   inCep.addEventListener('input', () => { inCep.value = mascara.cep(inCep.value); gCep.querySelector('.campo').classList.remove('invalido'); gCep.querySelector('.campo__msg').textContent = ''; consultarCep(); });
-  inCep.addEventListener('blur', () => { if (inCep.value && so(inCep.value).length < 8) marcar(gCep, validar.cep(inCep.value)); });
+  // espera um instante: se a pessoa tocou em "Não sei o meu CEP", o aviso não aparece (e o botão não pula de lugar)
+  inCep.addEventListener('blur', () => setTimeout(() => { if (gCep.hidden || !busca.hidden) return; if (inCep.value && so(inCep.value).length < 8) marcar(gCep, validar.cep(inCep.value)); }, 250));
   inLog.addEventListener('input', () => { const c = inLog.closest('.campo'); const ok = inLog.value.trim().length >= 3; c.classList.toggle('valido', ok); c.querySelector('.campo__ico').innerHTML = CHECK; checarEnd(); });
 
   ligarCampo('numero', { masc: (v) => v.replace(/[^\dsSnN/]/g, '').toUpperCase().slice(0, 6), val: validar.numero, depois: checarEnd });
@@ -224,38 +225,85 @@
   const UFS = [['AC', 'Acre'], ['AL', 'Alagoas'], ['AP', 'Amapá'], ['AM', 'Amazonas'], ['BA', 'Bahia'], ['CE', 'Ceará'], ['DF', 'Distrito Federal'], ['ES', 'Espírito Santo'], ['GO', 'Goiás'], ['MA', 'Maranhão'], ['MT', 'Mato Grosso'], ['MS', 'Mato Grosso do Sul'], ['MG', 'Minas Gerais'], ['PA', 'Pará'], ['PB', 'Paraíba'], ['PR', 'Paraná'], ['PE', 'Pernambuco'], ['PI', 'Piauí'], ['RJ', 'Rio de Janeiro'], ['RN', 'Rio Grande do Norte'], ['RS', 'Rio Grande do Sul'], ['RO', 'Rondônia'], ['RR', 'Roraima'], ['SC', 'Santa Catarina'], ['SP', 'São Paulo'], ['SE', 'Sergipe'], ['TO', 'Tocantins']];
   const busca = $('[data-busca-cep]'), selUf = $('#f-uf'), inCid = $('#f-cidade'), inRua = $('#f-rua'), sug = $('[data-sugestoes]');
   selUf.innerHTML = '<option value="" disabled selected hidden></option>' + UFS.map(([s, n]) => `<option value="${s}">${n}</option>`).join('');
-  $('[data-nao-sei-cep]').addEventListener('click', (e) => {
-    busca.hidden = !busca.hidden;
-    e.currentTarget.textContent = busca.hidden ? 'Não sei o meu CEP' : 'Fechar a busca e digitar o CEP';
-    if (!busca.hidden) selUf.focus();
-  });
+  const inRuaNum = $('#f-rua-num');
+  const btnNaoSei = $('[data-nao-sei-cep]');
+  function abrirBuscaCep(abrir) {
+    busca.hidden = !abrir;
+    // com a busca aberta, o campo de CEP some (e é limpo) para não misturar as duas formas
+    gCep.hidden = abrir;
+    if (abrir) { inCep.value = ''; cepBuscado = ''; limpar(gCep); revelar(blocoEnd, false); checarEnd(); }
+    btnNaoSei.textContent = abrir ? 'Fechar a busca e digitar o CEP' : 'Não sei o meu CEP';
+    if (abrir) selUf.focus(); else inCep.focus();
+  }
+  btnNaoSei.addEventListener('click', () => abrirBuscaCep(busca.hidden));
   selUf.addEventListener('change', async () => {
     selUf.closest('.campo').classList.add('valido'); selUf.closest('.campo').querySelector('.campo__ico').innerHTML = CHECK;
-    inCid.disabled = false; inCid.value = ''; inRua.disabled = true; inRua.value = ''; sug.innerHTML = '';
+    inCid.disabled = false; inCid.value = ''; inRua.disabled = true; inRua.value = ''; inRuaNum.disabled = true; inRuaNum.value = ''; sug.innerHTML = '';
     inCid.focus();
     try {
       const r = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selUf.value}/municipios?orderBy=nome`);
       $('#l-cidades').innerHTML = (await r.json()).map((c) => `<option value="${c.nome}">`).join('');
     } catch (er) { /* sem lista, o campo continua livre */ }
   });
-  inCid.addEventListener('input', () => { const ok = inCid.value.trim().length >= 3; inRua.disabled = !ok; inCid.closest('.campo').classList.toggle('valido', ok); inCid.closest('.campo').querySelector('.campo__ico').innerHTML = CHECK; });
-  let tRua;
-  inRua.addEventListener('input', () => {
-    clearTimeout(tRua);
-    const rua = inRua.value.trim();
-    if (rua.length < 3) { sug.innerHTML = ''; return; }
-    tRua = setTimeout(async () => {
-      try {
-        const lista = await (await fetch(`https://viacep.com.br/ws/${selUf.value}/${encodeURIComponent(inCid.value.trim())}/${encodeURIComponent(rua)}/json/`)).json();
-        if (!Array.isArray(lista) || !lista.length) { sug.innerHTML = '<p class="dy-apoio" style="padding:4px 6px">Não achamos uma rua com esse nome nessa cidade. Confira a grafia — sem “Rua” ou “Av.” no começo costuma funcionar melhor.</p>'; return; }
-        sug.innerHTML = lista.slice(0, 25).map((d) => `<button type="button" class="sugestao" role="option" data-cep="${so(d.cep)}"><b>${d.logradouro}</b>${/^(até|de|lado)\b/i.test(d.complemento || '') ? `<span class="faixa">${d.complemento}</span>` : ''}<span>${d.bairro} · ${d.localidade}/${d.uf} · CEP ${d.cep}</span></button>`).join('');
-      } catch (er) { sug.innerHTML = '<p class="dy-apoio">Não conseguimos buscar agora. Tente de novo em instantes.</p>'; }
-    }, 380);
-  });
+  inCid.addEventListener('input', () => { const ok = inCid.value.trim().length >= 3; inRua.disabled = !ok; inRuaNum.disabled = !ok; inCid.closest('.campo').classList.toggle('valido', ok); inCid.closest('.campo').querySelector('.campo__ico').innerHTML = CHECK; });
+
+  // "Rua Paulo Setúbal, 315" ou "Rua Paulo Setúbal 315": o número vai para o campo Número
+  function separarNumero() {
+    const m = inRua.value.match(/^(.*?\D)[\s,]+(?:n[º°o.]?\s*)?(\d{1,6})\s*$/i);
+    if (m && m[1].trim().length >= 3) { inRua.value = m[1].replace(/[\s,]+$/, ''); inRuaNum.value = m[2]; }
+  }
+  const tirarTipo = (r) => r.replace(/^(rua|r\.|avenida|av\.?|travessa|tv\.?|alameda|al\.?|rodovia|rod\.?|estrada|praça|pça\.?)\s+/i, '').trim();
+  // Faixas do Correios: "até 1239/1240", "de 1241/1242 a 3519/3520", "de 3521/3522 ao fim", "lado par/ímpar"
+  function faixaInclui(comp, n) {
+    const c = String(comp || '').toLowerCase().trim();
+    if (!/^(até|de |lado)/.test(c)) return null; // sem faixa (rua de CEP único)
+    const par = /lado par/.test(c), impar = /lado ímpar|lado impar/.test(c);
+    if ((par && n % 2) || (impar && !(n % 2))) return false;
+    let m;
+    if ((m = c.match(/^até\s+(\d+)(?:\/(\d+))?/))) return n <= +(m[2] || m[1]);
+    if ((m = c.match(/^de\s+(\d+)(?:\/\d+)?\s+(?:a|à)\s+(\d+)(?:\/(\d+))?/))) return n >= +m[1] && n <= +(m[3] || m[2]);
+    if ((m = c.match(/^de\s+(\d+)(?:\/\d+)?\s+ao fim/))) return n >= +m[1];
+    return par || impar ? true : null;
+  }
+  const itemSug = (d, destaque) => `<button type="button" class="sugestao${destaque ? ' sugestao--certa' : ''}" role="option" data-cep="${so(d.cep)}">${destaque ? '<span class="sugestao__selo">CEP do seu número</span>' : ''}<b>${d.logradouro}</b>${/^(até|de|lado)\b/i.test(d.complemento || '') ? `<span class="faixa">Números ${d.complemento}</span>` : ''}<span>${d.bairro} · ${d.localidade}/${d.uf} · CEP ${d.cep}</span></button>`;
+  let tRua, ultimaLista = [], pedidoRua = 0;
+  function mostrarSugestoes() {
+    const n = parseInt(so(inRuaNum.value), 10);
+    const lista = ultimaLista;
+    if (!lista.length) return;
+    if (!n) { sug.innerHTML = (lista.length > 1 ? '<p class="dy-apoio sug-dica">Essa rua tem mais de um CEP. Digite o número para acharmos o seu.</p>' : '') + lista.slice(0, 25).map((d) => itemSug(d)).join(''); return; }
+    const certos = lista.filter((d) => faixaInclui(d.complemento, n) === true);
+    const unicos = lista.filter((d) => faixaInclui(d.complemento, n) === null);
+    const melhor = certos.length ? certos : unicos;
+    if (melhor.length) {
+      const resto = lista.filter((d) => !melhor.includes(d));
+      sug.innerHTML = melhor.slice(0, 5).map((d) => itemSug(d, melhor.length === 1)).join('')
+        + (resto.length ? `<details class="sug-outros"><summary>Ver outros CEPs dessa rua (${resto.length})</summary>${resto.slice(0, 25).map((d) => itemSug(d)).join('')}</details>` : '');
+    } else sug.innerHTML = '<p class="dy-apoio sug-dica">Nenhum CEP dessa rua cobre esse número. Confira o número ou escolha abaixo.</p>' + lista.slice(0, 25).map((d) => itemSug(d)).join('');
+  }
+  async function buscarRua() {
+    separarNumero();
+    const rua = tirarTipo(inRua.value.trim());
+    if (rua.length < 3) { sug.innerHTML = ''; ultimaLista = []; return; }
+    const meu = ++pedidoRua;
+    try {
+      const lista = await (await fetch(`https://viacep.com.br/ws/${selUf.value}/${encodeURIComponent(inCid.value.trim())}/${encodeURIComponent(rua)}/json/`)).json();
+      if (meu !== pedidoRua) return;
+      ultimaLista = Array.isArray(lista) ? lista : [];
+      if (!ultimaLista.length) { sug.innerHTML = '<p class="dy-apoio sug-dica">Não achamos uma rua com esse nome nessa cidade. Confira a grafia.</p>'; return; }
+      mostrarSugestoes();
+    } catch (er) { if (meu === pedidoRua) sug.innerHTML = '<p class="dy-apoio sug-dica">Não conseguimos buscar agora. Tente de novo em instantes.</p>'; }
+  }
+  inRua.addEventListener('input', () => { clearTimeout(tRua); tRua = setTimeout(buscarRua, 380); });
+  inRua.addEventListener('blur', () => { const antes = inRuaNum.value; separarNumero(); if (inRuaNum.value !== antes) mostrarSugestoes(); });
+  inRuaNum.addEventListener('input', () => { inRuaNum.value = so(inRuaNum.value).slice(0, 6); const c = inRuaNum.closest('.campo'); c.classList.toggle('valido', !!inRuaNum.value); c.querySelector('.campo__ico').innerHTML = CHECK; mostrarSugestoes(); });
+  inRuaNum.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const b = $('.sugestao--certa', sug); if (b) b.click(); } });
   sug.addEventListener('click', (e) => {
     const b = e.target.closest('[data-cep]'); if (!b) return;
-    inCep.value = mascara.cep(b.dataset.cep); busca.hidden = true; $('[data-nao-sei-cep]').textContent = 'Não sei o meu CEP';
-    consultarCep();
+    const num = so(inRuaNum.value);
+    abrirBuscaCep(false);
+    inCep.value = mascara.cep(b.dataset.cep);
+    consultarCep().then(() => { if (num) { inNum.value = num; inNum.dispatchEvent(new Event('input', { bubbles: true })); checarEnd(); } });
   });
 
   // Pré-preenchimento: vindo da Home (sessionStorage) ou pela URL
@@ -264,7 +312,7 @@
     let salvo = null; try { salvo = JSON.parse(sessionStorage.getItem('dy_endereco') || 'null'); } catch (er) { /* */ }
     const cep = so(q.get('cep') || (salvo && salvo.cep) || ''); const num = q.get('numero') || (salvo && salvo.numero) || '';
     if (cep.length === 8) { inCep.value = mascara.cep(cep); if (num) { inNum.value = num; } consultarCep().then(() => { if (num) $('[data-grupo="numero"]').validarAgora(); }); }
-    else if (abrirBusca) $('[data-nao-sei-cep]').click();
+    else if (abrirBusca) abrirBuscaCep(true);
     else setTimeout(() => inCep.focus(), 300);
   })();
 
