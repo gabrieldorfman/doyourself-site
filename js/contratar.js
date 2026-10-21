@@ -327,6 +327,8 @@
   // Pré-preenchimento: vindo da Home (sessionStorage) ou pela URL
   (function preencher() {
     if (retomar) return;
+    // Veio de "Não sei o meu CEP" (home, combo, energia, internet, celular): abre direto a busca pelo endereço
+    if (abrirBusca && !q.get('cep')) { abrirBuscaCep(true); return; }
     let salvo = null; try { salvo = JSON.parse(sessionStorage.getItem('dy_endereco') || 'null'); } catch (er) { /* */ }
     const cep = so(q.get('cep') || (salvo && salvo.cep) || ''); const num = q.get('numero') || (salvo && salvo.numero) || '';
     if (cep.length === 8) { inCep.value = mascara.cep(cep); if (num) { inNum.value = num; } consultarCep().then(() => { if (num) $('[data-grupo="numero"]').validarAgora(); }); }
