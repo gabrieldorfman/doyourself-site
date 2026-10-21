@@ -644,20 +644,23 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
   .dock__resumo .carrinho__seta { display: none; }
 }
 
-.dock__valor .t-curto { display: none; }
-@media (max-width: 430px) {
-  .dock__qtd small { display: none; }
+/* ============ v12 · Barra do celular: resumo nunca espremido ============ */
+@media (max-width: 767px) {
+  .dock__barra { justify-content: flex-end; }
+  /* base 0 + largura mínima do conteúdo: meio a meio quando cabe; quando não cabe, o resumo cresce e o botão encolhe */
+  .dock__resumo:not([hidden]) { flex: 1 1 0; min-width: max-content; justify-content: center; gap: 10px; padding: 6px 12px 6px 10px; }
+  .dock__resumo:not([hidden]) ~ .dock__ir { flex: 1 1 0; min-width: 92px; }
+  .dock__ir { white-space: nowrap; }
+  .dock__qtd small { display: block; font-size: 10.5px; }
+  .dock__resumo .dock__qtd .carrinho__qtd { width: 30px; height: 30px; border-radius: 10px; font-size: 15px; }
+  .dock__valor small { font-size: 10.5px; white-space: nowrap; }
+  .dock__valor b { font-size: 15px; }
+  .dock__valor b i { font-size: 10px; }
+  .dock__valor em { font-size: 12px; }
+}
+@media (max-width: 360px) {
+  .dock__barra { gap: 6px; }
   .dock__resumo:not([hidden]) { gap: 8px; padding: 6px 8px; }
-}
-@media (max-width: 400px) {
-  .dock__valor .t-longo { display: none; }
-  .dock__valor .t-curto { display: inline; }
-  .dock__valor small { font-size: 11px; }
-}
-@media (max-width: 340px) {
-  .dock__resumo:not([hidden]) { gap: 6px; padding: 6px; }
-  .dock__resumo .dock__qtd .carrinho__qtd { width: 26px; height: 26px; font-size: 14px; }
-  .dock__valor b { font-size: 13px; }
-  .dock__valor b i { font-size: 9px; }
-  .dock__ir { font-size: 14px; padding: 0 8px; }
+  .dock__ir { font-size: 14px; padding: 0 10px; }
+  .dock__ir .seta-dir { display: none; }
 }
