@@ -29,12 +29,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792614354">
-  <link rel="stylesheet" href="css/base.css?v=1792614354">
-  <link rel="stylesheet" href="css/dy.css?v=1792614354">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792614354">
-  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792614354">
-  <link rel="stylesheet" href="css/contratar.css?v=1792614354">
+  <link rel="stylesheet" href="css/tokens.css?v=1792618471">
+  <link rel="stylesheet" href="css/base.css?v=1792618471">
+  <link rel="stylesheet" href="css/dy.css?v=1792618471">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792618471">
+  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792618471">
+  <link rel="stylesheet" href="css/contratar.css?v=1792618471">
 </head>
 <body class="pg-contratar">
   <a class="sr-only" href="#fluxo">Pular para o formulário</a>
@@ -164,6 +164,7 @@
             </div>
           </div>
           <p class="campo__msg dica" data-bairro></p>
+          <div class="aviso-faixa" data-aviso-faixa role="status" hidden></div>
 
           <div class="campo-grupo" data-grupo="comp">
             <div class="campo">
@@ -219,11 +220,17 @@
         <h1 class="tela__titulo" id="h-disponivel" tabindex="-1">Disponível no seu endereço</h1>
         <p class="tela__sub" data-disp-end></p>
       </header>
+      <ol class="disp-passos" aria-label="Como funciona">
+        <li><span>1</span>Escolha os serviços e os planos</li>
+        <li><span>2</span>Envie o pedido pelo WhatsApp</li>
+        <li><span>3</span>Receba o cashback via PIX quando o contrato fechar</li>
+      </ol>
+      <p class="disp-pergunta">O que você quer no seu pedido?</p>
       <div class="resumo" data-disp></div>
       <div class="form__acoes">
         <button class="dy-btn dy-btn--primario dy-btn--g dy-btn--bloco" type="button" data-montar>Montar meu combo <span class="seta-dir" aria-hidden="true">→</span></button>
       </div>
-      <p class="tela__seguro">Você escolhe só o que quiser.</p>
+      <p class="tela__seguro" data-disp-dica>Toque nos cards para escolher um, dois ou os três.</p>
     </section>
 
     <!-- ========== TELA 3 · SEU COMBO (produtos) ========== -->
@@ -310,7 +317,7 @@
         </div>
         <button class="escolha consentimento" type="button" role="checkbox" aria-checked="false" data-consentimento>
           <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <span>Autorizo o uso dos meus dados só para este pedido (<a class="dy-link" href="politica-de-privacidade.html" target="_blank" rel="noopener">Privacidade</a>).</span>
+          <span>Autorizo o uso dos meus dados só para este pedido. <a class="dy-link" href="politica-de-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a></span>
         </button>
         <div class="form__acoes">
           <button class="dy-btn dy-btn--primario dy-btn--g dy-btn--bloco" type="submit" data-continuar disabled>Continuar <span class="seta-dir" aria-hidden="true">→</span></button>
@@ -326,6 +333,7 @@
         <p class="tela__sub">Nada é cobrado agora.</p>
       </header>
       <div class="form">
+        <p class="pag__oque" data-pag-oque hidden></p>
         <div class="pagamentos" role="radiogroup" aria-labelledby="h-pagamento" data-pagamentos>
           <button class="escolha escolha--radio pag" type="button" role="radio" aria-checked="false" data-pag="debito">
             <span class="pag__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10h18M5 10V8l7-4 7 4v2M6 10v7M10 10v7M14 10v7M18 10v7M3 20h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -421,12 +429,12 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
-  <script src="js/config.js?v=1792614354"></script>
-  <script src="js/menu.js?v=1792614354"></script>
-  <script src="js/main.js?v=1792614354"></script>
-  <script src="js/pedido.js?v=1792614354"></script>
-  <script src="js/ofertas.js?v=1792614354"></script>
-  <script src="js/vendor/gsap.min.js?v=1792614354"></script>
-  <script src="js/contratar.js?v=1792614354"></script>
+  <script src="js/config.js?v=1792618471"></script>
+  <script src="js/menu.js?v=1792618471"></script>
+  <script src="js/main.js?v=1792618471"></script>
+  <script src="js/pedido.js?v=1792618471"></script>
+  <script src="js/ofertas.js?v=1792618471"></script>
+  <script src="js/vendor/gsap.min.js?v=1792618471"></script>
+  <script src="js/contratar.js?v=1792618471"></script>
 </body>
 </html>

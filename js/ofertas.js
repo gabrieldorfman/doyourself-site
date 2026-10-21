@@ -75,7 +75,7 @@
         return `<button type="button" class="p-op" role="radio" aria-checked="${i === op}" data-op="${i}"><span class="p-op__logo">${logo}</span><span class="p-op__txt"><b>${o.logo ? o.nome : 'Só internet'}</b>${tag}</span><span class="p-op__preco">${brl(centavos(o.preco))}<small>/mês</small></span></button>`;
       }).join('');
       extra = `<p class="personaliza__titulo personaliza__titulo--2">Quer adicionar um streaming?</p>
-        <p class="personaliza__sub">Já vem no preço do plano.</p>
+        <p class="personaliza__sub">O valor do streaming já aparece somado em cada opção.</p>
         <div class="personaliza__ops" role="radiogroup" aria-label="Streaming do plano de ${p.num} ${unid(p)}">${ops}</div>`;
     } else if (!yt) {
       extra = '<p class="personaliza__sub">Somente internet, sem streaming.</p>';

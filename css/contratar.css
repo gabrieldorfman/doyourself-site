@@ -689,3 +689,51 @@ button.disp-item:hover .disp-ver { background: var(--marca-tint); }
 .sugestao--rua span { white-space: nowrap; }
 .sugestao__cep { font-size: 18px !important; font-weight: 800; color: var(--marca-soft-texto) !important; margin-top: 4px; }
 .sugestao__usar { margin-top: 6px; font-size: 14px !important; font-weight: 800; color: var(--marca-titulo) !important; }
+
+/* ============ v14 · Tela "Disponível no seu endereço" ============ */
+.disp-alterar { font-size: inherit; margin-left: 2px; }
+.disp-passos { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin: -4px auto 22px; font-size: 14px; font-weight: 600; color: var(--texto-corpo); }
+.disp-passos li { display: flex; align-items: center; gap: 8px; }
+.disp-passos li span { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--marca-soft); color: var(--marca-soft-texto); font-size: 12px; font-weight: 800; }
+.disp-pergunta { margin-bottom: 12px; text-align: center; font-size: 17px; font-weight: 800; color: var(--texto-titulo); }
+.disp-item { gap: 12px; position: relative; }
+.disp-item .disp-linha { align-items: center; }
+.disp-tit { font-size: 18px; line-height: 1.25; color: var(--texto-titulo); }
+.disp-preco { font-size: 15px; color: var(--texto-corpo-forte); }
+.disp-preco b { color: var(--texto-titulo); }
+.disp-lista { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--texto-corpo); }
+.disp-lista li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.35; }
+.disp-lista svg { flex: none; width: 14px; height: 14px; margin-top: 3px; color: var(--marca-icone); }
+.disp-cb { padding: 10px 12px; border-radius: 12px; background: var(--marca-soft); color: var(--marca-soft-texto); font-size: 13.5px; line-height: 1.4; }
+.disp-talvez { font-size: 12.5px; color: var(--texto-terciario); line-height: 1.4; }
+.disp-nao { font-size: 14px; color: var(--texto-terciario); }
+.disp-quero { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 99px; border: 1.5px solid var(--marca-outline); color: var(--marca-titulo); font-weight: 800; font-size: 15px; transition: background var(--rapido), color var(--rapido); }
+.disp-quero__marca { width: 22px; height: 22px; border-radius: 7px; border: 2px solid currentColor; display: grid; place-items: center; }
+.disp-quero__marca svg { width: 12px; height: 12px; opacity: 0; }
+.disp-item--on { border-color: var(--marca-outline) !important; box-shadow: 0 0 0 3px var(--marca-tint); }
+.disp-item--on .disp-quero { background: var(--marca-primario); border-color: var(--marca-primario); color: var(--marca-primario-texto); }
+.disp-item--on .disp-quero__marca { background: #fff; border-color: #fff; color: var(--marca-primario); }
+.disp-item--on .disp-quero__marca svg { opacity: 1; }
+button.disp-item:hover .disp-quero { background: var(--marca-tint); }
+button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-primario); }
+.tela[data-tela="disponivel"] [data-montar]:disabled { opacity: 1; }
+@media (max-width: 767px) { .disp-passos { flex-direction: column; align-items: flex-start; width: fit-content; gap: 8px; } }
+
+/* Número fora da faixa do CEP */
+.aviso-faixa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; padding: 12px 14px; border-radius: 14px; background: var(--aviso-informativo-fundo); border: 1px solid var(--aviso-informativo-borda); font-size: 14px; color: var(--texto-corpo-forte); }
+.aviso-faixa[hidden] { display: none; }
+.aviso-faixa .ct-link { font-size: 14px; }
+
+/* Seu combo: serviços que faltam antes dos totais */
+.rz-falta-tit { margin-top: 6px; font-size: 14px; font-weight: 800; color: var(--texto-terciario); }
+
+/* Pagamento: o que entra no valor */
+.pag__oque { margin: -6px 0 14px; text-align: center; font-size: 14px; color: var(--texto-corpo); }
+.pag__oque[hidden] { display: none; }
+
+/* Barra preta acompanha a rolagem no computador e no tablet */
+@media (min-width: 768px) { .dock { position: sticky; top: 76px; z-index: 40; } }
+
+/* Tela final: o fundo verde não cria rolagem lateral (barra de rolagem do Windows) */
+.pg-contratar { overflow-x: clip; }
+@media (min-width: 768px) { .dock .dock__resumo { box-shadow: 0 10px 28px rgba(0, 0, 0, .22); } }

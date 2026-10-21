@@ -119,21 +119,21 @@ const net800 = { id: '800', variante: 'soft', selo: 'OFERTA DO MÊS', num: '800'
   detalhes: detNet('800 Mega', '400 Mega', 6), apps: ['aya-books', 'youtube-premium'], tituloAcao: 'Já vem incluso no seu plano',
   opcoes: [{ nome: 'YouTube Premium', logo: 'youtube-premium', preco: 129.99, de: 169.99, incluso: 'sem custo extra', resumo: '800 Mb + YouTube Premium' }], opcaoPadrao: 0, de: 169.99, tarja: { streaming: ['youtube-premium'] } };
 const net1000 = { id: '1000', variante: 'premium', selo: 'PREMIUM', num: '1000', unidade: 'MEGA',
-  detalhes: detNet('1.000 Mega', '500 Mega', 6, true), apps: ['aya-books', 'aya-bancah', 'paramount-44'], tituloAcao: 'Personalize o seu plano',
+  detalhes: detNet('1000 Mega', '500 Mega', 6, true), apps: ['aya-books', 'aya-bancah', 'paramount-44'], tituloAcao: 'Personalize o seu plano',
   opcoes: [SO(129.99, 189.99, '1000 Mb'), PARA(149.99, 199.99, '1000 Mb + Paramount+', 'paramount-44'), HBO(159.99, 219.99, '1000 Mb + HBO Max')], opcaoPadrao: 0, de: 189.99, tarja: { streaming: ['paramount', 'hbo-max'] } };
 const net600 = (preco, selo = 'ESSENCIAL', variante = 'tint', soComStreaming = false) => ({ id: '600', variante, selo, num: '600', unidade: 'MEGA',
   detalhes: detNet('600 Mega', '300 Mega', 5), apps: ['aya-books', 'aya-bancah', 'paramount'], tituloAcao: 'Personalize o seu plano',
   opcoes: [...(soComStreaming ? [] : [SO(preco, 149.99, '600 Mb')]), PARA(109.99, 149.99, '600 Mb + Paramount+'), GLOBO(119.99, 159.99, '600 Mb + GloboPlay')], opcaoPadrao: 0, de: 149.99, tarja: { streaming: ['paramount', 'globoplay'] } });
 const netSimples = (id, preco, de, up, wifi, selo, variante, extra) => ({ id, variante, selo, num: id.replace(/^e/, ''), unidade: 'MEGA',
   ...(extra ? { nota: extra } : {}),
-  detalhes: detNet(id.replace(/^e/, '') === '1000' ? '1.000 Mega' : id.replace(/^e/, '') + ' Mega', up, wifi, variante === 'premium'), apps: ['aya-books', 'aya-bancah'],
+  detalhes: detNet(id.replace(/^e/, '') === '1000' ? '1000 Mega' : id.replace(/^e/, '') + ' Mega', up, wifi, variante === 'premium'), apps: ['aya-books', 'aya-bancah'],
   tituloAcao: 'Este plano inclui', opcoes: [SO(preco, de, id.replace(/^e/, '') + ' Mb')], opcaoPadrao: 0, de, tarja: { streaming: null } });
 
 DY.catalogo = {
   // Internet para a sua casa (CPF)
   casa: {
     tbr: [netSimples('500', 89.99, 129.99, '250 Mega', 5, 'BÁSICO', 'branco'), net600(99.99), net800, net1000],
-    norte: [net600(79.99, 'OFERTA REGIONAL', 'branco'), net800, { ...net1000, variante: 'tint', detalhes: detNet('1.000 Mega', '500 Mega', 6) }],
+    norte: [net600(79.99, 'OFERTA REGIONAL', 'branco'), net800, { ...net1000, variante: 'tint', detalhes: detNet('1000 Mega', '500 Mega', 6) }],
     sp: [netSimples('400', 79.99, 119.99, '200 Mega', 5, 'BÁSICO', 'branco'), net600(0, 'ESSENCIAL', 'tint', true), net800, net1000],
   },
   // Internet para a sua empresa (CNPJ) — sem streaming
