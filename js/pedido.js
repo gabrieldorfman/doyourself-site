@@ -34,6 +34,9 @@
     const calc = (n) => { let s = 0, p = n - 7; for (let i = 0; i < n; i++) { s += +d[i] * p--; if (p < 2) p = 9; } const r = s % 11; return r < 2 ? 0 : 11 - r; };
     return calc(12) === +d[12] && calc(13) === +d[13];
   }
+  // CPF de teste 000.000.000-00: passa só no ambiente de teste (Vercel e cópia local), nunca no domínio oficial
+  const AMBIENTE_TESTE = /(^localhost$|^127\.0\.0\.1$|\.vercel\.app$)/.test(location.hostname);
+  const cpfTeste = (v) => AMBIENTE_TESTE && so(v) === '00000000000';
   DY.validar = {
     cep: (v) => (so(v).length === 8 ? '' : 'Digite os 8 números do CEP.'),
     numero: (v) => (String(v).trim() ? '' : 'Informe o número do imóvel. Se não tiver, escreva S/N.'),
@@ -53,7 +56,7 @@
       return '';
     },
     email: (v) => (/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(String(v).trim()) ? '' : 'Esse e-mail parece incompleto. Ex.: seunome@gmail.com'),
-    cpf: (v) => (so(v).length < 11 ? 'O CPF tem 11 números.' : cpfOk(v) ? '' : 'Esse CPF não é válido. Confira os números.'),
+    cpf: (v) => (so(v).length < 11 ? 'O CPF tem 11 números.' : cpfOk(v) || cpfTeste(v) ? '' : 'Esse CPF não é válido. Confira os números.'),
     cnpj: (v) => (so(v).length < 14 ? 'O CNPJ tem 14 números.' : cnpjOk(v) ? '' : 'Esse CNPJ não é válido. Confira os números.'),
   };
   DY.so = so;
