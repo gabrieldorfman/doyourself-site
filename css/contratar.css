@@ -753,3 +753,11 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .ct-quem:not(.ct-quem--ok) .ct-quem__ops { animation: telaEntra .4s var(--ease) both; }
 @media (max-width: 380px) { .ct-quem__ops { grid-template-columns: 1fr; } }
 .energia-sim .ct-quem { margin: 4px 0 0; max-width: none; }
+
+/* ============ v16 · Benefícios em internet e celular; check das etapas ============ */
+.beneficios--internet, .beneficios--celular { max-width: 560px; margin: 0 auto 18px; }
+.beneficios--internet li { background: var(--internet-tint); }
+.beneficios--celular li { background: var(--celular-tint); }
+.cp-pilula.adicionado .n { font-size: 13px; }
+.cp-pilula.adicionado .n::after { content: none; }
+.cp-pilula .n svg { width: 13px; height: 13px; display: block; }

@@ -488,7 +488,7 @@
   function renderPassos() {
     $('[data-combo-passos]').innerHTML = st.ordem.map((p, i) => {
       const cls = st.esc[p] ? 'adicionado' : st.esc[p] === null ? 'pulado' : i === st.idx ? 'atual' : '';
-      return `<span class="cp-pilula ${i === st.idx ? 'atual ' : ''}${cls}"><span class="n">${i + 1}</span>${ROTULO[p]}</span>`;
+      return `<span class="cp-pilula ${i === st.idx ? 'atual ' : ''}${cls}"><span class="n">${st.esc[p] ? CHECK : i + 1}</span>${ROTULO[p]}</span>`;
     }).join('');
   }
 
@@ -548,14 +548,23 @@
       <div class="ct-quem__ops" role="radiogroup" aria-labelledby="q-${prod}" data-para="${prod}">${ops.map(([k, a, b]) => `<button type="button" class="ct-quem__op" role="radio" aria-checked="${v === k}" data-v="${k}"><span class="ct-quem__marca" aria-hidden="true"></span><span><b>${a}</b><small>${b}</small></span></button>`).join('')}</div></div>`;
   }
   const faltaQuem = (prod) => !st.para[prod];
+  function beneficios(prod) {
+    const B = {
+      internet: st.para.internet === 'empresa'
+        ? [['instalacao.svg', 'Instalação grátis'], ['lista-wifi.svg', '100% fibra óptica'], ['modem.svg', 'Wi-Fi incluso']]
+        : [['instalacao.svg', 'Instalação grátis'], ['dif-tela.svg', 'Streaming incluso'], ['lista-wifi.svg', '100% fibra óptica']],
+      celular: [['ligacoes.svg', 'Ligações ilimitadas'], ['portabilidade.svg', 'Portabilidade grátis'], ['dados-moveis.svg', 'Apps ilimitados']],
+    }[prod];
+    return `<ul class="energia-beneficios beneficios--${prod}">${B.map(([i, t]) => `<li><img src="${img('icones/' + i)}" alt="">${t}</li>`).join('')}</ul>`;
+  }
 
   /* ----- Internet ----- */
   function htmlInternet() {
-    if (faltaQuem('internet')) return htmlQuem('internet');
+    if (faltaQuem('internet')) return beneficios('internet') + htmlQuem('internet');
     const sel = st.rasc.internet || (st.esc.internet && { ...st.esc.internet });
     const cards = DY.planosInternet.map((p) => { const on = !!(sel && sel.id === p.id); return DY.ofertas.internet(p, { on, op: on ? sel.op : 0 }); }).join('');
     const pSel = sel && DY.planosInternet.find((x) => x.id === sel.id);
-    return `${htmlQuem('internet')}
+    return `${beneficios('internet')}${htmlQuem('internet')}
       <div><div class="ofertas" data-trilho>${cards}</div>${dots(DY.planosInternet.length)}</div>
       <div data-pers-box>${pSel ? DY.ofertas.personaliza(pSel, sel.op) : ''}</div>
       <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. Pagando no boleto ou PIX, o valor aumenta apenas R$ 10,00.</p>`;
@@ -632,11 +641,11 @@
 
   /* ----- Celular ----- */
   function htmlCelular() {
-    if (faltaQuem('celular')) return htmlQuem('celular');
+    if (faltaQuem('celular')) return beneficios('celular') + htmlQuem('celular');
     const sel = st.rasc.celular || (st.esc.celular && { ...st.esc.celular });
     const cards = DY.planosCelular.map((p) => DY.ofertas.celular(p, { on: !!(sel && sel.id === p.id) })).join('');
     const n = sel ? sel.linhas : 1;
-    return `${htmlQuem('celular')}
+    return `${beneficios('celular')}${htmlQuem('celular')}
       <div><div class="ofertas ofertas--cel" data-trilho>${cards}</div>${dots(DY.planosCelular.length)}</div>
       <div class="linhas" data-linhas-box${sel ? '' : ' hidden'}>
         <p class="linhas__titulo" id="lbl-linhas">Quantas linhas você quer?</p>

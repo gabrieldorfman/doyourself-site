@@ -138,7 +138,17 @@
 .dica-bolha { position: fixed; z-index: 200; max-width: 280px; padding: 12px 14px; border-radius: 12px; background: var(--texto-ink, #1f1f1f); color: #fff; font-size: 13.5px; line-height: 1.45; font-weight: 500; box-shadow: 0 12px 30px rgba(0, 0, 0, .22); opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
 .dica-bolha b { font-weight: 800; color: #b5ffdc; }
 .dica-bolha.on { opacity: 1; transform: none; }
-.dica-bolha::after { content: ""; position: absolute; left: 24px; bottom: -6px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-radius: 2px; }
+.dica-bolha::after { content: ""; position: absolute; left: calc(var(--seta-x, 24px) - 6px); bottom: -6px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-radius: 2px; }
 .dica-bolha.embaixo::after { bottom: auto; top: -6px; }
 [data-tema="escuro"] .dica-bolha { background: #f4f3ee; color: #1f1f1f; }
 [data-tema="escuro"] .dica-bolha b { color: #40745c; }
+
+/* Streamings à escolha no card do plano */
+.oferta__stream { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+.oferta__stream small { font-size: 12px; font-weight: 700; color: var(--texto-terciario); }
+.oferta.premium .oferta__stream small { color: var(--premium-texto-suave, rgba(255,255,255,.7)); }
+.oferta__stream div { display: flex; gap: 8px; }
+.oferta__stream img { width: 34px; height: 34px; border-radius: 9px; object-fit: cover; }
+/* Dica também nos quadrinhos de "Seu plano" */
+.pz-tile[data-dica] { cursor: help; }
+.pz-tile[data-dica]:focus-visible { outline: 3px solid var(--marca-outline); outline-offset: 2px; }

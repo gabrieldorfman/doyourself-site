@@ -30,12 +30,16 @@
     const apps = basicos.map((k) => k === 'youtube-premium' ? `<img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium">` : `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
     const o = p.opcoes[op] || p.opcoes[0];
     const preco = centavos(o.preco);
+    // planos que têm streaming à escolha mostram os logos já no card (a escolha é feita depois de "Escolher este plano")
+    const comLogo = p.opcoes.filter((x) => x.logo && logos[x.logo]);
+    const stream = p.opcoes.length > 1 && comLogo.length ? `<div class="oferta__stream"><small>Streaming à sua escolha</small><div>${comLogo.map((x) => `<img src="${img(logos[x.logo].src)}" alt="${x.nome}" title="${x.nome}">`).join('')}</div></div>` : '';
     const extra = op > 0 && o.logo ? `<span class="oferta__extra">+ ${o.nome}</span>` : '';
     return `<div class="oferta${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="Internet ${p.num} ${unid(p)}" data-id="${p.id}">
       <div class="oferta__topo"><span class="oferta__selo">${p.selo}</span><span class="oferta__check" aria-hidden="true">${CHECK}</span></div>
       <p class="oferta__vel"><b>${p.num}</b><span>${unid(p)}</span></p>
       <ul class="oferta__lista">${det}</ul>
       <div class="oferta__apps">${apps}</div>
+      ${stream}
       <div class="oferta__espaco"></div>
       <div class="oferta__preco"><s data-de>De ${brl(centavos(o.de || p.de))}</s><div><b data-preco>${brl(preco)}</b><span>/mês</span></div><small data-preco-obs>${extra || 'no débito automático'}</small></div>
       <div class="oferta__cb"><span>Volta para você<br><small>cashback de 50%</small></span><b data-cb>${brl(cashbackCentavos(preco, 50))}</b></div>
@@ -63,7 +67,7 @@
   function personaliza(p, op) {
     if (!p) return '';
     const [dl, ul, mo] = p.detalhes;
-    const tile = (ico, r, v) => `<div class="pz-tile"><img src="${img('icones/' + ico.replace('premium-', ''))}" alt=""><span>${r}</span><b>${v}</b></div>`;
+    const tile = (ico, r, v) => `<div class="pz-tile"${attrDica(r, v)}><img src="${img('icones/' + ico.replace('premium-', ''))}" alt=""><span class="dica-rot">${r}</span><b>${v}</b></div>`;
     let tiles = tile(dl[0], 'Download', dl[2]) + tile(ul[0], 'Upload', ul[2]) + tile(mo[0], 'Modem', mo[2].replace(' incluso', ''));
     const yt = p.opcoes.length === 1 && p.opcoes[0].logo === 'youtube-premium';
     if (yt) tiles += `<div class="pz-tile pz-tile--app"><img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium"><span>Assinatura</span><b>Já inclusa</b></div>`;
@@ -126,10 +130,13 @@
     if (!bolha) { bolha = document.createElement('div'); bolha.className = 'dica-bolha'; bolha.setAttribute('role', 'tooltip'); document.body.appendChild(bolha); }
     if (atual !== el) desde = Date.now();
     bolha.innerHTML = el.dataset.dica; bolha.classList.add('on'); atual = el;
-    const r = el.getBoundingClientRect(); const b = bolha.getBoundingClientRect();
-    let x = r.left + Math.min(r.width, 160) / 2 - b.width / 2; x = Math.max(10, Math.min(x, innerWidth - b.width - 10));
+    const alvo = el.querySelector('.dica-rot') || el;
+    const r = alvo.getBoundingClientRect(); const b = bolha.getBoundingClientRect();
+    const meio = r.left + r.width / 2;
+    let x = meio - b.width / 2; x = Math.max(10, Math.min(x, innerWidth - b.width - 10));
     const cima = r.top - b.height - 10 > 70; const y = cima ? r.top - b.height - 10 : r.bottom + 10;
     bolha.style.left = x + 'px'; bolha.style.top = y + 'px'; bolha.classList.toggle('embaixo', !cima);
+    bolha.style.setProperty('--seta-x', Math.max(14, Math.min(b.width - 14, meio - x)) + 'px');
   }
   const fino = matchMedia('(hover: hover) and (pointer: fine)');
   document.addEventListener('mouseover', (e) => {
