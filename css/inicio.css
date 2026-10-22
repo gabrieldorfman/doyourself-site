@@ -393,3 +393,12 @@ a.cb-card.gancho:hover .gancho__cta span { transform: translateX(4px); }
 .hero2__linha { display: block; }
 @media (min-width: 1024px) { .hero2 .dy-display { font-size: clamp(36px, 3.5vw, 52px); } .hero2__linha { white-space: nowrap; } }
 .hero2 .dy-lead { font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; max-width: 580px; }
+/* Ganchos do hero: mais respiro entre título, descrição e "Clique e confira" */
+.hero2 .cb-card.gancho { padding: 20px 22px; gap: 16px; }
+.hero2 .gancho .cb-card__txt { gap: 6px; line-height: 1.4; }
+.hero2 .gancho .cb-card__txt b { line-height: 1.25; }
+.hero2 .gancho .gancho__cta { margin-top: 6px; }
+.hero2 .cb-pilha { gap: 14px; }
+.hero2 .gancho-total { padding: 26px 26px; gap: 6px; }
+.hero2 .gancho-total small { margin-top: 2px; }
+.hero2 .dy-lead { max-width: 660px; }
