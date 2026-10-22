@@ -402,3 +402,11 @@ a.cb-card.gancho:hover .gancho__cta span { transform: translateX(4px); }
 .hero2 .gancho-total { padding: 26px 26px; gap: 6px; }
 .hero2 .gancho-total small { margin-top: 2px; }
 .hero2 .dy-lead { max-width: 660px; }
+/* Celular: hierarquia mais clara — etiqueta menor, título maior, desenho do fundo mais discreto */
+@media (max-width: 767px) {
+  .hero2 .dy-eyebrow { font-size: 11px; letter-spacing: .08em; }
+  .hero2 .dy-display { font-size: 37px; line-height: 1.07; letter-spacing: -.02em; }
+  .hero-fundo { opacity: .1; }
+}
+@media (max-width: 380px) { .hero2 .dy-display { font-size: 33px; } }
+@media (max-width: 767px) { .hero2 .consulta-cep__titulo { font-size: 17px; } }
