@@ -335,3 +335,29 @@
 @media (max-width: 1023px) { .secao-ico { --ico-tam: 150px !important; } .secao-ico--esq .secao-ico__fixo { margin-left: -36px; } .secao-ico--dir .secao-ico__fixo { margin-right: -36px; } }
 @media (max-width: 640px) { .secao-ico { --ico-tam: 104px !important; } .secao-ico__fixo { top: 14vh; margin-top: 40px; } .secao-ico--esq .secao-ico__fixo { margin-left: -28px; } .secao-ico--dir .secao-ico__fixo { margin-right: -28px; } }
 @media (prefers-reduced-motion: reduce) { .secao-ico svg { animation: none; opacity: .14; } }
+
+/* ---------- Hero: fundo animado (lâmpada, Wi-Fi e celular apontando para o cashback) ---------- */
+.hero2 { position: relative; isolation: isolate; }
+.hero-fundo { position: absolute; inset: 0; z-index: -1; overflow: clip; pointer-events: none; }
+.hero-fundo svg { position: absolute; top: 47%; left: max(var(--gutter, 40px), calc((100% - var(--conteudo, 1368px)) / 2)); translate: 0 -50%; width: min(920px, 64%); height: auto; opacity: .13; color: var(--marca-primario, #3f7a5e); overflow: visible; }
+[data-tema="escuro"] .hero-fundo svg { opacity: .2; }
+.hf-i { transform-box: fill-box; transform-origin: center; opacity: 0; animation: 10s var(--ease, ease) infinite both; }
+.hf-lamp { animation-name: hf-lamp; } .hf-wifi { animation-name: hf-wifi; } .hf-cel { animation-name: hf-cel; } .hf-moeda { animation-name: hf-moeda; }
+.hf-s { stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0; animation: hf-seta 10s ease-in-out infinite both; }
+.hf-s2 { animation-delay: .15s; } .hf-s3 { animation-delay: .3s; }
+@keyframes hf-lamp { 0%, 0% { opacity: 0; transform: translateY(14px) scale(.85); } 8%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
+@keyframes hf-wifi { 0%, 9% { opacity: 0; transform: translateY(14px) scale(.85); } 17%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
+@keyframes hf-cel { 0%, 18% { opacity: 0; transform: translateY(14px) scale(.85); } 26%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
+@keyframes hf-seta { 0%, 30% { stroke-dashoffset: 1; opacity: 0; } 32% { opacity: 1; } 46%, 86% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes hf-moeda { 0%, 46% { opacity: 0; transform: scale(.6); } 54% { opacity: 1; transform: scale(1.12); } 60% { transform: scale(1); } 68% { transform: scale(1.07); } 74%, 86% { opacity: 1; transform: scale(1); } 96%, 100% { opacity: 0; transform: scale(1); } }
+@media (max-width: 1023px) { .hero-fundo svg { top: 40px; left: 50%; translate: -50% 0; width: min(760px, 112%); opacity: .11; } }
+@media (max-width: 640px) { .hero-fundo svg { top: 30px; width: 118%; } }
+@media (prefers-reduced-motion: reduce) { .hf-i, .hf-s { animation: none; opacity: 1; stroke-dashoffset: 0; } }
+
+/* Ícones das seções: um pouco maiores e inclinados */
+.secao-ico--energia { --ico-tam: 290px; } .secao-ico--internet { --ico-tam: 300px; } .secao-ico--celular { --ico-tam: 280px; }
+.secao-ico--energia .secao-ico__fixo { rotate: -18deg; }
+.secao-ico--internet .secao-ico__fixo { rotate: 16deg; }
+.secao-ico--celular .secao-ico__fixo { rotate: -15deg; }
+@media (max-width: 1023px) { .secao-ico { --ico-tam: 185px !important; } }
+@media (max-width: 640px) { .secao-ico { --ico-tam: 128px !important; } }
