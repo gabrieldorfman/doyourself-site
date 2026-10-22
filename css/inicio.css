@@ -351,7 +351,7 @@
 @keyframes hf-seta { 0%, 30% { stroke-dashoffset: 1; opacity: 0; } 32% { opacity: 1; } 46%, 86% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
 @keyframes hf-moeda { 0%, 46% { opacity: 0; transform: scale(.6); } 54% { opacity: 1; transform: scale(1.12); } 60% { transform: scale(1); } 68% { transform: scale(1.07); } 74%, 86% { opacity: 1; transform: scale(1); } 96%, 100% { opacity: 0; transform: scale(1); } }
 @media (max-width: 1023px) { .hero-fundo svg { top: 40px; left: 50%; translate: -50% 0; width: min(760px, 112%); opacity: .11; } }
-@media (max-width: 640px) { .hero-fundo svg { top: 30px; width: 118%; } }
+@media (max-width: 640px) { .hero-fundo svg { top: 40px; width: 96%; } }
 @media (prefers-reduced-motion: reduce) { .hf-i, .hf-s { animation: none; opacity: 1; stroke-dashoffset: 0; } }
 
 /* Ícones das seções: um pouco maiores e inclinados */
@@ -361,3 +361,17 @@
 .secao-ico--celular .secao-ico__fixo { rotate: -15deg; }
 @media (max-width: 1023px) { .secao-ico { --ico-tam: 185px !important; } }
 @media (max-width: 640px) { .secao-ico { --ico-tam: 128px !important; } }
+
+/* ---------- Abertura do hero (primeira visita da sessão) ---------- */
+.hero-intro .hero2__copy > * { opacity: 0; transform: translateY(18px); animation: hero-garantia 0s 8s forwards; }
+.hero-intro.hero-intro--copy .hero2__copy > * { opacity: 1; transform: none; animation: none; transition: opacity .7s var(--ease, ease), transform .8s var(--ease, ease); }
+.hero-intro.hero-intro--copy .hero2__copy > :nth-child(2) { transition-delay: .12s; }
+.hero-intro.hero-intro--copy .hero2__copy > :nth-child(3) { transition-delay: .26s; }
+.hero-intro.hero-intro--copy .hero2__copy > :nth-child(4) { transition-delay: .42s; }
+.hero-intro.hero-intro--copy .hero2__copy > :nth-child(5) { transition-delay: .58s; }
+.hero-intro .hero2__legenda { opacity: 0; transition: opacity .7s 1s; }
+.hero-intro.hero-intro--copy .hero2__legenda { opacity: 1; }
+.hero-intro .hero-fundo svg { opacity: .42; transition: opacity 1.4s ease; }
+.hero-intro.hero-intro--fundo .hero-fundo svg { opacity: .13; }
+@media (max-width: 1023px) { .hero-intro .hero-fundo svg { opacity: .5; } .hero-intro.hero-intro--fundo .hero-fundo svg { opacity: .11; } }
+@keyframes hero-garantia { to { opacity: 1; transform: none; } }
