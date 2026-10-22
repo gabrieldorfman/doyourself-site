@@ -382,3 +382,9 @@ a.cb-card.gancho:hover .gancho__cta span { transform: translateX(4px); }
 .cb-card--celular .gancho__cta { color: #188a54; }
 .gancho-total b { letter-spacing: 0; }
 @media (max-width: 420px) { .gancho-total b { font-size: 26px; } }
+/* Título do hero mais contido (texto mais longo) */
+.hero2 .dy-display { font-size: clamp(30px, 3.4vw, 48px); line-height: 1.1; letter-spacing: -.015em; }
+@media (min-width: 768px) and (max-width: 1023px) { .hero2 .dy-display { font-size: 34px; } }
+@media (max-width: 767px) { .hero2 .dy-display { font-size: 30px; line-height: 1.12; } }
+@media (max-width: 380px) { .hero2 .dy-display { font-size: 28px; } }
+.gancho-total b { font-size: clamp(24px, 2.3vw, 32px); }
