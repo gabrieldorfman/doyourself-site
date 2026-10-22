@@ -369,3 +369,4 @@
 .hero2 .cb-total { transform: none; transition: opacity .9s ease; transition-delay: 1.6s; }
 .hero2 .cb-pilha.ativa .cb-card, .hero2 .cb-pilha.ativa .cb-total { opacity: 1; transform: none; }
 .hero2__visual { overflow-x: clip; padding-inline: 14px; margin-inline: -14px; }
+.gancho .cb-card__valor small { white-space: nowrap; }
