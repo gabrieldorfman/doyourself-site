@@ -761,3 +761,54 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .cp-pilula.adicionado .n { font-size: 13px; }
 .cp-pilula.adicionado .n::after { content: none; }
 .cp-pilula .n svg { width: 13px; height: 13px; display: block; }
+
+/* ============ v17 · CPF/CNPJ com ícone; resumo separado; confirmação em blocos ============ */
+.ct-quem__op { position: relative; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; padding: 18px 12px 16px; }
+.ct-quem__op .ct-quem__marca { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; }
+.ct-quem__op[aria-checked="true"] .ct-quem__marca::after { width: 9px; height: 9px; }
+.ct-quem__ico { width: 34px; height: 34px; display: grid; place-items: center; color: var(--texto-titulo); }
+.ct-quem__ico svg { width: 28px; height: 28px; }
+.ct-quem__op[aria-checked="true"] .ct-quem__ico { color: var(--marca-titulo); }
+.ct-quem__op b { font-size: 17px; }
+.ct-quem__op small { font-size: 13px; line-height: 1.35; }
+@media (max-width: 380px) { .ct-quem__ops { grid-template-columns: 1fr 1fr; } .ct-quem__op { padding: 16px 8px 14px; } }
+
+.energia-res__tit { display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--texto-titulo); }
+.energia-res__tit em { font-style: normal; padding: 3px 10px; border-radius: 99px; background: var(--energia-tint); color: var(--energia-soft-texto); font-size: 12px; font-weight: 800; }
+.energia-res__linha b small.mes { display: inline; font-size: 13px; font-weight: 700; color: var(--texto-terciario); }
+.energia-res__aviso { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; background: var(--aviso-informativo-fundo); border: 1px solid var(--aviso-informativo-borda); font-size: 13.5px; line-height: 1.45; color: var(--texto-corpo-forte); }
+.energia-res__aviso img { width: 18px; height: 18px; margin-top: 2px; flex: none; }
+
+.rz-link-cb { align-self: flex-start; margin-top: 2px; padding: 0; background: none; border: 0; font: inherit; font-size: 13.5px; font-weight: 800; color: var(--marca-soft-texto); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.rz-total--energia { border-color: var(--energia-solido); }
+.rz-agora { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--texto-corpo); }
+.rz-agora img { width: 18px; height: 18px; }
+
+.fim-blocos { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.fim-bl { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 18px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #e8faf1; }
+.fim-bl small { font-size: 13px; line-height: 1.45; color: #c6f2dd; opacity: .9; }
+.fim-bl__tit { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; color: #fff; }
+.fim-bl__tit img { width: 22px; height: 22px; padding: 3px; border-radius: 7px; background: #fff; }
+.fim-bl--energia { background: rgba(255, 133, 43, .1); border-color: rgba(255, 170, 100, .45); }
+.fim-bl__de { font-size: 15px; }
+.fim-bl__de b { font-size: 20px; color: #ffcf9f; }
+.fim-bl__lista { display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; }
+.fim-bl__lista li { display: flex; justify-content: space-between; gap: 12px; }
+.fim-bl__lista b, .fim-bl__total b { white-space: nowrap; color: #fff; }
+.fim-bl__total { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, .14); font-weight: 700; }
+.fim-bl__total b { font-size: 17px; }
+.fim-bl--cb { background: #c6f2dd; border-color: #c6f2dd; color: #064a2d; }
+.fim-bl--cb .fim-bl__tit { color: #064a2d; }
+.fim-bl--cb small { color: #064a2d; opacity: .85; }
+.fim-bl__cb { font-size: 34px; font-weight: 800; line-height: 1.1; color: #064a2d; }
+.fim-bl--cb .rz-link-cb { color: #064a2d; }
+
+.cb-info__caixa { gap: 12px; }
+.cb-info__lista { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 14px; background: var(--marca-soft); color: var(--marca-soft-texto); }
+.cb-info__lista li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.cb-info .rz-confirma__acoes .dy-btn { flex: 1; }
+.fim__cartao { padding: 0; background: none; border: 0; }
+.fim-bl__de { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.fim-bl__de span { white-space: nowrap; }
+.fim-bl__total { flex-wrap: wrap; }
+.fim-bl__total b { margin-left: auto; }

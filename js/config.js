@@ -212,7 +212,8 @@ DY.logos = {
    Tudo em centavos inteiros para não errar no ponto flutuante.
    Cashback TRUNCA no centavo (regras-de-cashback §2.3). */
 DY.centavos = (reais) => Math.round(reais * 100);
-DY.cashbackCentavos = (baseCentavos, pct) => Math.floor((baseCentavos * pct) / 100);
+// Cashback arredondado para cima no centavo (ex.: 50% de R$ 149,99 = R$ 75,00) — a mesma regra em todo o site
+DY.cashbackCentavos = (baseCentavos, pct) => Math.ceil((baseCentavos * pct) / 100 - 1e-9);
 DY.brl = (centavos) => 'R$ ' + (centavos / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /* Valor em reais, como a pessoa digita: "800" → 800 · "1500" → 1.500 · "1500,5" → 1.500,5 */

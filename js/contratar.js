@@ -538,14 +538,18 @@
 
   const PERGUNTA = {
     // CPF mostra os planos residenciais; CNPJ, os empresariais (plano de CPF não vai para CNPJ)
-    internet: ['A internet vai ficar no seu CPF ou no CNPJ?', [['casa', 'No meu CPF', 'Planos residenciais'], ['empresa', 'No CNPJ', 'Planos para empresas']]],
-    celular: ['As linhas são para você ou para a sua empresa?', [['cpf', 'Para mim', 'No seu CPF'], ['cnpj', 'Para minha empresa', 'No CNPJ da empresa']]],
-    energia: ['A sua conta de luz hoje está no CPF ou no CNPJ?', [['cpf', 'No meu CPF', 'Casa ou apartamento'], ['cnpj', 'No CNPJ', 'Empresa ou comércio']]],
+    internet: ['A internet vai ficar no seu CPF ou no CNPJ?', [['casa', 'CPF', 'Casa ou apartamento', 'pessoa'], ['empresa', 'CNPJ', 'Empresa ou comércio', 'predio']]],
+    celular: ['As linhas vão ficar no seu CPF ou no CNPJ?', [['cpf', 'CPF', 'Para você e a sua família', 'pessoa'], ['cnpj', 'CNPJ', 'Empresa ou comércio', 'predio']]],
+    energia: ['A sua conta de luz hoje está no CPF ou no CNPJ?', [['cpf', 'CPF', 'Casa ou apartamento', 'pessoa'], ['cnpj', 'CNPJ', 'Condomínio, empresa ou comércio', 'predio']]],
+  };
+  const ICO_QUEM = {
+    pessoa: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c.8-3.6 3.8-6 7.5-6s6.7 2.4 7.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    predio: '<svg viewBox="0 0 24 24"><path d="M4 21V5.5L12 3v18M12 8.5l8 2.5v10M2.5 21h19M7 8h2M7 11.5h2M7 15h2M15 13.5h2M15 17h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
   function htmlQuem(prod) {
     const [tit, ops] = PERGUNTA[prod]; const v = st.para[prod];
     return `<div class="ct-quem${v ? ' ct-quem--ok' : ''}"><p class="ct-quem__tit" id="q-${prod}">${tit}</p>
-      <div class="ct-quem__ops" role="radiogroup" aria-labelledby="q-${prod}" data-para="${prod}">${ops.map(([k, a, b]) => `<button type="button" class="ct-quem__op" role="radio" aria-checked="${v === k}" data-v="${k}"><span class="ct-quem__marca" aria-hidden="true"></span><span><b>${a}</b><small>${b}</small></span></button>`).join('')}</div></div>`;
+      <div class="ct-quem__ops" role="radiogroup" aria-labelledby="q-${prod}" data-para="${prod}">${ops.map(([k, a, b, ico]) => `<button type="button" class="ct-quem__op" role="radio" aria-checked="${v === k}" data-v="${k}"><span class="ct-quem__marca" aria-hidden="true"></span><span class="ct-quem__ico" aria-hidden="true">${ICO_QUEM[ico]}</span><b>${a}</b><small>${b}</small></button>`).join('')}</div></div>`;
   }
   const faltaQuem = (prod) => !st.para[prod];
   function beneficios(prod) {
@@ -736,12 +740,13 @@
         marcar(g, '');
         st.rasc.energia = { conta: reais };
         res.innerHTML = `<div class="energia-res">
-          <div class="energia-res__linha"><span>Hoje você paga</span><b><s>${brl(s.conta)}</s></b></div>
-          <div class="energia-res__linha nova"><span>Com a energia solar, cerca de</span><b>${brl(s.comDesconto)}</b></div>
+          <p class="energia-res__tit"><span>Simulação do seu desconto</span><em>Estimativa</em></p>
+          <div class="energia-res__linha"><span>Sua fatura hoje</span><b><s>${brl(s.conta)}</s></b></div>
+          <div class="energia-res__linha nova"><span>Com o desconto de ${s.pct}%, cerca de</span><b>${brl(s.comDesconto)}<small class="mes">/mês</small></b></div>
           <div class="energia-res__linha"><span>Economia estimada</span><b>${brl(s.economiaMes)} por mês<small>${brl(s.economiaMes * 12)} em um ano</small></b></div>
           <hr>
-          <div class="oferta__cb"><span>Volta para você<br><small>cashback de 10%, uma vez</small></span><b>${brl(s.cashback)}</b></div>
-          <p class="energia-res__nota">É uma estimativa com ${s.pct}% de desconto (pode chegar a 20%). O valor exato depende da sua cidade, da distribuidora e da sua fatura — a gente confirma tudo no WhatsApp antes de você assinar.</p>
+          <div class="oferta__cb"><span>Volta para você<br><small>cashback de 10% da nova conta, uma vez</small></span><b>${brl(s.cashback)}</b></div>
+          <div class="energia-res__aviso"><img src="${img('icones/aviso-info.svg')}" alt=""><span><b>Isto é uma simulação.</b> O desconto real é calculado com a sua fatura e enviado pelo WhatsApp para você aprovar antes de qualquer contrato. A primeira fatura com desconto pode levar até 90 dias.</span></div>
         </div>`;
       }
       atualizarBotaoAdd(); atualizarCarrinho();
@@ -821,28 +826,29 @@
   const ICO = { energia: 'hero-lampada.svg', internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg' };
   const ICO_LAPIS = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.7 3.3a1.6 1.6 0 0 1 2.3 0l1.7 1.7a1.6 1.6 0 0 1 0 2.3L7.5 16.5 3.5 17.5l1-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
   const ICO_LIXO = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M8 6V4.5h4V6M5.5 6l.8 10h7.4l.8-10M8.5 9v4.5M11.5 9v4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const separador = (t) => `<div class="rz-separador" role="separator"><span>${t}</span></div>`;
+  const LINK_CB = '<button type="button" class="rz-link-cb" data-como-cb>Como funciona o cashback?</button>';
   function blocosResumo(l, antesDosTotais = '') {
     const chip = (v) => `<span class="rz-chip">Cashback <b>${brl(v)}</b></span>`;
     const cab = (p) => `<div class="rz-sec__cab"><h3><span class="rz-ico"><img src="${img('icones/' + ICO[p])}" alt=""></span>${TIT[p]}</h3>
       <div class="rz-acoes"><button class="rz-btn" type="button" data-editar="${p}" aria-label="Alterar ${TIT[p]}" title="Alterar">${ICO_LAPIS}<span>Alterar</span></button><button class="rz-btn rz-btn--remover" type="button" data-remover="${p}" aria-label="Remover ${TIT[p]}" title="Remover">${ICO_LIXO}<span>Remover</span></button></div></div>`;
+    const en = l.find((x) => x.produto === 'energia'); const tel = l.filter((x) => x.produto !== 'energia');
     let h = '';
-    ['energia', 'internet', 'celular'].forEach((p) => {
-      const i = l.find((x) => x.produto === p); if (!i) return;
-      if (p === 'energia') h += `<section class="rz-sec rz-sec--energia">${cab(p)}
-        <div class="rz-linha rz-linha--antiga"><span>Fatura antiga${i.titular === 'cnpj' ? ' · no CNPJ' : ' · no CPF'}</span><s>${brl(i.conta_luz)}</s></div>
-        <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Estimativa com ${i.estimativa_desconto_pct}% de desconto</small></span><b>${brl(i.mensal)}${MES}</b></div>
-        <div class="rz-linha rz-linha--cb"><span></span>${chip(i.cashback)}</div></section>`;
-      else h += `<section class="rz-sec rz-sec--${p}">${cab(p)}
-        <div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span></div><div class="rz-item__val"><b>${brl(precoMes(i))}${MES}</b>${chip(i.cashback)}</div></div></section>`;
-    });
-    const tel = l.filter((i) => i.produto !== 'energia'); const en = l.find((i) => i.produto === 'energia');
-    const n = l.length;
+    if (en) h += separador(`Conta de luz com desconto de ${en.estimativa_desconto_pct}%`) + `<section class="rz-sec rz-sec--energia">${cab('energia')}
+        <div class="rz-linha rz-linha--antiga"><span>Fatura atual · no ${en.titular === 'cnpj' ? 'CNPJ' : 'CPF'}</span><s>${brl(en.conta_luz)}</s></div>
+        <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Simulação com ${en.estimativa_desconto_pct}% de desconto</small></span><b>${brl(en.mensal)}${MES}</b></div>
+        <div class="rz-linha rz-linha--cb"><span></span>${chip(en.cashback)}</div></section>`;
+    if (tel.length) h += separador('Serviços de telecom') + tel.map((i) => `<section class="rz-sec rz-sec--${i.produto}">${cab(i.produto)}
+        <div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span></div><div class="rz-item__val"><b>${brl(precoMes(i))}${MES}</b>${chip(i.cashback)}</div></div></section>`).join('');
     h += antesDosTotais;
-    h += '<div class="rz-separador" role="separator"><span>Cashback e valor total</span></div>';
-    h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Esse é o valor que você recebe de volta ao finalizar esse pedido. Será enviado via PIX para a sua conta bancária.</small></div>`;
-    h += `<div class="rz-total"><div><span>Valor total ${n === 1 ? 'do serviço' : `dos ${n} serviços`}</span><b>${brl(somaMes(l))}${MES}</b></div><small>${notaTotal(l)}</small></div>`;
+    h += separador('Cashback e valores por mês');
+    h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Volta para você uma única vez, via PIX na sua conta bancária, em até 7 dias depois que o contrato fecha.</small>${LINK_CB}</div>`;
+    if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz estimada</span><b>${brl(en.mensal)}${MES}</b></div><small>Simulação já com o desconto. O valor real vem pelo WhatsApp para você aprovar. A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
+    if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${notaTotal(tel)} A primeira cobrança vem em cerca de 30 dias.</small></div>`;
+    h += '<p class="rz-agora"><img src="img/icones/verificado.svg" alt="">Você não paga nada agora.</p>';
     return h;
   }
+
 
   /* ---------- Barra do combo ---------- */
   const car = $('[data-carrinho]');
@@ -864,8 +870,10 @@
   function atualizarCarrinho() {
     const l = itens('esc');
     $('[data-carrinho-qtd]').textContent = l.length;
-    $('[data-carrinho-mensal]').textContent = brl(somaMes(l));
-    car.setAttribute('aria-label', `Ver resumo do pedido: ${l.length} ${l.length === 1 ? 'serviço' : 'serviços'}, ${brl(somaMes(l))} por mês, cashback de ${brl(somaCb(l))}`);
+    const telB = l.filter((i) => i.produto !== 'energia'); const enB = l.find((i) => i.produto === 'energia');
+    $('[data-carrinho-mensal]').textContent = brl(telB.length ? somaMes(telB) : enB ? enB.mensal : 0);
+    $('[data-carrinho-rot]').textContent = telB.length ? 'Valor dos planos' : 'Conta de luz estimada';
+    car.setAttribute('aria-label', `Ver resumo do pedido: ${l.length} ${l.length === 1 ? 'serviço' : 'serviços'}, cashback de ${brl(somaCb(l))}`);
     car.hidden = !l.length;
     const corpo = $('[data-rz-corpo]');
     corpo.innerHTML = l.length ? blocosResumo(l) : '<p>Escolha pelo menos um serviço para montar o combo.</p>';
@@ -900,6 +908,12 @@
     } else fim();
   }
   $('[data-carrinho-toggle]').addEventListener('click', abrirResumo);
+  const comoCb = $('[data-como-cb-modal]');
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-como-cb]')) { comoCb.hidden = false; if (gs) gs.fromTo('.cb-info__caixa', { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' }); setTimeout(() => $('[data-como-cb-fechar]').focus(), 30); return; }
+    if (e.target.closest('[data-como-cb-fechar]') || e.target === comoCb) comoCb.hidden = true;
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !comoCb.hidden) { e.stopImmediatePropagation(); comoCb.hidden = true; } }, true);
   modal.addEventListener('click', (e) => { if (e.target.closest('[data-rz-fechar]')) fecharResumo(); });
   document.addEventListener('keydown', (e) => {
     if (modal.hidden || !$('[data-rz-confirma]').hidden) return;
@@ -1067,11 +1081,19 @@
       .replace('Meu pedido é', `Forma de pagamento: ${st.pag.tipo === 'debito' ? 'Débito automático (' + st.pag.banco + ')' : 'Boleto ou PIX'}${valoresPagamento().planos ? ' — total de ' + brl(valoresPagamento()[st.pag.tipo]) + '/mês' : ''}\nMeu pedido é`);
     $('[data-zap-pedido]').href = DY.linkWhatsApp(msg);
     $('[data-num-pedido]').textContent = st.id;
-    $('[data-fim-cb]').textContent = brl(somaCb(l));
-    const enFim = l.find((i) => i.produto === 'energia');
-    $('[data-fim-mes]').textContent = brl((valoresPagamento()[st.pag.tipo] || 0) + (enFim ? enFim.mensal : 0));
-    $('.fim__mes span').textContent = enFim ? 'Você paga por mês (energia estimada)' : 'Você paga por mês';
-    $('[data-fim-itens]').innerHTML = l.map((i) => `<li><span>${i.titulo}</span><span>${brl(i.cashback)}</span></li>`).join('');
+    // Cartão da confirmação: energia (estimativa), telecom (cobrança dos planos) e cashback total
+    const enF = l.find((i) => i.produto === 'energia'); const telF = l.filter((i) => i.produto !== 'energia');
+    let fh = '';
+    if (enF) fh += `<div class="fim-bl fim-bl--energia"><p class="fim-bl__tit"><img src="${img('icones/hero-lampada.svg')}" alt="">Sua nova fatura de luz estimada</p>
+      <p class="fim-bl__de"><span>De <s>${brl(enF.conta_luz)}</s></span><span>Para <b>${brl(enF.mensal)}/mês</b></span></p>
+      <small>Simulação feita com economia aproximada de ${enF.estimativa_desconto_pct}%. O valor exato será confirmado pelo WhatsApp após a análise da sua fatura. A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
+    if (telF.length) fh += `<div class="fim-bl"><p class="fim-bl__tit"><img src="${img('icones/hero-wifi.svg')}" alt="">Serviços de telecom</p>
+      <ul class="fim-bl__lista">${telF.map((i) => `<li><span>${i.titulo}</span><b>${brl(precoMes(i))}/mês</b></li>`).join('')}</ul>
+      <p class="fim-bl__total"><span>Total dos serviços de telecom</span><b>${brl(telF.reduce((a, i) => a + precoMes(i), 0))}/mês</b></p>
+      <small>${st.pag.tipo === 'boleto' ? 'No boleto ou PIX.' : 'No débito automático' + (st.pag.banco ? ' (' + st.pag.banco + ')' : '') + '.'} Você não paga nada agora: a primeira cobrança vem em cerca de 30 dias.</small></div>`;
+    fh += `<div class="fim-bl fim-bl--cb"><p class="fim-bl__tit">Valor que volta para você em cashback</p><p class="fim-bl__cb">${brl(somaCb(l))}</p>
+      <small>Uma única vez, via PIX na sua conta bancária, em até 7 dias depois que o contrato fecha.</small>${LINK_CB}</div>`;
+    $('[data-fim-blocos]').innerHTML = fh;
     $('[data-copiar]').onclick = async () => {
       try { await navigator.clipboard.writeText(msg); toast('Mensagem copiada. Cole no WhatsApp.'); }
       catch (er) { toast('Não deu para copiar. Toque em "Enviar no WhatsApp".'); }
