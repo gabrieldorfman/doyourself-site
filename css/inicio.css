@@ -396,3 +396,4 @@
   .ganchos .cb-total span { flex-basis: 100%; }
   .ganchos .cb-total small { flex: 1; min-width: 240px; margin: 0; }
 }
+.ganchos { overflow-x: clip; }
