@@ -812,3 +812,16 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .fim-bl__de span { white-space: nowrap; }
 .fim-bl__total { flex-wrap: wrap; }
 .fim-bl__total b { margin-left: auto; }
+
+/* ============ v18 · Simulação da energia: título em cima, valor embaixo; cashback centralizado ============ */
+.energia-res__linha { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 2px; font-size: 14.5px; color: var(--texto-terciario); }
+.energia-res__linha b { text-align: left; font-size: 20px; }
+.energia-res__linha s { font-size: 20px; font-weight: 700; color: var(--texto-terciario); }
+.energia-res__linha.nova { padding: 12px 14px; margin: 2px -4px; border-radius: 14px; background: var(--energia-tint); color: var(--texto-corpo-forte); }
+.energia-res__linha.nova b { font-size: 30px; line-height: 1.15; }
+.energia-res__linha b small { display: block; margin-top: 2px; }
+.energia-res__linha b small.mes { display: inline; margin: 0; }
+.energia-res .oferta__cb { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 2px; padding: 14px 12px; }
+.energia-res .oferta__cb span br { display: none; }
+.energia-res .oferta__cb span small { display: block; }
+.energia-res .oferta__cb b { font-size: 30px; line-height: 1.15; }

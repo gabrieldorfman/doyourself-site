@@ -408,6 +408,21 @@
   /* =========================================================
      2b · DISPONÍVEL NO ENDEREÇO
      ========================================================= */
+  function areaVisivel() {
+    const topoEl = $('.ct-topo'); let topo = topoEl ? topoEl.offsetHeight : 64;
+    const desk = matchMedia('(min-width: 768px)').matches; const dockEl = $('[data-dock]'); const carEl = $('[data-carrinho]');
+    if (desk && dockEl && !dockEl.hidden && carEl && !carEl.hidden) topo += dockEl.offsetHeight + 16;
+    const baixo = !desk && dockEl && !dockEl.hidden ? dockEl.offsetHeight : 0;
+    const alt = window.visualViewport ? window.visualViewport.height : innerHeight;   // com o teclado aberto, a área é menor
+    return { topo, livre: Math.max(120, alt - topo - baixo) };
+  }
+  // modo 'centro': centraliza o elemento na área livre; 'topo': encosta logo abaixo do menu
+  function rolarPara(el, { modo = 'centro', folga = 14 } = {}) {
+    if (!el) return;
+    const r = el.getBoundingClientRect(); const { topo, livre } = areaVisivel();
+    const alvo = modo === 'topo' || r.height > livre - 24 ? scrollY + r.top - topo - folga : scrollY + r.top - topo - (livre - r.height) / 2;
+    if (Math.abs(alvo - scrollY) > 6) window.scrollTo({ top: Math.max(0, alvo), behavior: reduzir ? 'auto' : 'smooth' });
+  }
   const ORDEM_FIXA = ['energia', 'internet', 'celular'];
   function faixa(lista, f) { const v = lista.map(f); return [Math.min(...v), Math.max(...v)]; }
   function infoDisponivel() {
@@ -423,10 +438,10 @@
         cb: `Volta <b>10% da nova conta</b>. Ex.: conta de R$ 350 → volta <b>${brl(ex.cashback)}</b>` },
       internet: { tit: 'Internet Fibra Óptica', ico: 'hero-wifi.svg', preco: `${vMin} a ${vMax} Mega · a partir de <b>${brl(Math.min(...precosNet))}/mês</b>`,
         itens: ['Wi-Fi incluso', 'Instalação gratuita', 'Streaming em alguns planos'],
-        cb: `Volta <b>metade de um mês</b>: de ${brl(cashbackCentavos(Math.min(...precosNet), 50))} a <b>${brl(cashbackCentavos(Math.max(...precosNet), 50))}</b>` },
+        cb: `Volta <b>50% do valor do plano</b>: de ${brl(cashbackCentavos(Math.min(...precosNet), 50))} a <b>${brl(cashbackCentavos(Math.max(...precosNet), 50))}</b>` },
       celular: { tit: 'Plano de Celular', ico: 'hero-celular-5g.svg', preco: `${gMin} a ${gMax} GB · a partir de <b>${brl(cMin)}/mês</b> por linha`,
         itens: ['Ligações ilimitadas para todo o Brasil', '5G e portabilidade grátis', 'WhatsApp e Waze ilimitados'],
-        cb: `Volta <b>um mês inteiro</b> de cada linha: ${brl(cMin)} a <b>${brl(cMax)}</b>` },
+        cb: `Volta <b>100% do valor do plano</b>: ${brl(cMin)} a <b>${brl(cMax)}</b> por linha` },
     };
   }
   const ICO_OK = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -467,6 +482,12 @@
     $('.disp-quero__txt', b).textContent = on ? 'Incluído no pedido' : 'Quero este';
     if (gs && on) gs.fromTo($('.disp-quero__marca', b), { scale: 0.4 }, { scale: 1, duration: 0.35, ease: 'back.out(2.5)' });
     atualizarMontar();
+    const cards = $$('[data-sel]', $('[data-disp]'));
+    const empilhado = cards.length > 1 && cards[1].getBoundingClientRect().top > cards[0].getBoundingClientRect().top + 20;
+    if (on && empilhado) {
+      const prox = cards.slice(cards.indexOf(b) + 1).find((c) => !c.classList.contains('disp-item--on'));
+      setTimeout(() => rolarPara(prox || $('[data-montar]')), 150);
+    }
   });
   $('[data-montar]').addEventListener('click', () => {
     if (!ORDEM_FIXA.some((p) => st.disp[p] !== 'nao')) { location.href = DY.linkWhatsApp('Olá! Consultei meu endereço no site da Do Yourself e quero falar sobre as opções.'); return; }
@@ -638,7 +659,12 @@
         // primeira escolha: mostra os planos (ou o campo da conta) logo abaixo da pergunta
         const y = window.scrollY; renderProduto(); window.scrollTo(0, y);
         const alvo = $(prod === 'energia' ? '[data-grupo="conta"]' : '[data-trilho]', palco);
-        if (alvo && !antes) { if (gs) gs.from(alvo.parentElement, { y: 16, autoAlpha: 0, duration: 0.4, ease: 'power2.out', clearProps: 'all' }); if (prod === 'energia') setTimeout(() => $('#f-conta', palco)?.focus({ preventScroll: true }), 80); }
+        if (alvo && !antes) {
+          if (gs) gs.from(alvo.parentElement, { y: 16, autoAlpha: 0, duration: 0.4, ease: 'power2.out', clearProps: 'all' });
+          setTimeout(() => rolarPara($('.ct-quem', palco), { modo: 'topo' }), 60);
+          // energia: já abre o teclado no campo da fatura (a pergunta fica no topo e o campo logo abaixo, acima do teclado)
+          if (prod === 'energia') setTimeout(() => $('#f-conta', palco)?.focus({ preventScroll: true }), 120);
+        }
       } else if (prod === 'celular') atualizarLinhas();
     });
   }
@@ -751,8 +777,13 @@
       }
       atualizarBotaoAdd(); atualizarCarrinho();
     };
-    input.addEventListener('input', () => { input.value = mascara.moeda(input.value); calc(); });
-    $$('.chip-op', palco).forEach((c) => c.addEventListener('click', () => { input.value = mascara.moeda(String(c.dataset.v * 100)); calc(); }));
+    const mostrarSim = () => { const box = $('.energia-res', res) || $('.aviso', res); if (box) rolarPara(box); };
+    let tSim;
+    input.addEventListener('input', () => { input.value = mascara.moeda(input.value); calc(); clearTimeout(tSim); tSim = setTimeout(mostrarSim, 1400); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(tSim); input.blur(); setTimeout(mostrarSim, 250); } });
+    $$('.chip-op', palco).forEach((c) => c.addEventListener('click', () => { input.value = mascara.moeda(String(c.dataset.v * 100)); calc(); clearTimeout(tSim); if (document.activeElement === input) input.blur(); setTimeout(mostrarSim, 150); }));
+    // celular: quando o teclado abre, garante o campo visível
+    if (window.visualViewport) { const vv = window.visualViewport; const garantir = () => { if (document.activeElement === input) rolarPara($('.ct-quem', palco) || input, { modo: 'topo' }); }; vv.addEventListener('resize', garantir); }
     if (input.value) calc();
   }
 
@@ -933,7 +964,7 @@
     const faltam = ['energia', 'internet', 'celular'].filter((p) => !st.esc[p] && (st.disp || {})[p] !== 'nao');
     const ico = { internet: 'hero-wifi.svg', celular: 'hero-celular-5g.svg', energia: 'hero-lampada.svg' };
     const faltaHtml = faltam.length ? '<p class="rz-falta-tit">Quer incluir mais algum?</p>' + faltam.map((p) => `<div class="item-combo item-combo--vazio"><span class="item-combo__ico i-${p}"><img src="${img('icones/' + ico[p])}" alt=""></span>
-        <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Desconto na Conta de Luz' }[p]}</b><span>${{ internet: 'Metade de um mês volta para você', celular: 'Um mês inteiro das linhas volta para você', energia: '10% da nova conta volta para você' }[p]}</span></span>
+        <span class="item-combo__txt"><b>${{ internet: 'Internet Fibra', celular: 'Planos de Celular', energia: 'Desconto na Conta de Luz' }[p]}</b><span>${{ internet: '50% do valor do plano volta para você', celular: '100% do valor do plano volta para você', energia: '10% da nova conta de luz volta para você' }[p]}</span></span>
         <button class="item-combo__acao" type="button" data-editar="${p}">+ Adicionar</button></div>`).join('') : '';
     $('[data-resumo]').innerHTML = l.length ? blocosResumo(l, faltaHtml)
       : '<div class="aviso aviso--info"><img src="img/icones/aviso-info.svg" alt=""><span>O seu pedido está vazio. Para seguir, escolha <b>pelo menos um serviço</b> abaixo.</span></div>' + faltaHtml;
