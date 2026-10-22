@@ -863,3 +863,20 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .ct-quem__tit { margin-bottom: 4px; }
 .pag__oque { font-weight: 600; color: var(--texto-corpo-forte); }
 .fim-agora__passos small { font-size: 13px; opacity: .85; }
+
+/* ============ v22 · ajustes do teste no celular ============ */
+/* Disponível: botão mais afastado dos cards */
+.tela[data-tela="disponivel"] .form__acoes { margin-top: 28px; }
+/* Cashback igual nos três cards do resumo, em verde escuro */
+.rz-chip { gap: 6px; padding: 6px 14px; background: #064a2d; color: #c6f2dd; font-size: 14px; font-weight: 600; }
+.rz-chip b, .rz-item__val .rz-chip b, .rz-linha .rz-chip b { font-size: 18px; font-weight: 800; color: #fff; }
+/* Totais: rótulo do cashback um pouco maior e valores alinhados ao rótulo */
+.rz-cbtotal span { font-size: 18px; }
+.rz-total div, .rz-cbtotal div { align-items: center; }
+.rz-total span { line-height: 1.25; }
+.fim-blocos .rz-total div, .fim-blocos .rz-cbtotal div { flex-wrap: nowrap; }
+/* Pagamento: sem o aviso no topo, mesmo respiro; frase e botão espaçados abaixo dos bancos */
+.form--pag { margin-top: 10px; }
+.pag__nota { margin: 28px 0 6px; text-align: center; font-size: 15px; line-height: 1.5; color: var(--texto-titulo); }
+.form--pag .form__acoes { margin-top: 18px; }
+.fim-resumo__pag { line-height: 1.5; }

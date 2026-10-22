@@ -90,6 +90,7 @@
     if (empurrar) history.pushState({ tela: nome, idx: st.idx }, '', '#' + nome);
     salvarAndamento();
     window.scrollTo({ top: 0, behavior: reduzir ? 'auto' : 'smooth' });
+    if (nome === 'resumo' && !matchMedia('(min-width: 768px)').matches) setTimeout(() => { const t = $('#h-resumo'); if (t) rolarPara(t, { modo: 'topo', folga: 18 }); }, 480);
     const foco = tela.querySelector('[tabindex="-1"]');
     if (foco) setTimeout(() => foco.focus({ preventScroll: true }), 60);
   }
@@ -485,7 +486,7 @@
     const cards = $$('[data-sel]', $('[data-disp]'));
     const empilhado = cards.length > 1 && cards[1].getBoundingClientRect().top > cards[0].getBoundingClientRect().top + 20;
     // celular: o card tocado vai para o centro (e já aparece um pedaço do próximo); no último, mostra também o botão
-    if (on && empilhado) setTimeout(() => (b === cards[cards.length - 1] ? rolarPara($('[data-montar]'), { modo: 'centro' }) : rolarPara(b)), 150);
+    if (on && empilhado) setTimeout(() => rolarPara(b), 150);
   });
   $('[data-montar]').addEventListener('click', () => {
     if (!ORDEM_FIXA.some((p) => st.disp[p] !== 'nao')) { location.href = DY.linkWhatsApp('Olá! Consultei meu endereço no site da Do Yourself e quero falar sobre as opções.'); return; }
@@ -776,7 +777,7 @@
       }
       atualizarBotaoAdd(); atualizarCarrinho();
     };
-    const mostrarSim = () => { const box = $('.energia-res', res) || $('.aviso', res); if (box) rolarPara(box); };
+    const mostrarSim = () => { const box = $('.energia-res', res) || $('.aviso', res); if (box) rolarPara(box, { modo: box.classList.contains('energia-res') && !matchMedia('(min-width: 768px)').matches ? 'topo' : 'centro', folga: 12 }); };
     let tSim;
     input.addEventListener('input', () => { input.value = mascara.moeda(input.value); calc(); clearTimeout(tSim); tSim = setTimeout(mostrarSim, 1400); });
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(tSim); input.blur(); setTimeout(mostrarSim, 250); } });
@@ -868,12 +869,12 @@
         <div class="rz-linha rz-linha--antiga"><span>Fatura atual · no ${en.titular === 'cnpj' ? 'CNPJ' : 'CPF'}</span><s>${brl(en.conta_luz)}</s></div>
         <div class="rz-linha rz-linha--nova"><span>Fatura de luz com desconto<small>Simulação com ${en.estimativa_desconto_pct}% de desconto</small></span><b>${brl(en.mensal)}${MES}</b></div>
         <div class="rz-linha rz-linha--cb"><span></span>${chip(en.cashback)}</div></section>`;
-    if (tel.length) h += separador('Serviços de telecom') + tel.map((i) => `<section class="rz-sec rz-sec--${i.produto}">${cab(i.produto)}
+    if (tel.length) h += separador(tel.length === 2 ? 'Internet e Celular' : tel[0].produto === 'internet' ? 'Internet Fibra' : 'Plano de celular') + tel.map((i) => `<section class="rz-sec rz-sec--${i.produto}">${cab(i.produto)}
         <div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span></div><div class="rz-item__val"><b>${brl(precoMes(i))}${MES}</b>${chip(i.cashback)}</div></div></section>`).join('');
     h += antesDosTotais;
     h += separador('Cashback e valores por mês');
     h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Enviamos esse valor em até 7 dias via PIX pra você após o contrato ser finalizado.</small>${LINK_CB}</div>`;
-    if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz estimada</span><b>${brl(en.mensal)}${MES}</b></div><small>Valor estimado do desconto de ${en.estimativa_desconto_pct}% aplicado.<br>O valor real enviamos via WhatsApp para você aprovar.<br>A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
+    if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz<br>(Estimada)</span><b>${brl(en.mensal)}${MES}</b></div><small>Valor estimado do desconto de ${en.estimativa_desconto_pct}% aplicado.<br>O valor real enviamos via WhatsApp para você aprovar.<br>A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
     if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${noBoleto() ? 'Valor na forma de pagamento BOLETO ou PIX.<br>Já com o acréscimo de R$ 10,00 ao valor do plano.' : 'Valor na forma de pagamento Débito Automático.<br>Você pode alterar para BOLETO ou PIX, tendo um acréscimo de R$ 10,00 ao valor do plano.'}</small></div>`;
     h += `<div class="rz-agora"><img src="img/icones/verificado.svg" alt=""><span><b>Nada é cobrado agora.</b><br>Antes de finalizar qualquer contrato, nossa equipe tira todas as suas dúvidas via WhatsApp.</span></div>`;
     return h;
@@ -893,7 +894,7 @@
     dockIr.disabled = a.disabled;
     dockIr.classList.toggle('carregando', a.classList.contains('carregando'));
     const t = a.textContent.replace('→', '').trim();
-    dockRot.textContent = /^Adicionar/.test(t) ? 'Adicionar' : /^Manter/.test(t) ? 'Continuar' : t === 'Criar meu pedido' ? 'Criar pedido' : /^Ver os planos/.test(t) ? 'Ver planos' : /^Montar meu combo/.test(t) ? 'Montar combo' : /^Marque/.test(t) ? 'Escolha acima' : t;
+    dockRot.textContent = /^Adicionar/.test(t) ? 'Adicionar' : /^Manter/.test(t) ? 'Continuar' : t === 'Gerar meu Pedido' ? 'Gerar Pedido' : /^Ver os planos/.test(t) ? 'Ver planos' : /^Montar meu combo/.test(t) ? 'Montar combo' : /^Marque/.test(t) ? 'Escolha acima' : t;
   }
   dockIr.addEventListener('click', () => { const a = alvoDock(); if (a && !a.disabled) a.click(); });
   new MutationObserver(() => requestAnimationFrame(syncDock)).observe($('#fluxo'), { subtree: true, childList: true, attributes: true, attributeFilter: ['disabled', 'hidden', 'class'] });
@@ -1060,7 +1061,7 @@
     const b = e.target.closest('[data-pag]'); if (!b) return;
     $$('[data-pag]').forEach((x) => x.setAttribute('aria-checked', x === b));
     st.pag.tipo = b.dataset.pag; revelar(blocoBancos, st.pag.tipo === 'debito'); atualizarCarrinho();
-    if (st.pag.tipo === 'debito') setTimeout(() => blocoBancos.scrollIntoView({ block: 'nearest', behavior: reduzir ? 'auto' : 'smooth' }), 200);
+    if (st.pag.tipo === 'debito') setTimeout(() => (matchMedia('(min-width: 768px)').matches ? blocoBancos.scrollIntoView({ block: 'nearest', behavior: reduzir ? 'auto' : 'smooth' }) : rolarPara($('[data-pag="boleto"]'), { modo: 'topo', folga: 16 })), 260);
     chkPag();
   });
   grade.addEventListener('click', (e) => {
@@ -1083,7 +1084,7 @@
     const oq = $('[data-pag-oque]');
     const pn = (st.contato.nome || '').trim().split(/\s+/)[0];
     $('#h-pagamento').textContent = pn ? `${pn}, como prefere pagar?` : 'Como prefere pagar?';
-    if (oq) { oq.hidden = !v.planos; oq.innerHTML = 'A primeira fatura vem somente depois de 30 dias após a instalação.'; }
+    if (oq) oq.hidden = true;
     const eco = $('[data-pag-eco]'); if (eco) { eco.hidden = !v.planos; eco.textContent = `Você economiza ${brl(v.boleto - v.debito)} por mês`; }
     const sm = $('[data-pag="boleto"] small');
     if (sm) sm.textContent = v.planos ? (v.planos === 1 ? 'O valor aumenta apenas R$ 10,00.' : 'O valor aumenta apenas R$ 10,00 por plano.') : 'Você paga todo mês, até o vencimento.';
@@ -1114,7 +1115,7 @@
     $$('[data-zap-pedido]').forEach((a) => (a.href = DY.linkWhatsApp(msg)));
     $('[data-num-pedido]').textContent = st.id;
     // Resumo do pedido realizado: o mesmo da tela "Seu combo", sem os botões de alterar/remover
-    $('[data-fim-blocos]').innerHTML = `<p class="fim-resumo__tit">Resumo do seu pedido</p>${blocosResumo(l, '', { leitura: true })}${st.pag.tipo ? `<p class="fim-resumo__pag">Forma de pagamento: <b>${st.pag.tipo === 'boleto' ? 'Boleto ou PIX' : 'Débito automático' + (st.pag.banco ? ' · ' + st.pag.banco : '')}</b></p>` : ''}`;
+    $('[data-fim-blocos]').innerHTML = `<p class="fim-resumo__tit">Resumo do seu pedido</p>${blocosResumo(l, '', { leitura: true })}${st.pag.tipo ? `<p class="fim-resumo__pag">Forma de pagamento escolhida:<br><b>${st.pag.tipo === 'boleto' ? 'Boleto ou PIX' : 'Débito automático' + (st.pag.banco ? ' · ' + st.pag.banco : '')}</b></p>` : ''}`;
     $('[data-copiar]').onclick = async () => {
       try { await navigator.clipboard.writeText(msg); toast('Mensagem copiada. Cole no WhatsApp.'); }
       catch (er) { toast('Não deu para copiar. Toque em "Enviar no WhatsApp".'); }
