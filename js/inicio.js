@@ -46,20 +46,10 @@
       if (!reduzir && alvo) alvo.textContent = brl(0);
       // Só anima quando a pilha entra na tela (no celular ela fica abaixo do formulário)
       const iniciar = () => { pilha.classList.add('ativa'); contar(); };
-      // na abertura, os ganchos entram logo depois que a ilustração aparece (computador e tablet)
-      if (document.documentElement.classList.contains('hero-intro') && matchMedia('(min-width: 768px)').matches) { setTimeout(iniciar, 1900); }
-      else if ('IntersectionObserver' in window) {
+      if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((ents) => { if (ents.some((e) => e.isIntersecting)) { io.disconnect(); iniciar(); } }, { threshold: 0.35 });
         io.observe(pilha);
       } else iniciar();
-    }
-
-    /* ---------- Abertura do hero no celular: a ilustração primeiro, depois o conteúdo sobe ---------- */
-    const raiz = document.documentElement;
-    if (raiz.classList.contains('hero-intro')) {
-      try { sessionStorage.setItem('dy-intro', '1'); } catch (e) {}
-      setTimeout(() => raiz.classList.add('hero-intro--copy'), 1900);
-      setTimeout(() => raiz.classList.remove('hero-intro', 'hero-intro--copy'), 4200);
     }
 
     /* ---------- Consulta de CEP do topo → página de contratação ---------- */
