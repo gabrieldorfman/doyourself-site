@@ -389,3 +389,7 @@ a.cb-card.gancho:hover .gancho__cta span { transform: translateX(4px); }
 @media (max-width: 380px) { .hero2 .dy-display { font-size: 28px; } }
 .gancho-total b { font-size: clamp(24px, 2.3vw, 32px); }
 .hero2__provas--lista { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; gap: 10px; }
+/* Título em 2 linhas (uma frase por linha) e subtítulo menor */
+.hero2__linha { display: block; }
+@media (min-width: 1024px) { .hero2 .dy-display { font-size: clamp(36px, 3.5vw, 52px); } .hero2__linha { white-space: nowrap; } }
+.hero2 .dy-lead { font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; max-width: 580px; }
