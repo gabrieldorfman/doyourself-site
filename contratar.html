@@ -29,12 +29,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792630111">
-  <link rel="stylesheet" href="css/base.css?v=1792630111">
-  <link rel="stylesheet" href="css/dy.css?v=1792630111">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792630111">
-  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792630111">
-  <link rel="stylesheet" href="css/contratar.css?v=1792630111">
+  <link rel="stylesheet" href="css/tokens.css?v=1792631456">
+  <link rel="stylesheet" href="css/base.css?v=1792631456">
+  <link rel="stylesheet" href="css/dy.css?v=1792631456">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792631456">
+  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792631456">
+  <link rel="stylesheet" href="css/contratar.css?v=1792631456">
 </head>
 <body class="pg-contratar">
   <a class="sr-only" href="#fluxo">Pular para o formulário</a>
@@ -244,8 +244,8 @@
     <section class="tela" id="t-resumo" data-tela="resumo" data-etapa="2" hidden aria-labelledby="h-resumo">
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
-        <h1 class="tela__titulo" id="h-resumo" tabindex="-1">Seu combo</h1>
-        <p class="tela__sub">Tudo numa conversa só no WhatsApp.</p>
+        <h1 class="tela__titulo" id="h-resumo" tabindex="-1">Resumo do seu pedido</h1>
+        <p class="tela__sub">Confira se está tudo certo. Se precisar, altere, adicione ou remova um serviço.</p>
       </header>
       <div class="resumo" data-resumo></div>
       <div class="form__acoes">
@@ -330,7 +330,7 @@
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
         <h1 class="tela__titulo" id="h-pagamento" tabindex="-1">Como prefere pagar?</h1>
-        <p class="tela__sub">Nada é cobrado agora. A primeira cobrança vem em cerca de 30 dias.</p>
+        <p class="tela__sub">Nada é cobrado agora. A primeira fatura vem cerca de 30 dias depois da instalação.</p>
       </header>
       <div class="form">
         <p class="pag__oque" data-pag-oque hidden></p>
@@ -374,11 +374,16 @@
         <div class="fim__cartao">
           <div class="fim-blocos" data-fim-blocos></div>
         </div>
-        <ol class="fim__passos">
-          <li><b>Em minutos</b>a gente confirma a oferta.</li>
-          <li><b>Instalação e ativação</b>agendadas com você.</li>
-          <li><b>Contrato fechado</b>cashback via PIX na sua conta bancária, em até 7 dias.</li>
-        </ol>
+        <section class="fim-agora" aria-labelledby="h-agora">
+          <h2 id="h-agora">Pedido feito. E agora?</h2>
+          <ol class="fim-agora__passos">
+            <li><span class="fim-agora__n">1</span><div><b>Envie o seu pedido pelo WhatsApp</b><p>A mensagem já vai pronta, com o número do pedido.</p>
+              <a class="dy-btn dy-btn--whatsapp dy-btn--bloco fim-agora__zap" data-zap-pedido target="_blank" rel="noopener"><img src="img/icones/whatsapp-branco.svg" alt="" width="20" height="20">Enviar no WhatsApp</a></div></li>
+            <li><span class="fim-agora__n">2</span><div><b>Tire suas dúvidas com um atendente</b><p>Uma pessoa de verdade confirma a oferta no seu endereço e agenda a instalação com você.</p></div></li>
+            <li><span class="fim-agora__n">3</span><div><b>Confirme o seu pedido pelo link</b><p>Você recebe um link no WhatsApp para confirmar o contrato com biometria. Só depois disso o pedido é finalizado.</p></div></li>
+            <li><span class="fim-agora__n">4</span><div><b>Receba o seu cashback</b><p>Com o contrato fechado, o cashback cai via PIX na sua conta bancária em até 7 dias.</p></div></li>
+          </ol>
+        </section>
         <a class="dy-link fim__home" href="/">Voltar para a página inicial</a>
       </div>
     </section>
@@ -442,12 +447,12 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
-  <script src="js/config.js?v=1792630111"></script>
-  <script src="js/menu.js?v=1792630111"></script>
-  <script src="js/main.js?v=1792630111"></script>
-  <script src="js/pedido.js?v=1792630111"></script>
-  <script src="js/ofertas.js?v=1792630111"></script>
-  <script src="js/vendor/gsap.min.js?v=1792630111"></script>
-  <script src="js/contratar.js?v=1792630111"></script>
+  <script src="js/config.js?v=1792631456"></script>
+  <script src="js/menu.js?v=1792631456"></script>
+  <script src="js/main.js?v=1792631456"></script>
+  <script src="js/pedido.js?v=1792631456"></script>
+  <script src="js/ofertas.js?v=1792631456"></script>
+  <script src="js/vendor/gsap.min.js?v=1792631456"></script>
+  <script src="js/contratar.js?v=1792631456"></script>
 </body>
 </html>

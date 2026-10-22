@@ -840,3 +840,17 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .fim-blocos .rz-total div, .fim-blocos .rz-cbtotal div { flex-wrap: wrap; }
 .fim-blocos .rz-total div b, .fim-blocos .rz-cbtotal div b { margin-left: auto; }
 .fim-blocos .rz-linha--nova span { flex: 1 1 140px; }
+
+/* ============ v20 · Pedido feito. E agora? ============ */
+.rz-agora { align-items: flex-start; text-align: left; padding: 12px 14px; border-radius: 14px; background: var(--marca-tint); font-weight: 500; line-height: 1.45; }
+.rz-agora img { margin-top: 2px; flex: none; }
+.rz-agora b { color: var(--texto-titulo); }
+.fim-agora { width: 100%; margin-top: 6px; padding: 20px 18px; border-radius: 22px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14); text-align: left; }
+.fim-agora h2 { margin-bottom: 14px; font-size: 20px; font-weight: 800; color: #fff; text-align: center; }
+.fim-agora__passos { display: flex; flex-direction: column; gap: 16px; }
+.fim-agora__passos li { display: flex; gap: 12px; align-items: flex-start; }
+.fim-agora__n { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #c6f2dd; color: #064a2d; font-weight: 800; }
+.fim-agora__passos b { display: block; font-size: 16px; color: #fff; }
+.fim-agora__passos p { margin-top: 2px; font-size: 14px; line-height: 1.45; color: #c6f2dd; }
+.fim-agora__zap { margin-top: 10px; min-height: 48px; gap: 8px; }
+.fim-agora__zap { white-space: nowrap; font-size: 15px; padding: 0 16px; }

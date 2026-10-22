@@ -659,7 +659,8 @@
         const alvo = $(prod === 'energia' ? '[data-grupo="conta"]' : '[data-trilho]', palco);
         if (alvo && !antes) {
           if (gs) gs.from(alvo.parentElement, { y: 16, autoAlpha: 0, duration: 0.4, ease: 'power2.out', clearProps: 'all' });
-          setTimeout(() => rolarPara($('.ct-quem', palco), { modo: 'topo' }), 60);
+          // energia: a pergunta sobe e o campo da fatura fica logo abaixo; internet e celular: os cards dos planos vão para o centro
+          setTimeout(() => (prod === 'energia' ? rolarPara($('.ct-quem', palco), { modo: 'topo' }) : rolarPara($('.oferta', palco) || $('[data-trilho]', palco))), 60);
           // energia: já abre o teclado no campo da fatura (a pergunta fica no topo e o campo logo abaixo, acima do teclado)
           if (prod === 'energia') setTimeout(() => $('#f-conta', palco)?.focus({ preventScroll: true }), 120);
         }
@@ -873,8 +874,8 @@
     h += separador('Cashback e valores por mês');
     h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Volta para você uma única vez, via PIX na sua conta bancária, em até 7 dias depois que o contrato fecha.</small>${LINK_CB}</div>`;
     if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz estimada</span><b>${brl(en.mensal)}${MES}</b></div><small>Simulação já com o desconto. O valor real vem pelo WhatsApp para você aprovar. A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
-    if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${notaTotal(tel)} A primeira cobrança vem em cerca de 30 dias.</small></div>`;
-    h += `<p class="rz-agora"><img src="img/icones/verificado.svg" alt="">${leitura ? 'Nada foi cobrado. A primeira cobrança vem em cerca de 30 dias.' : 'Você não paga nada agora.'}</p>`;
+    if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${notaTotal(tel)} A primeira fatura vem cerca de 30 dias depois da instalação.</small></div>`;
+    h += `<div class="rz-agora"><img src="img/icones/verificado.svg" alt=""><span><b>Nada é cobrado agora.</b> Antes de qualquer contrato, a gente confirma tudo com você no WhatsApp e você recebe um link para confirmar o pedido.</span></div>`;
     return h;
   }
 
@@ -1108,7 +1109,7 @@
     const l = itens();
     const msg = DY.mensagemPedido({ id: st.id, itens: l })
       .replace('Meu pedido é', `Forma de pagamento: ${st.pag.tipo === 'debito' ? 'Débito automático (' + st.pag.banco + ')' : 'Boleto ou PIX'}${valoresPagamento().planos ? ' — total de ' + brl(valoresPagamento()[st.pag.tipo]) + '/mês' : ''}\nMeu pedido é`);
-    $('[data-zap-pedido]').href = DY.linkWhatsApp(msg);
+    $$('[data-zap-pedido]').forEach((a) => (a.href = DY.linkWhatsApp(msg)));
     $('[data-num-pedido]').textContent = st.id;
     // Resumo do pedido realizado: o mesmo da tela "Seu combo", sem os botões de alterar/remover
     $('[data-fim-blocos]').innerHTML = `<p class="fim-resumo__tit">Resumo do seu pedido</p>${blocosResumo(l, '', { leitura: true })}${st.pag.tipo ? `<p class="fim-resumo__pag">Forma de pagamento: <b>${st.pag.tipo === 'boleto' ? 'Boleto ou PIX' : 'Débito automático' + (st.pag.banco ? ' · ' + st.pag.banco : '')}</b></p>` : ''}`;
