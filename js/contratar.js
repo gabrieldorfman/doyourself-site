@@ -517,7 +517,7 @@
     const textos = {
       internet: primeiro
         ? ['Escolha sua internet', 'Fibra óptica com Wi-Fi e instalação grátis. <b>50% da mensalidade volta para você.</b>']
-        : ['Quer internet fibra também?', 'Na mesma conversa. <b>50% da mensalidade volta para você.</b>'],
+        : ['Quer internet fibra também?', ''],
       celular: primeiro
         ? ['Escolha seu plano de celular', 'Ligações ilimitadas, 5G e o seu número. <b>100% das linhas volta para você.</b>']
         : ['Quer incluir celular?', 'Ligações ilimitadas e 5G. <b>100% das linhas volta para você.</b>'],
@@ -527,7 +527,7 @@
     };
     const [t, s] = textos[prod];
     return `<header class="produto__cab">
-      <h1 class="tela__titulo" id="h-combo" tabindex="-1">${t}</h1><p class="tela__sub">${s}</p></header>`;
+      <h1 class="tela__titulo" id="h-combo" tabindex="-1">${t}</h1>${s ? `<p class="tela__sub">${s}</p>` : ''}</header>`;
   }
 
   function acoes(prod) {
@@ -590,7 +590,7 @@
     return `${beneficios('internet')}${htmlQuem('internet')}
       <div><div class="ofertas" data-trilho>${cards}</div>${dots(DY.planosInternet.length)}</div>
       <div data-pers-box>${pSel ? DY.ofertas.personaliza(pSel, sel.op) : ''}</div>
-      <p class="dy-apoio" style="text-align:center;margin-top:14px">Preços no débito automático. Pagando no boleto ou PIX, o valor aumenta apenas R$ 10,00.</p>`;
+      <p class="dy-apoio" style="text-align:center;margin-top:14px">Valores no débito automático.<br>Na forma de pagamento PIX ou BOLETO, o valor aumenta apenas R$ 10,00.</p>`;
   }
   function ligarInternet() {
     ligarPara('internet'); if (faltaQuem('internet')) return;
@@ -767,11 +767,11 @@
         res.innerHTML = `<div class="energia-res">
           <p class="energia-res__tit"><span>Simulação do seu desconto</span><em>Estimativa</em></p>
           <div class="energia-res__linha"><span>Sua fatura hoje</span><b><s>${brl(s.conta)}</s></b></div>
-          <div class="energia-res__linha nova"><span>Com o desconto de ${s.pct}%, cerca de</span><b>${brl(s.comDesconto)}<small class="mes">/mês</small></b></div>
+          <div class="energia-res__linha nova"><span>Com o desconto de ${s.pct}%, sua fatura fica cerca de:</span><b>${brl(s.comDesconto)}<small class="mes">/mês</small></b></div>
           <div class="energia-res__linha"><span>Economia estimada</span><b>${brl(s.economiaMes)} por mês<small>${brl(s.economiaMes * 12)} em um ano</small></b></div>
           <hr>
           <div class="oferta__cb"><span>Volta para você<br><small>cashback de 10% da nova conta, uma vez</small></span><b>${brl(s.cashback)}</b></div>
-          <div class="energia-res__aviso"><img src="${img('icones/aviso-info.svg')}" alt=""><span><b>Isto é uma simulação.</b> O desconto real é calculado com a sua fatura e enviado pelo WhatsApp para você aprovar antes de qualquer contrato. A primeira fatura com desconto pode levar até 90 dias.</span></div>
+          <div class="energia-res__aviso"><img src="${img('icones/aviso-info.svg')}" alt=""><span><b>Isto é uma simulação.</b> O desconto real é calculado com a sua fatura e enviado pelo WhatsApp para você aprovar antes de qualquer contrato.<br>A primeira fatura com desconto pode levar até 90 dias.</span></div>
         </div>`;
       }
       atualizarBotaoAdd(); atualizarCarrinho();
@@ -872,10 +872,10 @@
         <div class="rz-item"><div class="rz-item__nome"><b>${i.titulo}</b><span>${i.sub}</span></div><div class="rz-item__val"><b>${brl(precoMes(i))}${MES}</b>${chip(i.cashback)}</div></div></section>`).join('');
     h += antesDosTotais;
     h += separador('Cashback e valores por mês');
-    h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Volta para você uma única vez, via PIX na sua conta bancária, em até 7 dias depois que o contrato fecha.</small>${LINK_CB}</div>`;
-    if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz estimada</span><b>${brl(en.mensal)}${MES}</b></div><small>Simulação já com o desconto. O valor real vem pelo WhatsApp para você aprovar. A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
-    if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${notaTotal(tel)} A primeira fatura vem cerca de 30 dias depois da instalação.</small></div>`;
-    h += `<div class="rz-agora"><img src="img/icones/verificado.svg" alt=""><span><b>Nada é cobrado agora.</b> Antes de qualquer contrato, a gente confirma tudo com você no WhatsApp e você recebe um link para confirmar o pedido.</span></div>`;
+    h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Enviamos esse valor em até 7 dias via PIX pra você após o contrato ser finalizado.</small>${LINK_CB}</div>`;
+    if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz estimada</span><b>${brl(en.mensal)}${MES}</b></div><small>Valor estimado do desconto de ${en.estimativa_desconto_pct}% aplicado.<br>O valor real enviamos via WhatsApp para você aprovar.<br>A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
+    if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${noBoleto() ? 'Valor na forma de pagamento BOLETO ou PIX.<br>Já com o acréscimo de R$ 10,00 ao valor do plano.' : 'Valor na forma de pagamento Débito Automático.<br>Você pode alterar para BOLETO ou PIX, tendo um acréscimo de R$ 10,00 ao valor do plano.'}</small></div>`;
+    h += `<div class="rz-agora"><img src="img/icones/verificado.svg" alt=""><span><b>Nada é cobrado agora.</b><br>Antes de finalizar qualquer contrato, nossa equipe tira todas as suas dúvidas via WhatsApp.</span></div>`;
     return h;
   }
 
@@ -1081,7 +1081,9 @@
     // deixa claro o que entra no valor da forma de pagamento
     const tel = itens().filter((i) => i.produto !== 'energia').map((i) => i.produto); const temEn = itens().some((i) => i.produto === 'energia');
     const oq = $('[data-pag-oque]');
-    if (oq) { oq.hidden = !v.planos; oq.innerHTML = `Valor da <b>${tel.length === 2 ? 'internet e do celular' : tel[0] === 'internet' ? 'internet' : 'linha de celular'}</b>.${temEn ? ' O desconto na conta de luz não entra neste valor.' : ''}`; }
+    const pn = (st.contato.nome || '').trim().split(/\s+/)[0];
+    $('#h-pagamento').textContent = pn ? `${pn}, como prefere pagar?` : 'Como prefere pagar?';
+    if (oq) { oq.hidden = !v.planos; oq.innerHTML = 'A primeira fatura vem somente depois de 30 dias após a instalação.'; }
     const eco = $('[data-pag-eco]'); if (eco) { eco.hidden = !v.planos; eco.textContent = `Você economiza ${brl(v.boleto - v.debito)} por mês`; }
     const sm = $('[data-pag="boleto"] small');
     if (sm) sm.textContent = v.planos ? (v.planos === 1 ? 'O valor aumenta apenas R$ 10,00.' : 'O valor aumenta apenas R$ 10,00 por plano.') : 'Você paga todo mês, até o vencimento.';

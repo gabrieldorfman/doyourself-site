@@ -854,3 +854,12 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .fim-agora__passos p { margin-top: 2px; font-size: 14px; line-height: 1.45; color: #c6f2dd; }
 .fim-agora__zap { margin-top: 10px; min-height: 48px; gap: 8px; }
 .fim-agora__zap { white-space: nowrap; font-size: 15px; padding: 0 16px; }
+
+/* ============ v21 · textos e espaçamentos ============ */
+.rz-separador { font-size: 14px; letter-spacing: .06em; }
+.produto__cab:not(:has(.tela__sub)) { margin-bottom: 26px; }
+.beneficios--internet, .beneficios--celular { margin-bottom: 28px; }
+.ct-quem:not(.energia-sim .ct-quem) { margin-bottom: 30px; }
+.ct-quem__tit { margin-bottom: 4px; }
+.pag__oque { font-weight: 600; color: var(--texto-corpo-forte); }
+.fim-agora__passos small { font-size: 13px; opacity: .85; }

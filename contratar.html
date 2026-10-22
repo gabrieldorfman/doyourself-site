@@ -29,12 +29,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792631456">
-  <link rel="stylesheet" href="css/base.css?v=1792631456">
-  <link rel="stylesheet" href="css/dy.css?v=1792631456">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792631456">
-  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792631456">
-  <link rel="stylesheet" href="css/contratar.css?v=1792631456">
+  <link rel="stylesheet" href="css/tokens.css?v=1792634990">
+  <link rel="stylesheet" href="css/base.css?v=1792634990">
+  <link rel="stylesheet" href="css/dy.css?v=1792634990">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792634990">
+  <link rel="stylesheet" href="css/vendor/animate.min.css?v=1792634990">
+  <link rel="stylesheet" href="css/contratar.css?v=1792634990">
 </head>
 <body class="pg-contratar">
   <a class="sr-only" href="#fluxo">Pular para o formulário</a>
@@ -245,7 +245,7 @@
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
         <h1 class="tela__titulo" id="h-resumo" tabindex="-1">Resumo do seu pedido</h1>
-        <p class="tela__sub">Confira se está tudo certo. Se precisar, altere, adicione ou remova um serviço.</p>
+        <p class="tela__sub">Confira se está tudo certo.<br>Se precisar, altere, adicione ou remova um serviço.</p>
       </header>
       <div class="resumo" data-resumo></div>
       <div class="form__acoes">
@@ -317,7 +317,7 @@
         </div>
         <button class="escolha consentimento" type="button" role="checkbox" aria-checked="false" data-consentimento>
           <span class="escolha__marca" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <span>Autorizo o uso dos meus dados só para este pedido. <a class="dy-link" href="politica-de-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a></span>
+          <span>Autorizo o uso dos meus dados para este pedido. <a class="dy-link" href="politica-de-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a></span>
         </button>
         <div class="form__acoes">
           <button class="dy-btn dy-btn--primario dy-btn--g dy-btn--bloco" type="submit" data-continuar disabled>Continuar <span class="seta-dir" aria-hidden="true">→</span></button>
@@ -330,7 +330,7 @@
       <button class="ct-voltar" type="button" data-voltar>← Voltar</button>
       <header class="tela__cab">
         <h1 class="tela__titulo" id="h-pagamento" tabindex="-1">Como prefere pagar?</h1>
-        <p class="tela__sub">Nada é cobrado agora. A primeira fatura vem cerca de 30 dias depois da instalação.</p>
+        <p class="tela__sub"><b>Nada é cobrado agora.</b><br>Antes de finalizar qualquer contrato, nossa equipe tira todas as suas dúvidas via WhatsApp.</p>
       </header>
       <div class="form">
         <p class="pag__oque" data-pag-oque hidden></p>
@@ -347,8 +347,8 @@
           </button>
         </div>
         <div class="bancos revela" data-revela-bancos>
-          <p class="bancos__titulo" id="lbl-bancos">Qual é o seu banco?</p>
-          <p class="dy-apoio">Não achou o seu? Escolha Boleto ou PIX.</p>
+          <p class="bancos__titulo" id="lbl-bancos">Bancos que aceitamos</p>
+          <p class="dy-apoio">Seu banco não está na lista? Escolha BOLETO ou PIX.</p>
           <div class="bancos__grade" role="radiogroup" aria-labelledby="lbl-bancos" data-bancos></div>
         </div>
         <div class="form__acoes">
@@ -379,9 +379,10 @@
           <ol class="fim-agora__passos">
             <li><span class="fim-agora__n">1</span><div><b>Envie o seu pedido pelo WhatsApp</b><p>A mensagem já vai pronta, com o número do pedido.</p>
               <a class="dy-btn dy-btn--whatsapp dy-btn--bloco fim-agora__zap" data-zap-pedido target="_blank" rel="noopener"><img src="img/icones/whatsapp-branco.svg" alt="" width="20" height="20">Enviar no WhatsApp</a></div></li>
-            <li><span class="fim-agora__n">2</span><div><b>Tire suas dúvidas com um atendente</b><p>Uma pessoa de verdade confirma a oferta no seu endereço e agenda a instalação com você.</p></div></li>
-            <li><span class="fim-agora__n">3</span><div><b>Confirme o seu pedido pelo link</b><p>Você recebe um link no WhatsApp para confirmar o contrato com biometria. Só depois disso o pedido é finalizado.</p></div></li>
-            <li><span class="fim-agora__n">4</span><div><b>Receba o seu cashback</b><p>Com o contrato fechado, o cashback cai via PIX na sua conta bancária em até 7 dias.</p></div></li>
+            <li><span class="fim-agora__n">2</span><div><b>Tire suas dúvidas com um atendente</b><p>Nossos atendentes irão lhe atender e tirar todas as suas dúvidas.</p></div></li>
+            <li><span class="fim-agora__n">3</span><div><b>Agende sua instalação</b><p>Sem dúvidas, iremos enviar as datas disponíveis para a instalação.</p></div></li>
+            <li><span class="fim-agora__n">4</span><div><b>Confirme o seu pedido pelo link</b><p>Você recebe um link no WhatsApp para revisar e confirmar o contrato com biometria.<br>Só depois disso o pedido é finalizado.</p></div></li>
+            <li><span class="fim-agora__n">5</span><div><b>Receba o seu Cashback</b><p>Com o contrato fechado, o Cashback cai via PIX na sua conta bancária em até 7 dias.<br><small>(Iremos solicitar sua chave PIX via WhatsApp!)</small></p></div></li>
           </ol>
         </section>
         <a class="dy-link fim__home" href="/">Voltar para a página inicial</a>
@@ -447,12 +448,12 @@
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
-  <script src="js/config.js?v=1792631456"></script>
-  <script src="js/menu.js?v=1792631456"></script>
-  <script src="js/main.js?v=1792631456"></script>
-  <script src="js/pedido.js?v=1792631456"></script>
-  <script src="js/ofertas.js?v=1792631456"></script>
-  <script src="js/vendor/gsap.min.js?v=1792631456"></script>
-  <script src="js/contratar.js?v=1792631456"></script>
+  <script src="js/config.js?v=1792634990"></script>
+  <script src="js/menu.js?v=1792634990"></script>
+  <script src="js/main.js?v=1792634990"></script>
+  <script src="js/pedido.js?v=1792634990"></script>
+  <script src="js/ofertas.js?v=1792634990"></script>
+  <script src="js/vendor/gsap.min.js?v=1792634990"></script>
+  <script src="js/contratar.js?v=1792634990"></script>
 </body>
 </html>
