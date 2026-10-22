@@ -28,12 +28,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792639156">
-  <link rel="stylesheet" href="css/base.css?v=1792639156">
-  <link rel="stylesheet" href="css/dy.css?v=1792639156">
-  <link rel="stylesheet" href="css/planos.css?v=1792639156">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792639156">
-  <link rel="stylesheet" href="css/inicio.css?v=1792639156">
+  <link rel="stylesheet" href="css/tokens.css?v=1792639992">
+  <link rel="stylesheet" href="css/base.css?v=1792639992">
+  <link rel="stylesheet" href="css/dy.css?v=1792639992">
+  <link rel="stylesheet" href="css/planos.css?v=1792639992">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792639992">
+  <link rel="stylesheet" href="css/inicio.css?v=1792639992">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"Do Yourself","description":"Marca 100% digital que reúne Internet Fibra, Planos de Celular e Energia Solar por Assinatura, com cashback para o cliente na contratação.","logo":"img/marca/dy-selo-verde.svg"}
   </script>
@@ -110,7 +110,7 @@
           <p class="dy-lead">Contrate internet fibra, celular ou energia solar e ainda receba um <strong>cashback via PIX na sua conta bancária</strong>. Resolva tudo pelo WhatsApp.</p>
 
           <form class="consulta-cep" data-hero-cep novalidate aria-labelledby="cep-titulo">
-            <p class="consulta-cep__titulo" id="cep-titulo">Veja o que chega no seu endereço</p>
+            <p class="consulta-cep__titulo" id="cep-titulo">Descubra as ofertas no seu endereço</p>
             <div class="consulta-cep__campos">
               <div class="campo-grupo" data-g="cep">
                 <div class="campo">
@@ -146,29 +146,25 @@
         <!-- Ganchos: luz, internet, celular e por fim o cashback -->
         <div class="hero2__visual" aria-label="O que você ganha com a Do Yourself">
           <div class="cb-pilha" data-pilha>
-            <article class="cb-card gancho cb-card--energia" data-lado="esq" style="--i:0">
+            <a class="cb-card gancho cb-card--energia" data-lado="esq" style="--i:0" href="/energia">
               <span class="cb-card__ico"><img src="img/icones/hero-lampada.svg" alt=""></span>
-              <div class="cb-card__txt"><b>Pague menos na conta de luz</b><span>Até 20% de desconto, sem obra e sem placas</span></div>
-              <div class="cb-card__valor"><small>Cashback de</small><b>10%</b><em>da conta</em></div>
-            </article>
-            <article class="cb-card gancho cb-card--internet" data-lado="dir" style="--i:1">
+              <div class="cb-card__txt"><b>Pague mais barato na conta de luz</b><span>Até 20% de desconto, sem obra e sem instalação de placas solares</span><span class="gancho__cta">Clique e confira <span aria-hidden="true">→</span></span></div>
+            </a>
+            <a class="cb-card gancho cb-card--internet" data-lado="dir" style="--i:1" href="/internet-fibra">
               <span class="cb-card__ico"><img src="img/icones/hero-wifi.svg" alt=""></span>
-              <div class="cb-card__txt"><b>Melhore sua conexão</b><span>Internet 100% fibra óptica, com Wi-Fi e streaming</span></div>
-              <div class="cb-card__valor"><small>Cashback de</small><b>50%</b><em>do plano</em></div>
-            </article>
-            <article class="cb-card gancho cb-card--celular" data-lado="esq" style="--i:2">
+              <div class="cb-card__txt"><b>Melhore sua conexão</b><span>Internet 100% fibra óptica, com Wi-Fi que cobre a casa toda</span><span class="gancho__cta">Clique e confira <span aria-hidden="true">→</span></span></div>
+            </a>
+            <a class="cb-card gancho cb-card--celular" data-lado="esq" style="--i:2" href="/celular">
               <span class="cb-card__ico"><img src="img/icones/hero-celular-5g.svg" alt=""></span>
-              <div class="cb-card__txt"><b>Fale à vontade com 5G</b><span>Ligações ilimitadas e portabilidade grátis</span></div>
-              <div class="cb-card__valor"><small>Cashback de</small><b>100%</b><em>do plano</em></div>
-            </article>
+              <div class="cb-card__txt"><b>Fale à vontade com 5G</b><span>Ligações, WhatsApp e Waze ilimitados e portabilidade grátis!</span><span class="gancho__cta">Clique e confira <span aria-hidden="true">→</span></span></div>
+            </a>
             <div class="cb-total gancho-total" style="--i:3">
-              <span>Contrate um, dois ou os três</span>
-              <b>E ainda recebe dinheiro de volta</b>
-              <small>Cashback via PIX na sua conta bancária.</small>
+              <span>Contrate um, dois ou os três serviços</span>
+              <b>E RECEBA DINHEIRO DE VOLTA</b>
+              <small>Ao contratar os serviços você receberá um Cashback</small>
             </div>
           </div>
-          <p class="hero2__legenda">O cashback é pago uma única vez, depois que o contrato é finalizado.</p>
-        </div>
+          <p class="hero2__legenda">O cashback é pago uma única vez, depois que o contrato é finalizado</p>        </div>
       </div>
     </section>
 
@@ -505,12 +501,12 @@
   </div>
   <a class="zap-flutuante" data-whatsapp="Olá! Vim pelo site da Do Yourself." aria-label="Falar no WhatsApp"><img src="img/icones/whatsapp-branco.svg" alt=""></a>
 
-  <script src="js/config.js?v=1792639156"></script>
-  <script src="js/menu.js?v=1792639156"></script>
-  <script src="js/main.js?v=1792639156"></script>
-  <script src="js/ofertas.js?v=1792639156"></script>
-  <script src="js/vendor/gsap.min.js?v=1792639156"></script>
-  <script src="js/planos.js?v=1792639156"></script>
-  <script src="js/inicio.js?v=1792639156"></script>
+  <script src="js/config.js?v=1792639992"></script>
+  <script src="js/menu.js?v=1792639992"></script>
+  <script src="js/main.js?v=1792639992"></script>
+  <script src="js/ofertas.js?v=1792639992"></script>
+  <script src="js/vendor/gsap.min.js?v=1792639992"></script>
+  <script src="js/planos.js?v=1792639992"></script>
+  <script src="js/inicio.js?v=1792639992"></script>
 </body>
 </html>

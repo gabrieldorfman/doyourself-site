@@ -370,3 +370,15 @@
 .hero2 .cb-pilha.ativa .cb-card, .hero2 .cb-pilha.ativa .cb-total { opacity: 1; transform: none; }
 .hero2__visual { overflow-x: clip; padding-inline: 14px; margin-inline: -14px; }
 .gancho .cb-card__valor small { white-space: nowrap; }
+/* Ganchos como links: título, descrição e "Clique e confira" */
+a.cb-card.gancho { text-decoration: none; color: inherit; cursor: pointer; transition-property: opacity, transform, box-shadow, border-color; }
+a.cb-card.gancho:hover { box-shadow: var(--sombra-2, 0 8px 24px rgba(0,0,0,.08)); border-color: var(--marca-outline, #9cc9b0); }
+a.cb-card.gancho:focus-visible { outline: 3px solid var(--marca-outline, #3f7a5e); outline-offset: 3px; }
+.gancho__cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 800; color: var(--marca-titulo, #1a7f4b); }
+.gancho__cta span { transition: transform .2s ease; }
+a.cb-card.gancho:hover .gancho__cta span { transform: translateX(4px); }
+.cb-card--energia .gancho__cta { color: #c2590d; }
+.cb-card--internet .gancho__cta { color: #2f6fb3; }
+.cb-card--celular .gancho__cta { color: #188a54; }
+.gancho-total b { letter-spacing: 0; }
+@media (max-width: 420px) { .gancho-total b { font-size: 26px; } }
