@@ -24,7 +24,8 @@
 
   // Card de internet: velocidade, download/upload/modem, apps básicos e preço (sem a personalização)
   function internet(p, { on = false, op = 0, rotulo } = {}) {
-    const det = p.detalhes.slice(0, 4).map(([ico, r, v]) => `<li${attrDica(r, v)}><img src="${img('icones/' + ico)}" alt=""><span><i class="dica-rot">${r}</i> <b>${v}</b></span></li>`).join('');
+    // sem a linha de Instalação (fica nos benefícios da tela): o card fica mais baixo
+    const det = p.detalhes.filter(([, r]) => !/^instala/i.test(r)).slice(0, 3).map(([ico, r, v]) => `<li${attrDica(r, v)}><img src="${img('icones/' + ico)}" alt=""><span><i class="dica-rot">${r}</i> <b>${v}</b></span></li>`).join('');
     // Planos com personalização mostram só os apps básicos; o streaming aparece depois de escolher
     const basicos = p.opcoes.length > 1 ? p.apps.filter((k) => !/^(paramount|globoplay|hbo)/.test(k)) : p.apps;
     const apps = basicos.map((k) => k === 'youtube-premium' ? `<img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium">` : `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
@@ -32,14 +33,19 @@
     const preco = centavos(o.preco);
     // planos que têm streaming à escolha mostram os logos já no card (a escolha é feita depois de "Escolher este plano")
     const comLogo = p.opcoes.filter((x) => x.logo && logos[x.logo]);
-    const stream = p.opcoes.length > 1 && comLogo.length ? `<div class="oferta__stream"><small>Streaming à sua escolha</small><div>${comLogo.map((x) => `<img src="${img(logos[x.logo].src)}" alt="${x.nome}" title="${x.nome}">`).join('')}</div></div>` : '';
+    // Uma linha só, sempre com a mesma altura: streaming à escolha, streaming incluso (800 Mega) ou os aplicativos inclusos
+    const logoImg = (k, nome) => (k === 'youtube-premium' ? `<img class="yt" src="${img('apps/youtube-premium-logo.svg')}" alt="YouTube Premium">` : `<img src="${img(logos[k].src)}" alt="${nome || logos[k].alt}" title="${nome || logos[k].alt}">`);
+    const inclusos = p.opcoes.length > 1 && comLogo.length
+      ? `<div class="oferta__stream"><small>Streaming à sua escolha</small><div>${comLogo.map((x) => logoImg(x.logo, x.nome)).join('')}</div></div>`
+      : p.opcoes[0] && p.opcoes[0].logo
+        ? `<div class="oferta__stream"><small>Streaming incluso</small><div>${logoImg(p.opcoes[0].logo, p.opcoes[0].nome)}</div></div>`
+        : `<div class="oferta__stream"><small>Aplicativos inclusos</small><div>${apps}</div></div>`;
     const extra = op > 0 && o.logo ? `<span class="oferta__extra">+ ${o.nome}</span>` : '';
     return `<div class="oferta${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="Internet ${p.num} ${unid(p)}" data-id="${p.id}">
       <div class="oferta__topo"><span class="oferta__selo">${p.selo}</span><span class="oferta__check" aria-hidden="true">${CHECK}</span></div>
       <p class="oferta__vel"><b>${p.num}</b><span>${unid(p)}</span></p>
       <ul class="oferta__lista">${det}</ul>
-      <div class="oferta__apps">${apps}</div>
-      ${stream}
+      ${inclusos}
       <div class="oferta__espaco"></div>
       <div class="oferta__preco"><s data-de>De ${brl(centavos(o.de || p.de))}</s><div><b data-preco>${brl(preco)}</b><span>/mês</span></div><small data-preco-obs>${extra || 'no débito automático'}</small></div>
       <div class="oferta__cb"><span>Volta para você<br><small>cashback de 50%</small></span><b data-cb>${brl(cashbackCentavos(preco, 50))}</b></div>

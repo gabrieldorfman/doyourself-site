@@ -484,10 +484,8 @@
     atualizarMontar();
     const cards = $$('[data-sel]', $('[data-disp]'));
     const empilhado = cards.length > 1 && cards[1].getBoundingClientRect().top > cards[0].getBoundingClientRect().top + 20;
-    if (on && empilhado) {
-      const prox = cards.slice(cards.indexOf(b) + 1).find((c) => !c.classList.contains('disp-item--on'));
-      setTimeout(() => rolarPara(prox || $('[data-montar]')), 150);
-    }
+    // celular: o card tocado vai para o centro (e já aparece um pedaço do próximo); no último, mostra também o botão
+    if (on && empilhado) setTimeout(() => (b === cards[cards.length - 1] ? rolarPara($('[data-montar]'), { modo: 'centro' }) : rolarPara(b)), 150);
   });
   $('[data-montar]').addEventListener('click', () => {
     if (!ORDEM_FIXA.some((p) => st.disp[p] !== 'nao')) { location.href = DY.linkWhatsApp('Olá! Consultei meu endereço no site da Do Yourself e quero falar sobre as opções.'); return; }
@@ -859,10 +857,10 @@
   const ICO_LIXO = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M8 6V4.5h4V6M5.5 6l.8 10h7.4l.8-10M8.5 9v4.5M11.5 9v4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const separador = (t) => `<div class="rz-separador" role="separator"><span>${t}</span></div>`;
   const LINK_CB = '<button type="button" class="rz-link-cb" data-como-cb>Como funciona o cashback?</button>';
-  function blocosResumo(l, antesDosTotais = '') {
+  function blocosResumo(l, antesDosTotais = '', { leitura = false } = {}) {
     const chip = (v) => `<span class="rz-chip">Cashback <b>${brl(v)}</b></span>`;
     const cab = (p) => `<div class="rz-sec__cab"><h3><span class="rz-ico"><img src="${img('icones/' + ICO[p])}" alt=""></span>${TIT[p]}</h3>
-      <div class="rz-acoes"><button class="rz-btn" type="button" data-editar="${p}" aria-label="Alterar ${TIT[p]}" title="Alterar">${ICO_LAPIS}<span>Alterar</span></button><button class="rz-btn rz-btn--remover" type="button" data-remover="${p}" aria-label="Remover ${TIT[p]}" title="Remover">${ICO_LIXO}<span>Remover</span></button></div></div>`;
+      ${leitura ? '' : `<div class="rz-acoes"><button class="rz-btn" type="button" data-editar="${p}" aria-label="Alterar ${TIT[p]}" title="Alterar">${ICO_LAPIS}<span>Alterar</span></button><button class="rz-btn rz-btn--remover" type="button" data-remover="${p}" aria-label="Remover ${TIT[p]}" title="Remover">${ICO_LIXO}<span>Remover</span></button></div>`}</div>`;
     const en = l.find((x) => x.produto === 'energia'); const tel = l.filter((x) => x.produto !== 'energia');
     let h = '';
     if (en) h += separador(`Conta de luz com desconto de ${en.estimativa_desconto_pct}%`) + `<section class="rz-sec rz-sec--energia">${cab('energia')}
@@ -876,7 +874,7 @@
     h += `<div class="rz-cbtotal"><div><span>Cashback total</span><b>${brl(somaCb(l))}</b></div><small>Volta para você uma única vez, via PIX na sua conta bancária, em até 7 dias depois que o contrato fecha.</small>${LINK_CB}</div>`;
     if (en) h += `<div class="rz-total rz-total--energia"><div><span>Conta de luz estimada</span><b>${brl(en.mensal)}${MES}</b></div><small>Simulação já com o desconto. O valor real vem pelo WhatsApp para você aprovar. A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
     if (tel.length) h += `<div class="rz-total"><div><span>${tel.length === 2 ? 'Internet e celular' : tel[0].produto === 'internet' ? 'Internet' : 'Celular'}</span><b>${brl(tel.reduce((a, i) => a + precoMes(i), 0))}${MES}</b></div><small>${notaTotal(tel)} A primeira cobrança vem em cerca de 30 dias.</small></div>`;
-    h += '<p class="rz-agora"><img src="img/icones/verificado.svg" alt="">Você não paga nada agora.</p>';
+    h += `<p class="rz-agora"><img src="img/icones/verificado.svg" alt="">${leitura ? 'Nada foi cobrado. A primeira cobrança vem em cerca de 30 dias.' : 'Você não paga nada agora.'}</p>`;
     return h;
   }
 
@@ -1112,19 +1110,8 @@
       .replace('Meu pedido é', `Forma de pagamento: ${st.pag.tipo === 'debito' ? 'Débito automático (' + st.pag.banco + ')' : 'Boleto ou PIX'}${valoresPagamento().planos ? ' — total de ' + brl(valoresPagamento()[st.pag.tipo]) + '/mês' : ''}\nMeu pedido é`);
     $('[data-zap-pedido]').href = DY.linkWhatsApp(msg);
     $('[data-num-pedido]').textContent = st.id;
-    // Cartão da confirmação: energia (estimativa), telecom (cobrança dos planos) e cashback total
-    const enF = l.find((i) => i.produto === 'energia'); const telF = l.filter((i) => i.produto !== 'energia');
-    let fh = '';
-    if (enF) fh += `<div class="fim-bl fim-bl--energia"><p class="fim-bl__tit"><img src="${img('icones/hero-lampada.svg')}" alt="">Sua nova fatura de luz estimada</p>
-      <p class="fim-bl__de"><span>De <s>${brl(enF.conta_luz)}</s></span><span>Para <b>${brl(enF.mensal)}/mês</b></span></p>
-      <small>Simulação feita com economia aproximada de ${enF.estimativa_desconto_pct}%. O valor exato será confirmado pelo WhatsApp após a análise da sua fatura. A primeira fatura com desconto pode levar até 90 dias.</small></div>`;
-    if (telF.length) fh += `<div class="fim-bl"><p class="fim-bl__tit"><img src="${img('icones/hero-wifi.svg')}" alt="">Serviços de telecom</p>
-      <ul class="fim-bl__lista">${telF.map((i) => `<li><span>${i.titulo}</span><b>${brl(precoMes(i))}/mês</b></li>`).join('')}</ul>
-      <p class="fim-bl__total"><span>Total dos serviços de telecom</span><b>${brl(telF.reduce((a, i) => a + precoMes(i), 0))}/mês</b></p>
-      <small>${st.pag.tipo === 'boleto' ? 'No boleto ou PIX.' : 'No débito automático' + (st.pag.banco ? ' (' + st.pag.banco + ')' : '') + '.'} Você não paga nada agora: a primeira cobrança vem em cerca de 30 dias.</small></div>`;
-    fh += `<div class="fim-bl fim-bl--cb"><p class="fim-bl__tit">Valor que volta para você em cashback</p><p class="fim-bl__cb">${brl(somaCb(l))}</p>
-      <small>Uma única vez, via PIX na sua conta bancária, em até 7 dias depois que o contrato fecha.</small>${LINK_CB}</div>`;
-    $('[data-fim-blocos]').innerHTML = fh;
+    // Resumo do pedido realizado: o mesmo da tela "Seu combo", sem os botões de alterar/remover
+    $('[data-fim-blocos]').innerHTML = `<p class="fim-resumo__tit">Resumo do seu pedido</p>${blocosResumo(l, '', { leitura: true })}${st.pag.tipo ? `<p class="fim-resumo__pag">Forma de pagamento: <b>${st.pag.tipo === 'boleto' ? 'Boleto ou PIX' : 'Débito automático' + (st.pag.banco ? ' · ' + st.pag.banco : '')}</b></p>` : ''}`;
     $('[data-copiar]').onclick = async () => {
       try { await navigator.clipboard.writeText(msg); toast('Mensagem copiada. Cole no WhatsApp.'); }
       catch (er) { toast('Não deu para copiar. Toque em "Enviar no WhatsApp".'); }

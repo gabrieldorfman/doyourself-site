@@ -152,3 +152,9 @@
 /* Dica também nos quadrinhos de "Seu plano" */
 .pz-tile[data-dica] { cursor: help; }
 .pz-tile[data-dica]:focus-visible { outline: 3px solid var(--marca-outline); outline-offset: 2px; }
+
+/* Cards de internet mais baixos: uma linha de inclusos com altura fixa */
+.oferta__stream { min-height: 58px; margin-top: 0; }
+.oferta__stream div { align-items: center; min-height: 34px; flex-wrap: wrap; }
+.oferta__stream img.yt { width: 96px; height: 24px; border-radius: 0; object-fit: contain; }
+.oferta.premium .oferta__stream img.yt { filter: brightness(0) invert(1); }

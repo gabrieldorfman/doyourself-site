@@ -825,3 +825,18 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .energia-res .oferta__cb span br { display: none; }
 .energia-res .oferta__cb span small { display: block; }
 .energia-res .oferta__cb b { font-size: 30px; line-height: 1.15; }
+
+/* ============ v19 · Resumo do pedido na tela final ============ */
+.fim-blocos { padding: 20px 18px; border-radius: 22px; background: var(--fundo-pagina); color: var(--texto-corpo); text-align: left; display: flex; flex-direction: column; gap: 12px; }
+[data-tema="escuro"] .fim-blocos { background: var(--fundo-superficie); }
+.fim-resumo__tit { font-size: 19px; font-weight: 800; color: var(--texto-titulo); text-align: center; }
+.fim-resumo__pag { text-align: center; font-size: 14px; color: var(--texto-corpo); }
+.fim-resumo__pag b { color: var(--texto-titulo); }
+.fim-blocos .rz-sec__cab h3 { padding-top: 0; }
+@media (max-width: 480px) { .fim-blocos { padding: 16px 12px; margin-inline: -4px; } }
+.fim-blocos b i { font-style: normal; font-size: .62em; font-weight: 700; opacity: .7; margin-left: 2px; }
+.fim-blocos .rz-sec { padding: 14px; }
+.fim-blocos .rz-item__val, .fim-blocos .rz-linha { flex-wrap: wrap; gap: 6px 10px; }
+.fim-blocos .rz-total div, .fim-blocos .rz-cbtotal div { flex-wrap: wrap; }
+.fim-blocos .rz-total div b, .fim-blocos .rz-cbtotal div b { margin-left: auto; }
+.fim-blocos .rz-linha--nova span { flex: 1 1 140px; }
