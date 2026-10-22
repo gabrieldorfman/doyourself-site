@@ -336,24 +336,6 @@
 @media (max-width: 640px) { .secao-ico { --ico-tam: 104px !important; } .secao-ico__fixo { top: 14vh; margin-top: 40px; } .secao-ico--esq .secao-ico__fixo { margin-left: -28px; } .secao-ico--dir .secao-ico__fixo { margin-right: -28px; } }
 @media (prefers-reduced-motion: reduce) { .secao-ico svg { animation: none; opacity: .14; } }
 
-/* ---------- Hero: fundo animado (lâmpada, Wi-Fi e celular apontando para o cashback) ---------- */
-.hero2 { position: relative; isolation: isolate; }
-.hero-fundo { position: absolute; inset: 0; z-index: -1; overflow: clip; pointer-events: none; }
-.hero-fundo svg { position: absolute; top: 47%; left: max(var(--gutter, 40px), calc((100% - var(--conteudo, 1368px)) / 2)); translate: 0 -50%; width: min(920px, 64%); height: auto; opacity: .13; color: var(--marca-primario, #3f7a5e); overflow: visible; }
-[data-tema="escuro"] .hero-fundo svg { opacity: .2; }
-.hf-i { transform-box: fill-box; transform-origin: center; opacity: 0; animation: 10s var(--ease, ease) infinite both; }
-.hf-lamp { animation-name: hf-lamp; } .hf-wifi { animation-name: hf-wifi; } .hf-cel { animation-name: hf-cel; } .hf-moeda { animation-name: hf-moeda; }
-.hf-s { stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0; animation: hf-seta 10s ease-in-out infinite both; }
-.hf-s2 { animation-delay: .15s; } .hf-s3 { animation-delay: .3s; }
-@keyframes hf-lamp { 0%, 0% { opacity: 0; transform: translateY(14px) scale(.85); } 8%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
-@keyframes hf-wifi { 0%, 9% { opacity: 0; transform: translateY(14px) scale(.85); } 17%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
-@keyframes hf-cel { 0%, 18% { opacity: 0; transform: translateY(14px) scale(.85); } 26%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
-@keyframes hf-seta { 0%, 30% { stroke-dashoffset: 1; opacity: 0; } 32% { opacity: 1; } 46%, 86% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes hf-moeda { 0%, 46% { opacity: 0; transform: scale(.6); } 54% { opacity: 1; transform: scale(1.12); } 60% { transform: scale(1); } 68% { transform: scale(1.07); } 74%, 86% { opacity: 1; transform: scale(1); } 96%, 100% { opacity: 0; transform: scale(1); } }
-@media (max-width: 1023px) { .hero-fundo svg { top: 40px; left: 50%; translate: -50% 0; width: min(760px, 112%); opacity: .11; } }
-@media (max-width: 640px) { .hero-fundo svg { top: 40px; width: 96%; } }
-@media (prefers-reduced-motion: reduce) { .hf-i, .hf-s { animation: none; opacity: 1; stroke-dashoffset: 0; } }
-
 /* Ícones das seções: um pouco maiores e inclinados */
 .secao-ico--energia { --ico-tam: 290px; } .secao-ico--internet { --ico-tam: 300px; } .secao-ico--celular { --ico-tam: 280px; }
 .secao-ico--energia .secao-ico__fixo { rotate: -18deg; }
@@ -362,16 +344,55 @@
 @media (max-width: 1023px) { .secao-ico { --ico-tam: 185px !important; } }
 @media (max-width: 640px) { .secao-ico { --ico-tam: 128px !important; } }
 
-/* ---------- Abertura do hero (primeira visita da sessão) ---------- */
-.hero-intro .hero2__copy > * { opacity: 0; transform: translateY(18px); animation: hero-garantia 0s 8s forwards; }
-.hero-intro.hero-intro--copy .hero2__copy > * { opacity: 1; transform: none; animation: none; transition: opacity .7s var(--ease, ease), transform .8s var(--ease, ease); }
-.hero-intro.hero-intro--copy .hero2__copy > :nth-child(2) { transition-delay: .12s; }
-.hero-intro.hero-intro--copy .hero2__copy > :nth-child(3) { transition-delay: .26s; }
-.hero-intro.hero-intro--copy .hero2__copy > :nth-child(4) { transition-delay: .42s; }
-.hero-intro.hero-intro--copy .hero2__copy > :nth-child(5) { transition-delay: .58s; }
-.hero-intro .hero2__legenda { opacity: 0; transition: opacity .7s 1s; }
-.hero-intro.hero-intro--copy .hero2__legenda { opacity: 1; }
-.hero-intro .hero-fundo svg { opacity: .42; transition: opacity 1.4s ease; }
-.hero-intro.hero-intro--fundo .hero-fundo svg { opacity: .13; }
-@media (max-width: 1023px) { .hero-intro .hero-fundo svg { opacity: .5; } .hero-intro.hero-intro--fundo .hero-fundo svg { opacity: .11; } }
+
+/* ---------- Hero: ilustração animada (lâmpada, Wi-Fi e celular viram cashback) ---------- */
+.hero2 { position: relative; isolation: isolate; }
+.hero2__visual { position: relative; }
+.hv { width: min(560px, 100%); height: auto; overflow: visible; }
+.hv-pop { transform-box: fill-box; transform-origin: center; animation: hv-pop .55s cubic-bezier(.2, 1.4, .4, 1) var(--d) both; }
+.hv-flut { transform-box: fill-box; transform-origin: center; animation: hv-flut 4.2s ease-in-out calc(2.4s + var(--f)) infinite; }
+.hv-setas { opacity: 0; animation: hv-aparece .5s ease 1.15s forwards; }
+.hv-setas path { animation: hv-fluxo 1.1s linear infinite; }
+.hv-moeda { opacity: 0; transform-box: fill-box; transform-origin: center; animation: hv-moeda 2.6s ease-in 2.4s infinite; }
+@keyframes hv-pop { from { opacity: 0; transform: translateY(18px) scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes hv-flut { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes hv-aparece { to { opacity: 1; } }
+@keyframes hv-fluxo { to { stroke-dashoffset: -16; } }
+@keyframes hv-moeda { 0% { opacity: 0; transform: translateY(-40px) scale(.8); } 15% { opacity: 1; } 55% { opacity: 1; transform: translateY(42px) scale(1); } 70%, 100% { opacity: 0; transform: translateY(60px) scale(.6); } }
+/* Celular: a ilustração fica no fundo, atrás do título */
+@media (max-width: 767px) {
+  .hero2__visual { position: absolute; inset: 0 0 auto 0; z-index: -1; display: flex; justify-content: center; padding-top: 18px; pointer-events: none; opacity: .16; }
+  .hv { width: min(400px, 96%); }
+  .hero-intro .hero2__visual { opacity: 1; }
+  .hero-intro.hero-intro--copy .hero2__visual { opacity: .16; transition: opacity 1s ease; }
+  .hero-intro .hero2__copy > * { opacity: 0; transform: translateY(40px); animation: hero-garantia 0s 6s forwards; }
+  .hero-intro.hero-intro--copy .hero2__copy > * { opacity: 1; transform: none; animation: none; transition: opacity .55s ease, transform .6s cubic-bezier(.2, 1, .3, 1); }
+  .hero-intro.hero-intro--copy .hero2__copy > :nth-child(2) { transition-delay: .08s; }
+  .hero-intro.hero-intro--copy .hero2__copy > :nth-child(3) { transition-delay: .16s; }
+  .hero-intro.hero-intro--copy .hero2__copy > :nth-child(4) { transition-delay: .26s; }
+  .hero-intro.hero-intro--copy .hero2__copy > :nth-child(5) { transition-delay: .36s; }
+}
 @keyframes hero-garantia { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hv-pop, .hv-flut, .hv-setas, .hv-setas path { animation: none; opacity: 1; } .hv-moeda { display: none; } }
+
+/* ---------- Faixa dos ganchos (logo abaixo do hero) ---------- */
+.ganchos { padding-block: clamp(8px, 2vw, 24px) clamp(40px, 6vw, 72px); }
+.ganchos .ganchos__grade { width: min(1000px, 100%); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ganchos .cb-pilha.ativa .cb-card:nth-child(n) { margin: 0; }
+.ganchos .cb-card, .ganchos .cb-total { transform: translateX(-80px); transition-delay: calc(var(--i) * .35s + .1s); }
+.ganchos [data-lado="dir"] { transform: translateX(80px); }
+.ganchos .cb-total { transform: translateY(30px) scale(.96); justify-content: center; }
+.ganchos .cb-pilha.ativa .cb-card, .ganchos .cb-pilha.ativa .cb-total { transform: none; }
+.ganchos .hero2__legenda { margin: 14px auto 0; max-width: none; }
+@media (max-width: 767px) { .ganchos .ganchos__grade { grid-template-columns: 1fr; gap: 12px; } }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* Computador e tablet: três ganchos lado a lado e o cashback numa faixa inteira embaixo */
+@media (min-width: 768px) {
+  .ganchos .ganchos__grade { width: min(1120px, 100%); grid-template-columns: repeat(3, 1fr); }
+  .ganchos .cb-card.gancho { flex-direction: column; align-items: flex-start; gap: 12px; padding: 22px; }
+  .ganchos .cb-card.gancho .cb-card__valor { display: flex; align-items: baseline; gap: 6px; text-align: left; margin-top: auto; }
+  .ganchos .cb-card.gancho .cb-card__valor em { display: inline; }
+  .ganchos .cb-total { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 24px; padding: 26px 32px; }
+  .ganchos .cb-total span { flex-basis: 100%; }
+  .ganchos .cb-total small { flex: 1; min-width: 240px; margin: 0; }
+}

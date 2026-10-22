@@ -46,25 +46,18 @@
       if (!reduzir && alvo) alvo.textContent = brl(0);
       // Só anima quando a pilha entra na tela (no celular ela fica abaixo do formulário)
       const iniciar = () => { pilha.classList.add('ativa'); contar(); };
-      // Abertura do hero: primeiro o desenho do fundo, depois os ganchos um a um e por fim o título e o formulário
-      const raiz = document.documentElement;
-      if (raiz.classList.contains('hero-intro')) {
-        try { sessionStorage.setItem('dy-intro', '1'); } catch (e) {}
-        const desk = matchMedia('(min-width: 1024px)').matches;
-        if (desk) {
-          setTimeout(iniciar, 2400);                                   // ganchos: 2,7 s · 3,2 s · 3,7 s · 4,2 s
-          setTimeout(() => raiz.classList.add('hero-intro--copy'), 4300);
-        } else {
-          setTimeout(() => raiz.classList.add('hero-intro--copy'), 3400);
-        }
-        setTimeout(() => raiz.classList.add('hero-intro--fundo'), desk ? 4300 : 3400);
-        setTimeout(() => raiz.classList.remove('hero-intro', 'hero-intro--copy', 'hero-intro--fundo'), desk ? 7500 : 6000);
-        if (desk) return;
-      }
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((ents) => { if (ents.some((e) => e.isIntersecting)) { io.disconnect(); iniciar(); } }, { threshold: 0.35 });
         io.observe(pilha);
       } else iniciar();
+    }
+
+    /* ---------- Abertura do hero no celular: a ilustração primeiro, depois o conteúdo sobe ---------- */
+    const raiz = document.documentElement;
+    if (raiz.classList.contains('hero-intro')) {
+      try { sessionStorage.setItem('dy-intro', '1'); } catch (e) {}
+      setTimeout(() => raiz.classList.add('hero-intro--copy'), 1900);
+      setTimeout(() => raiz.classList.remove('hero-intro', 'hero-intro--copy'), 4200);
     }
 
     /* ---------- Consulta de CEP do topo → página de contratação ---------- */
