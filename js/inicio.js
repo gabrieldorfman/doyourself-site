@@ -33,7 +33,7 @@
     if (pilha) {
       const alvo = $('[data-contador]', pilha);
       const contar = () => {
-        if (reduzir) return;
+        if (reduzir || !alvo) return;
         // o total começa a contar depois que o cartão dele aparece (4º da fila: 0,3 s + 3 × 0,5 s)
         const dur = 1600, ini = performance.now() + 1900;
         const passo = (t) => {
@@ -43,7 +43,7 @@
         };
         requestAnimationFrame(passo);
       };
-      if (!reduzir) alvo.textContent = brl(0);
+      if (!reduzir && alvo) alvo.textContent = brl(0);
       // Só anima quando a pilha entra na tela (no celular ela fica abaixo do formulário)
       const iniciar = () => { pilha.classList.add('ativa'); contar(); };
       if ('IntersectionObserver' in window) {

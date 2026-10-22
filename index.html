@@ -28,12 +28,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/tokens.css?v=1792634990">
-  <link rel="stylesheet" href="css/base.css?v=1792634990">
-  <link rel="stylesheet" href="css/dy.css?v=1792634990">
-  <link rel="stylesheet" href="css/planos.css?v=1792634990">
-  <link rel="stylesheet" href="css/ofertas.css?v=1792634990">
-  <link rel="stylesheet" href="css/inicio.css?v=1792634990">
+  <link rel="stylesheet" href="css/tokens.css?v=1792636212">
+  <link rel="stylesheet" href="css/base.css?v=1792636212">
+  <link rel="stylesheet" href="css/dy.css?v=1792636212">
+  <link rel="stylesheet" href="css/planos.css?v=1792636212">
+  <link rel="stylesheet" href="css/ofertas.css?v=1792636212">
+  <link rel="stylesheet" href="css/inicio.css?v=1792636212">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"Do Yourself","description":"Marca 100% digital que reúne Internet Fibra, Planos de Celular e Energia Solar por Assinatura, com cashback para o cliente na contratação.","logo":"img/marca/dy-selo-verde.svg"}
   </script>
@@ -130,65 +130,38 @@
           </ul>
         </div>
 
-        <!-- Cartões animados: quanto volta em cada serviço -->
-        <div class="hero2__visual" aria-label="Exemplo de cashback de um combo">
+        <!-- Ganchos: o que cada serviço melhora, e o cashback por cima -->
+        <div class="hero2__visual" aria-label="O que você ganha com a Do Yourself">
           <div class="cb-pilha" data-pilha>
-            <article class="cb-card cb-card--energia" style="--i:0">
+            <article class="cb-card gancho cb-card--energia" style="--i:0">
               <span class="cb-card__ico"><img src="img/icones/hero-lampada.svg" alt=""></span>
-              <div class="cb-card__txt"><b>Energia Solar por Assinatura</b><span data-ex="energia-desc">conta de R$ 800,00</span></div>
-              <div class="cb-card__valor"><small>volta</small><b data-ex="energia">R$ 65,60</b></div>
+              <div class="cb-card__txt"><b>Pague menos na conta de luz</b><span>Até 20% de desconto, sem obra e sem placas</span></div>
+              <div class="cb-card__valor"><small>volta</small><b>10%</b><em>da conta</em></div>
             </article>
-            <article class="cb-card cb-card--internet" style="--i:1">
+            <article class="cb-card gancho cb-card--internet" style="--i:1">
               <span class="cb-card__ico"><img src="img/icones/hero-wifi.svg" alt=""></span>
-              <div class="cb-card__txt"><b>Internet Fibra 800 Mega</b><span data-ex="internet-desc">R$ 129,99/mês</span></div>
-              <div class="cb-card__valor"><small>volta</small><b data-ex="internet">R$ 65,00</b></div>
+              <div class="cb-card__txt"><b>Melhore sua conexão</b><span>Internet 100% fibra óptica, com Wi-Fi e streaming</span></div>
+              <div class="cb-card__valor"><small>volta</small><b>50%</b><em>do plano</em></div>
             </article>
-            <article class="cb-card cb-card--celular" style="--i:2">
+            <article class="cb-card gancho cb-card--celular" style="--i:2">
               <span class="cb-card__ico"><img src="img/icones/hero-celular-5g.svg" alt=""></span>
-              <div class="cb-card__txt"><b>3 linhas de 30 GB</b><span data-ex="celular-desc">R$ 158,97/mês</span></div>
-              <div class="cb-card__valor"><small>volta</small><b data-ex="celular">R$ 158,97</b></div>
+              <div class="cb-card__txt"><b>Fale à vontade com 5G</b><span>Ligações ilimitadas e portabilidade grátis</span></div>
+              <div class="cb-card__valor"><small>volta</small><b>100%</b><em>do plano</em></div>
             </article>
-            <div class="cb-total" style="--i:3">
-              <span>Cashback do combo</span>
-              <b data-ex="total" data-contador>R$ 289,57</b>
-              <small>uma única vez, via PIX na sua conta bancária</small>
+            <div class="cb-total gancho-total" style="--i:3">
+              <span>Contrate um, dois ou os três</span>
+              <b>E ainda recebe dinheiro de volta</b>
+              <small>Cashback via PIX na sua conta bancária, sem custo extra.</small>
             </div>
           </div>
-          <p class="hero2__legenda">Exemplo com os preços de hoje. A energia é uma estimativa e o valor final depende da sua fatura.</p>
+          <p class="hero2__legenda">O cashback é pago uma única vez, depois que o contrato é finalizado.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- ============ COMO FUNCIONA ============ -->
-    <section class="secao" id="como-funciona" aria-labelledby="cf-titulo">
-      <div class="container">
-        <header class="cab surgir">
-          <span class="dy-eyebrow">Como funciona</span>
-          <h2 class="dy-h2" id="cf-titulo">Três passos, sem complicação</h2>
-          <p class="dy-lead">Tudo pelo celular, no seu tempo.</p>
-        </header>
-        <ol class="passos3">
-          <li class="passo surgir" style="--atraso:.05s">
-            <span class="passo__n">1</span>
-            <h3 class="dy-h3">Consulte seu endereço</h3>
-            <p class="dy-texto">Digite o CEP e o <strong>número do imóvel</strong> e consulte as ofertas disponíveis na sua região.</p>
-          </li>
-          <li class="passo surgir" style="--atraso:.15s">
-            <span class="passo__n">2</span>
-            <h3 class="dy-h3">Monte seu Combo</h3>
-            <p class="dy-texto">Escolha sua Internet Fibra, Plano de Celular e veja o desconto que pode ter na sua conta de luz.<br>Pode escolher um, dois ou os três serviços!</p>
-          </li>
-          <li class="passo surgir" style="--atraso:.25s">
-            <span class="passo__n">3</span>
-            <h3 class="dy-h3">Finalize no WhatsApp</h3>
-            <p class="dy-texto">O pedido chega pronto pra nós no WhatsApp.<br>Quando fechamos o contrato, enviamos seu cashback via PIX para sua conta bancária.</p>
-          </li>
-        </ol>
       </div>
     </section>
 
     <!-- ============ ENERGIA ============ -->
     <section class="secao secao--energia" id="energia" aria-labelledby="en-titulo">
+      <div class="secao-ico secao-ico--esq secao-ico--energia" aria-hidden="true"><div class="secao-ico__fixo"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
       <div class="container energia2">
         <div class="energia2__copy surgir">
           <span class="dy-eyebrow dy-eyebrow--energia">Energia Solar por Assinatura</span>
@@ -231,6 +204,7 @@
 
     <!-- ============ INTERNET FIBRA ============ -->
     <section class="secao secao--internet secao--planos" id="internet" aria-labelledby="int-titulo">
+      <div class="secao-ico secao-ico--dir secao-ico--internet" aria-hidden="true"><div class="secao-ico__fixo"><svg viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.3a9.5 9.5 0 0 1 13 0M8.6 15.6a5 5 0 0 1 6.8 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></svg></div></div>
       <div class="container">
         <header class="cab surgir">
           <span class="dy-eyebrow dy-eyebrow--internet">Internet Fibra</span>
@@ -269,6 +243,7 @@
 
     <!-- ============ CELULAR ============ -->
     <section class="secao secao--celular secao--planos" id="celular" aria-labelledby="cel-titulo">
+      <div class="secao-ico secao-ico--esq secao-ico--celular" aria-hidden="true"><div class="secao-ico__fixo"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 5.5h3M11 18.5h2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div></div>
       <div class="container">
         <header class="cab surgir">
           <span class="dy-eyebrow dy-eyebrow--celular">Planos de Celular</span>
@@ -302,6 +277,34 @@
           <li><img src="img/icones/dados-moveis.svg" alt=""><span><b>Aplicativos ilimitados</b>WhatsApp, Waze e Messenger ilimitados para usar o mês inteiro, sem gastar a franquia.</span></li>
           <li><img src="img/icones/enviar.svg" alt=""><span><b>Enviamos para todo o Brasil</b>Você escolhe o plano e a quantidade de linhas, e nós enviamos para o seu endereço.</span></li>
         </ul>
+      </div>
+    </section>
+
+    <!-- ============ COMO FUNCIONA ============ -->
+    <section class="secao" id="como-funciona" aria-labelledby="cf-titulo">
+      <div class="container">
+        <header class="cab surgir">
+          <span class="dy-eyebrow">Como funciona</span>
+          <h2 class="dy-h2" id="cf-titulo">Três passos, sem complicação</h2>
+          <p class="dy-lead">Tudo pelo celular, no seu tempo.</p>
+        </header>
+        <ol class="passos3">
+          <li class="passo surgir" style="--atraso:.05s">
+            <span class="passo__n">1</span>
+            <h3 class="dy-h3">Consulte seu endereço</h3>
+            <p class="dy-texto">Digite o CEP e o <strong>número do imóvel</strong> e consulte as ofertas disponíveis na sua região.</p>
+          </li>
+          <li class="passo surgir" style="--atraso:.15s">
+            <span class="passo__n">2</span>
+            <h3 class="dy-h3">Monte seu Combo</h3>
+            <p class="dy-texto">Escolha sua Internet Fibra, Plano de Celular e veja o desconto que pode ter na sua conta de luz.<br>Pode escolher um, dois ou os três serviços!</p>
+          </li>
+          <li class="passo surgir" style="--atraso:.25s">
+            <span class="passo__n">3</span>
+            <h3 class="dy-h3">Finalize no WhatsApp</h3>
+            <p class="dy-texto">O pedido chega pronto pra nós no WhatsApp.<br>Quando fechamos o contrato, enviamos seu cashback via PIX para sua conta bancária.</p>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -489,12 +492,12 @@
   </div>
   <a class="zap-flutuante" data-whatsapp="Olá! Vim pelo site da Do Yourself." aria-label="Falar no WhatsApp"><img src="img/icones/whatsapp-branco.svg" alt=""></a>
 
-  <script src="js/config.js?v=1792634990"></script>
-  <script src="js/menu.js?v=1792634990"></script>
-  <script src="js/main.js?v=1792634990"></script>
-  <script src="js/ofertas.js?v=1792634990"></script>
-  <script src="js/vendor/gsap.min.js?v=1792634990"></script>
-  <script src="js/planos.js?v=1792634990"></script>
-  <script src="js/inicio.js?v=1792634990"></script>
+  <script src="js/config.js?v=1792636212"></script>
+  <script src="js/menu.js?v=1792636212"></script>
+  <script src="js/main.js?v=1792636212"></script>
+  <script src="js/ofertas.js?v=1792636212"></script>
+  <script src="js/vendor/gsap.min.js?v=1792636212"></script>
+  <script src="js/planos.js?v=1792636212"></script>
+  <script src="js/inicio.js?v=1792636212"></script>
 </body>
 </html>

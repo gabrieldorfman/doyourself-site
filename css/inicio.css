@@ -308,3 +308,30 @@
 .local-aviso--celular .dy-btn { border-color: var(--celular-primario); color: var(--celular-titulo); }
 .local-aviso--celular .dy-btn:hover { background: var(--celular-tint); }
 .secao--planos .planos-nota { margin-top: 24px; }
+
+/* ---------- Hero: ganchos por serviço ---------- */
+.gancho .cb-card__txt b { font-size: 17px; }
+.gancho .cb-card__valor b { font-size: 22px; }
+.gancho .cb-card__valor em { display: block; font-style: normal; font-size: 12px; font-weight: 600; color: var(--texto-terciario); }
+.gancho-total { padding: 24px 26px; }
+.gancho-total b { font-size: clamp(28px, 3.4vw, 36px); line-height: 1.12; letter-spacing: -.02em; }
+.gancho-total small { margin-top: 4px; font-size: 15px; }
+@media (max-width: 420px) { .gancho .cb-card__txt b { font-size: 15.5px; } .gancho .cb-card__txt span { font-size: 13px; } .cb-card.gancho { padding: 14px; gap: 12px; } }
+
+/* ---------- Ícone flutuando no fundo de cada seção (acompanha a rolagem só dentro dela) ---------- */
+.secao--energia, .secao--internet, .secao--celular { position: relative; isolation: isolate; }
+.secao-ico { position: absolute; inset: 0; z-index: -1; overflow: clip; pointer-events: none; }
+.secao-ico__fixo { position: sticky; top: 22vh; width: var(--ico-tam); height: var(--ico-tam); margin-top: 80px; }
+.secao-ico--esq .secao-ico__fixo { margin-left: max(-2vw, calc((100% - var(--conteudo, 1200px)) / 2 - var(--ico-tam) * .55)); }
+.secao-ico--dir .secao-ico__fixo { margin-left: auto; margin-right: max(-2vw, calc((100% - var(--conteudo, 1200px)) / 2 - var(--ico-tam) * .55)); }
+.secao-ico svg { width: 100%; height: 100%; opacity: .16; filter: blur(1.5px); animation: ico-pulsa 4.5s ease-in-out infinite; transform-origin: center; }
+.secao-ico--energia { color: var(--energia, #f07c1b); --ico-tam: 240px; }
+.secao-ico--internet { color: var(--internet, #2f6fb3); --ico-tam: 250px; }
+.secao-ico--celular { color: var(--celular, #1a8a55); --ico-tam: 230px; }
+.secao-ico--energia svg { color: #f28c28; }
+.secao-ico--internet svg { color: #3b7fc4; }
+.secao-ico--celular svg { color: #1f9a5e; }
+@keyframes ico-pulsa { 0%, 100% { transform: translateY(0) scale(1); opacity: .12; } 50% { transform: translateY(-14px) scale(1.06); opacity: .22; } }
+@media (max-width: 1023px) { .secao-ico { --ico-tam: 150px !important; } .secao-ico--esq .secao-ico__fixo { margin-left: -36px; } .secao-ico--dir .secao-ico__fixo { margin-right: -36px; } }
+@media (max-width: 640px) { .secao-ico { --ico-tam: 104px !important; } .secao-ico__fixo { top: 14vh; margin-top: 40px; } .secao-ico--esq .secao-ico__fixo { margin-left: -28px; } .secao-ico--dir .secao-ico__fixo { margin-right: -28px; } }
+@media (prefers-reduced-motion: reduce) { .secao-ico svg { animation: none; opacity: .14; } }
