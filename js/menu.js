@@ -9,7 +9,7 @@
   const externo = (href) => /^https?:/.test(href);
   const a = (k, cls) => {
     const href = DY.linkRota(k); const x = R[k];
-    if (!href) return `<span class="${cls} em-breve" aria-disabled="true">${x.r}<small>em breve</small></span>`;
+    if (!href) return `<span class="${cls} em-breve" aria-disabled="true">${x.r}</span>`;
     return `<a class="${cls}${dentro(k) && x.pronta ? ' ' + cls + '--ativo' : ''}" href="${href}"${externo(href) ? ' target="_blank" rel="noopener"' : ''}${ehAqui(k) ? ' aria-current="page"' : ''}>${x.r}</a>`;
   };
   const curto = { inicio: 'Início', combo: 'Combo', energia: 'Energia', blog: 'Blog' };
@@ -54,11 +54,11 @@
   document.querySelectorAll('.rodape a[href^="/"], .ct-rodape a[href^="/"], .rodape a[href$="politica-de-privacidade.html"], .ct-rodape a[href$="politica-de-privacidade.html"], a.dy-link[href$="politica-de-privacidade.html"]').forEach((el) => {
     let h = el.getAttribute('href'); if (/politica-de-privacidade\.html$/.test(h)) h = '/politica-de-privacidade';
     const base = h.split('#')[0]; const k = porHref[h] || porHref[base];
-    if (!k) { if (base !== '/') { el.classList.add('em-breve'); el.removeAttribute('href'); el.setAttribute('aria-disabled', 'true'); el.insertAdjacentHTML('beforeend', '<small>em breve</small>'); } return; }
+    if (!k) { if (base !== '/') { el.classList.add('em-breve'); el.removeAttribute('href'); el.setAttribute('aria-disabled', 'true');  } return; }
     let href = DY.linkRota(k);
     // Link com âncora (#duvidas, #como-funciona) de uma página que ainda não existe → mesma seção na home
     if (!R[k].pronta && h.includes('#')) href = '/#' + h.split('#')[1];
     if (href) { el.href = href; if (externo(href)) { el.target = '_blank'; el.rel = 'noopener'; } }
-    else { el.classList.add('em-breve'); el.removeAttribute('href'); el.setAttribute('aria-disabled', 'true'); el.insertAdjacentHTML('beforeend', '<small>em breve</small>'); }
+    else { el.classList.add('em-breve'); el.removeAttribute('href'); el.setAttribute('aria-disabled', 'true');  }
   });
 })();
