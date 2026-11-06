@@ -20,16 +20,23 @@
 
   // Desktop
   const nav = document.querySelector('.header .nav');
-  if (nav) nav.innerHTML = DY.menu.map(([k, sub], i) => {
+  // Grupo com página principal: o rótulo é link (Internet → /internet-fibra) e a setinha abre o submenu
+  const principal = (pk) => pk && DY.linkRota(pk);
+  if (nav) nav.innerHTML = DY.menu.map(([k, sub, pk], i) => {
     if (!sub) { const href = DY.linkRota(k); if (!href) return ''; return `<li><a class="nav__link${itemAtivo(k) ? ' nav__link--ativo' : ''}" href="${href}"${ehAqui(k) ? ' aria-current="page"' : ''}>${curto[k] || R[k].r}</a></li>`; }
+    const lista = `<div class="submenu" id="sub-${i}">${sub.map((s) => a(s, 'submenu__item')).join('')}</div>`;
+    if (principal(pk)) return `<li class="nav__grupo"><a class="nav__link${grupoAtivo(sub) ? ' nav__link--ativo' : ''}" href="${principal(pk)}"${ehAqui(pk) ? ' aria-current="page"' : ''}>${k}</a><button class="nav__abre" type="button" aria-expanded="false" aria-controls="sub-${i}" aria-label="Abrir o menu de ${k}"><span class="nav__seta" aria-hidden="true">▾</span></button>
+      ${lista}</li>`;
     return `<li><button class="nav__link${grupoAtivo(sub) ? ' nav__link--ativo' : ''}" type="button" aria-expanded="false" aria-controls="sub-${i}">${k} <span class="nav__seta" aria-hidden="true">▾</span></button>
-      <div class="submenu" id="sub-${i}">${sub.map((s) => a(s, 'submenu__item')).join('')}</div></li>`;
+      ${lista}</li>`;
   }).join('');
 
   // Drawer (tablet e celular): acordeão
   const lista = document.querySelector('#drawer .drawer__lista');
-  if (lista) lista.innerHTML = DY.menu.map(([k, sub], i) => {
+  if (lista) lista.innerHTML = DY.menu.map(([k, sub, pk], i) => {
     if (!sub) { const href = DY.linkRota(k); if (!href) return ''; return `<li><a class="drawer__item${itemAtivo(k) ? ' drawer__item--ativo' : ''}" href="${href}"${ehAqui(k) ? ' aria-current="page"' : ''}>${k === 'energia' ? 'Energia Solar' : curto[k] || R[k].r}</a></li>`; }
+    if (principal(pk)) return `<li class="drawer__grupo"><a class="drawer__item${grupoAtivo(sub) ? ' drawer__item--ativo' : ''}" href="${principal(pk)}">${k}</a><button class="drawer__abre" type="button" aria-expanded="false" data-sub="dsub-${i}" aria-label="Ver as páginas de ${k}"><span class="drawer__glifo" aria-hidden="true">+</span></button>
+      <div class="drawer__sub" id="dsub-${i}" hidden>${sub.map((s) => a(s, 'drawer__subitem')).join('')}</div></li>`;
     return `<li><button class="drawer__item${grupoAtivo(sub) ? ' drawer__item--ativo' : ''}" type="button" aria-expanded="false" data-sub="dsub-${i}">${k}<span class="drawer__glifo" aria-hidden="true">+</span></button>
       <div class="drawer__sub" id="dsub-${i}" hidden>${sub.map((s) => a(s, 'drawer__subitem')).join('')}</div></li>`;
   }).join('');

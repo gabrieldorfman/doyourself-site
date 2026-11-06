@@ -880,3 +880,11 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .pag__nota { margin: 28px 0 6px; text-align: center; font-size: 15px; line-height: 1.5; color: var(--texto-titulo); }
 .form--pag .form__acoes { margin-top: 18px; }
 .fim-resumo__pag { line-height: 1.5; }
+
+/* Celular CPF: trazer o número (portabilidade) ou número novo */
+.ct-porta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 8px; }
+.ct-porta button { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: 16px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); text-align: left; font: inherit; color: var(--texto-corpo); cursor: pointer; transition: border-color var(--rapido), background var(--rapido); }
+.ct-porta button b { font-size: 15px; color: var(--texto-titulo); }
+.ct-porta button small { font-size: 12px; line-height: 1.35; }
+.ct-porta button[aria-checked="true"] { border-color: var(--celular-primario); background: var(--celular-tint); }
+@media (max-width: 520px) { .ct-porta { grid-template-columns: 1fr; } }

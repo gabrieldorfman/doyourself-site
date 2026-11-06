@@ -301,3 +301,14 @@ body.menu-aberto { overflow: hidden; }
 .em-breve { display: inline; gap: 0; opacity: .5; cursor: default; pointer-events: none; }
 .em-breve small { display: none; }
 .submenu .em-breve, .drawer__sub .em-breve, .ct-menu__sub .em-breve { display: flex; }
+
+/* Grupos do menu com página principal: o rótulo é link e a setinha abre o submenu */
+.nav__grupo { display: flex; align-items: center; gap: 2px; }
+.nav__abre { display: inline-grid; place-items: center; width: 22px; height: 30px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; border-radius: 6px; }
+.nav__abre:hover, .nav__abre[aria-expanded="true"] { color: var(--marca-titulo); background: var(--marca-tint); }
+.nav__abre[aria-expanded="true"] .nav__seta { transform: rotate(180deg); }
+.nav__grupo:hover > .nav__link { color: var(--marca-titulo); }
+.drawer__grupo { display: flex; flex-wrap: wrap; align-items: center; }
+.drawer__grupo > .drawer__item { flex: 1; }
+.drawer__abre { width: 48px; height: 48px; flex: none; display: grid; place-items: center; border: 0; background: none; color: inherit; font-size: 22px; cursor: pointer; }
+.drawer__grupo > .drawer__sub { flex-basis: 100%; }

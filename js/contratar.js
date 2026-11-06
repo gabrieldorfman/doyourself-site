@@ -41,6 +41,9 @@
     const p = DY.planosInternet.find((x) => x.id === q.get('plano'));
     if (p) { const oi = Math.max(0, p.opcoes.findIndex((o) => o.nome === q.get('opcao'))); st.rasc.internet = { id: p.id, op: oi }; }
   }
+  // Celular: CPF (planos controle) ou CNPJ (empresariais); portabilidade é o padrão (muda o preço no CPF)
+  st.porta = q.get('numero') !== 'novo';
+  if (st.para.celular) DY.definirPlanos({ celular: st.para.celular });
   if (origem === 'celular' && q.get('plano')) {
     const p = DY.planosCelular.find((x) => x.id === q.get('plano'));
     if (p) st.rasc.celular = { id: p.id, linhas: Math.max(1, Math.min(99, +q.get('linhas') || 1)) };
@@ -427,7 +430,7 @@
   const ORDEM_FIXA = ['energia', 'internet', 'celular'];
   function faixa(lista, f) { const v = lista.map(f); return [Math.min(...v), Math.max(...v)]; }
   function infoDisponivel() {
-    const net = DY.planosInternet, cel = DY.planosCelular;
+    const net = DY.planosInternet, cel = [...DY.celularCpf, ...DY.planosCnpj];
     const [vMin, vMax] = faixa(net, (p) => +p.num);
     const precosNet = net.flatMap((p) => p.opcoes.map((o) => centavos(o.preco)));
     const [gMin, gMax] = faixa(cel, (p) => +p.num);
@@ -441,7 +444,7 @@
         itens: ['Wi-Fi incluso', 'Instalação gratuita', 'Streaming em alguns planos'],
         cb: `Volta <b>50% do valor do plano</b>: de ${brl(cashbackCentavos(Math.min(...precosNet), 50))} a <b>${brl(cashbackCentavos(Math.max(...precosNet), 50))}</b>` },
       celular: { tit: 'Plano de Celular', ico: 'hero-celular-5g.svg', preco: `${gMin} a ${gMax} GB · a partir de <b>${brl(cMin)}/mês</b> por linha`,
-        itens: ['Ligações ilimitadas para todo o Brasil', '5G e portabilidade grátis', 'WhatsApp e Waze ilimitados'],
+        itens: ['Ligações ilimitadas para todo o Brasil', 'Portabilidade grátis', 'Planos controle (CPF) e empresariais (CNPJ)'],
         cb: `Volta <b>100% do valor do plano</b>: ${brl(cMin)} a <b>${brl(cMax)}</b> por linha` },
     };
   }
@@ -520,7 +523,7 @@
         ? ['Escolha sua internet', 'Fibra óptica com Wi-Fi e instalação grátis. <b>50% da mensalidade volta para você.</b>']
         : ['Quer internet fibra também?', ''],
       celular: primeiro
-        ? ['Escolha seu plano de celular', 'Ligações ilimitadas, 5G e o seu número. <b>100% das linhas volta para você.</b>']
+        ? ['Escolha seu plano de celular', 'Planos controle ou empresariais, com o seu número. <b>100% das linhas volta para você.</b>']
         : ['Quer incluir celular?', 'Ligações ilimitadas e 5G. <b>100% das linhas volta para você.</b>'],
       energia: primeiro
         ? ['Quanto vem sua conta de luz?', 'Até 20% menos na conta, sem obra e sem placas. <b>10% da nova conta volta para você.</b>']
@@ -577,7 +580,7 @@
       internet: st.para.internet === 'empresa'
         ? [['instalacao.svg', 'Instalação grátis'], ['lista-wifi.svg', '100% fibra óptica'], ['modem.svg', 'Wi-Fi incluso']]
         : [['instalacao.svg', 'Instalação grátis'], ['dif-tela.svg', 'Streaming incluso'], ['lista-wifi.svg', '100% fibra óptica']],
-      celular: [['ligacoes.svg', 'Ligações ilimitadas'], ['portabilidade.svg', 'Portabilidade grátis'], ['dados-moveis.svg', 'Apps ilimitados']],
+      celular: [['ligacoes.svg', 'Ligações ilimitadas'], ['portabilidade.svg', 'Portabilidade grátis'], ['dados-moveis.svg', 'Apps sem gastar a internet']],
     }[prod];
     return `<ul class="energia-beneficios beneficios--${prod}">${B.map(([i, t]) => `<li><img src="${img('icones/' + i)}" alt="">${t}</li>`).join('')}</ul>`;
   }
@@ -654,7 +657,11 @@
         DY.definirPlanos({ tipo: st.para.internet });
         if (st.rasc.internet && !DY.planosInternet.some((p) => p.id === st.rasc.internet.id)) st.rasc.internet = null;
       }
-      if (!antes || prod === 'internet') {
+      if (prod === 'celular') {
+        DY.definirPlanos({ celular: st.para.celular });
+        if (st.rasc.celular && !DY.planosCelular.some((p) => p.id === st.rasc.celular.id)) st.rasc.celular = null;
+      }
+      if (!antes || prod === 'internet' || prod === 'celular') {
         // primeira escolha: mostra os planos (ou o campo da conta) logo abaixo da pergunta
         const y = window.scrollY; renderProduto(); window.scrollTo(0, y);
         const alvo = $(prod === 'energia' ? '[data-grupo="conta"]' : '[data-trilho]', palco);
@@ -665,7 +672,7 @@
           // energia: já abre o teclado no campo da fatura (a pergunta fica no topo e o campo logo abaixo, acima do teclado)
           if (prod === 'energia') setTimeout(() => $('#f-conta', palco)?.focus({ preventScroll: true }), 120);
         }
-      } else if (prod === 'celular') atualizarLinhas();
+      }
     });
   }
 
@@ -673,9 +680,15 @@
   function htmlCelular() {
     if (faltaQuem('celular')) return beneficios('celular') + htmlQuem('celular');
     const sel = st.rasc.celular || (st.esc.celular && { ...st.esc.celular });
-    const cards = DY.planosCelular.map((p) => DY.ofertas.celular(p, { on: !!(sel && sel.id === p.id) })).join('');
+    const cpf = st.para.celular === 'cpf';
+    const cards = DY.planosCelular.map((p) => DY.ofertas.celular(p, { on: !!(sel && sel.id === p.id), porta: !cpf || st.porta })).join('');
     const n = sel ? sel.linhas : 1;
-    return `${beneficios('celular')}${htmlQuem('celular')}
+    // CPF: o preço e a internet mudam se a pessoa traz o número (portabilidade) ou pega um número novo
+    const porta = cpf ? `<div class="ct-porta" role="radiogroup" aria-label="Número da linha" data-porta-box>
+        <button type="button" role="radio" aria-checked="${st.porta}" data-porta="1"><b>Vou trazer o meu número</b><small>Portabilidade grátis · mais internet e menor preço</small></button>
+        <button type="button" role="radio" aria-checked="${!st.porta}" data-porta="0"><b>Quero um número novo</b><small>Linha nova, com chip enviado para você</small></button>
+      </div>` : '<p class="dy-apoio" style="text-align:center;margin:-4px 0 4px">Os planos “Só portabilidade” têm mais internet para quem traz o número de outra operadora.</p>';
+    return `${beneficios('celular')}${htmlQuem('celular')}${porta}
       <div><div class="ofertas ofertas--cel" data-trilho>${cards}</div>${dots(DY.planosCelular.length)}</div>
       <div class="linhas" data-linhas-box${sel ? '' : ' hidden'}>
         <p class="linhas__titulo" id="lbl-linhas">Quantas linhas você quer?</p>
@@ -685,6 +698,7 @@
         <div class="porta"><img src="${img('icones/portabilidade.svg')}" alt=""><span><b>Portabilidade grátis</b>Traga o número que você já usa, de qualquer operadora, sem pagar nada. A gente cuida do pedido por você.</span></div>
       </div>`;
   }
+  const celPorta = () => st.para.celular !== 'cpf' || st.porta;
   function atualizarLinhas() {
     const box = $('[data-linhas-box]', palco); if (!box) return;
     const r = st.rasc.celular; const n = r ? r.linhas : +$('[data-l-qtd]', box).textContent;
@@ -692,12 +706,19 @@
     $('[data-l="-1"]', box).disabled = n <= 1;
     $('[data-l-nota]', box).textContent = st.para.celular === 'cnpj' ? 'Se a sua empresa for MEI, o limite é de 3 linhas por CNPJ. A partir de 10 linhas existem condições especiais — a gente te explica no WhatsApp.' : '';
     if (r) {
-      const p = DY.planosCelular.find((x) => x.id === r.id); const total = centavos(p.preco) * n;
-      $('[data-l-total]', box).innerHTML = `${n} ${n === 1 ? 'linha' : 'linhas'} de ${p.num} GB = <b>${brl(total)}/mês</b> · você recebe <b style="color:var(--marca-titulo)">${brl(cashbackCentavos(total, 100))}</b>`;
+      const p = DY.planosCelular.find((x) => x.id === r.id); const total = centavos(DY.celPreco(p, celPorta())) * n;
+      $('[data-l-total]', box).innerHTML = `${n} ${n === 1 ? 'linha' : 'linhas'} de ${p.tipo === 'cpf' ? p.nome + ' · ' : ''}${DY.celGB(p, celPorta())} GB = <b>${brl(total)}/mês</b> · você recebe <b style="color:var(--marca-titulo)">${brl(cashbackCentavos(total, 100))}</b>`;
     }
   }
   function ligarCelular() {
     ligarPara('celular'); if (faltaQuem('celular')) return;
+    const pb = $('[data-porta-box]', palco);
+    if (pb) pb.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-porta]'); if (!b) return;
+      st.porta = b.dataset.porta === '1';
+      const y = window.scrollY; renderProduto(); window.scrollTo(0, y);
+      atualizarBotaoAdd(); atualizarCarrinho();
+    });
     const trilho = $('[data-trilho]', palco); ligarDots(trilho);
     const escolher = (card) => {
       const linhas = st.rasc.celular ? st.rasc.celular.linhas : +$('[data-l-qtd]', palco).textContent || 1;
@@ -797,7 +818,7 @@
     if (e.target.closest('[data-add]')) {
       if (!st.rasc[prod]) return;
       st.esc[prod] = { ...st.rasc[prod] };
-      if (prod === 'celular') st.esc.celular.para = st.para.celular;
+      if (prod === 'celular') { st.esc.celular.para = st.para.celular; st.esc.celular.porta = st.porta; }
       if (prod === 'internet') st.esc.internet.para = st.para.internet;
       if (prod === 'energia') st.esc.energia.para = st.para.energia;
       pulsar(); avancarProduto();
@@ -827,10 +848,15 @@
           linhaZap: `Internet Fibra ${nome}${extra} no valor de ${brl(preco)}/mês${v.para === 'empresa' ? ' (no CNPJ)' : ''}` });
       }
       if (prod === 'celular') {
-        const p = DY.planosCelular.find((x) => x.id === v.id); const unit = centavos(p.preco); const total = unit * v.linhas;
+        const lst = (v.para || st.para.celular) === 'cpf' ? DY.celularCpf : [...DY.planosCnpj, ...DY.celularPorta];
+        const p = lst.find((x) => x.id === v.id); if (!p) return;
+        const porta = p.tipo === 'cpf' ? (v.porta !== undefined ? v.porta : st.porta) : true;
+        const unit = centavos(DY.celPreco(p, porta)); const total = unit * v.linhas; const gb = DY.celGB(p, porta);
         const para = v.para || st.para.celular;
-        lista.push({ produto: 'celular', titulo: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular ${p.num} GB`, detalhe: `${brl(unit)} por linha · ${brl(total)}/mês · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}`, mensal: total, cashback: cashbackCentavos(total, 100), sub: `${brl(unit)} por linha · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}`, plano: p.id, linhas: v.linhas, para,
-          linhaZap: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular de ${p.num} GB (${brl(unit)} cada, total de ${brl(total)}/mês)${para === 'cnpj' ? ' para a minha empresa' : ''}` });
+        const nome = p.tipo === 'cpf' ? `${p.nome} ${gb} GB` : `${gb} GB`;
+        const modo = p.tipo === 'cpf' || p.soPorta ? (porta ? ' · portabilidade' : ' · número novo') : '';
+        lista.push({ produto: 'celular', titulo: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular ${nome}`, detalhe: `${brl(unit)} por linha · ${brl(total)}/mês · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}${modo}`, mensal: total, cashback: cashbackCentavos(total, 100), sub: `${brl(unit)} por linha · ${para === 'cnpj' ? 'CNPJ' : 'CPF'}${modo}`, plano: p.id, linhas: v.linhas, para, portabilidade: porta,
+          linhaZap: `${v.linhas} ${v.linhas === 1 ? 'linha' : 'linhas'} de celular ${p.tipo === 'cpf' ? p.nome + ' ' : ''}de ${gb} GB (${brl(unit)} cada, total de ${brl(total)}/mês)${modo.replace(' · ', ', ')}${para === 'cnpj' ? ' para a minha empresa' : ''}` });
       }
       if (prod === 'energia') {
         const s = DY.energia.simular(v.conta);

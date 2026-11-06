@@ -53,18 +53,23 @@
     </div>`;
   }
 
-  function celular(p, { on = false, rotulo } = {}) {
+  // Card de celular: CPF (controle, preço muda com a portabilidade) ou CNPJ (por linha)
+  function celular(p, { on = false, rotulo, porta = true } = {}) {
     const ic = (k) => img('icones/' + p.detalhes[k][0]);
-    const det = `<li${attrDica('Dados móveis', p.num + ' GB')}><img src="${ic(0)}" alt=""><span><b>${p.num} GB</b> <i class="dica-rot">de internet por mês</i></span></li><li><img src="${ic(1)}" alt=""><span><b>Ligações ilimitadas</b> para todo o Brasil</span></li><li><img src="${ic(3)}" alt=""><span><b>5G</b> e portabilidade grátis</span></li>`;
-    const apps = p.apps.map((k) => `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('');
-    return `<div class="oferta oferta--cel${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="Plano de ${p.num} GB" data-id="${p.id}">
+    const gb = DY.celGB(p, porta); const preco = DY.celPreco(p, porta);
+    const cpf = p.tipo === 'cpf';
+    const terceira = cpf ? '<b>SMS ilimitados</b> e roaming nacional' : p.soPorta ? '<b>Só para quem traz o número</b>' : '<b>1ª mensalidade grátis</b>';
+    const det = `<li${attrDica('Dados móveis', gb + ' GB')}><img src="${ic(0)}" alt=""><span><b>${gb} GB</b> <i class="dica-rot">de internet por mês</i></span></li><li><img src="${ic(1)}" alt=""><span>${p.minutos ? `<b>${p.minutos} minutos</b> para todo o Brasil` : '<b>Ligações ilimitadas</b> para todo o Brasil'}</span></li><li><img src="${ic(4)}" alt=""><span>${terceira}</span></li>`;
+    const apps = p.apps.length ? `<div class="oferta__apps" title="Apps que não gastam a sua internet">${p.apps.map((k) => `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('')}</div>` : `<p class="oferta__extra-txt">${(p.extras || [])[0] || ''}</p>`;
+    const titulo = cpf ? `<p class="oferta__nome">${p.nome}</p>` : '';
+    return `<div class="oferta oferta--cel${p.variante === 'soft' ? ' destaque' : ''}${p.variante === 'premium' ? ' premium' : ''}" role="radio" tabindex="0" aria-checked="${!!on}" aria-label="${p.nome}, ${gb} GB" data-id="${p.id}">
       <div class="oferta__topo"><span class="oferta__selo">${p.selo}</span><span class="oferta__check" aria-hidden="true">${CHECK}</span></div>
-      <p class="oferta__vel"><b>${p.num}</b><span>GB</span></p>
+      ${titulo}<p class="oferta__vel"><b>${gb}</b><span>GB</span></p>
       <ul class="oferta__lista">${det}</ul>
-      <div class="oferta__apps" title="Apps que não gastam a sua internet">${apps}</div>
+      ${apps}
       <div class="oferta__espaco"></div>
-      <div class="oferta__preco"><div><b>${brl(centavos(p.preco))}</b><span>/mês</span></div><small>por linha, no débito automático</small></div>
-      <div class="oferta__cb"><span>Volta para você<br><small>cashback de 100%</small></span><b>${brl(centavos(p.preco))}<small style="font-weight:600">/linha</small></b></div>
+      <div class="oferta__preco"><div><b>${brl(centavos(preco))}</b><span>/mês</span></div><small>${cpf ? (porta ? 'na portabilidade' : 'com número novo') : 'por linha'}, no débito automático</small></div>
+      <div class="oferta__cb"><span>Volta para você<br><small>cashback de 100%</small></span><b>${brl(centavos(preco))}${cpf ? '' : '<small style="font-weight:600">/linha</small>'}</b></div>
       <span class="oferta__escolher" aria-hidden="true">${rotulo || (on ? 'Plano escolhido' : 'Escolher este plano')}</span>
     </div>`;
   }

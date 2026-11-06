@@ -14,7 +14,7 @@
     /* ---------- Exemplos calculados com os preços do config (nunca ficam desatualizados) ---------- */
     const p800 = DY.planosInternet.find((p) => p.id === '800') || DY.planosInternet.find((p) => /1000$/.test(p.id)) || DY.planosInternet[0];
     const pInt = centavos(p800.opcoes[0].preco);
-    const p30 = DY.planosCelular.find((p) => p.id === '30');
+    const p30 = DY.planosCnpj.find((p) => p.id === '30');
     const pCel = centavos(p30.preco) * 3;
     const en = DY.energia.simular(800);
     const ex = { internet: cashbackCentavos(pInt, 50), celular: cashbackCentavos(pCel, 100), energia: en.cashback };

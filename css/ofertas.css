@@ -158,3 +158,8 @@
 .oferta__stream div { align-items: center; min-height: 34px; flex-wrap: wrap; }
 .oferta__stream img.yt { width: 96px; height: 24px; border-radius: 0; object-fit: contain; }
 .oferta.premium .oferta__stream img.yt { filter: brightness(0) invert(1); }
+
+/* Celular: nome do plano controle e extra quando não há apps sem franquia */
+.oferta__nome { margin: 2px 0 -6px; font-size: 13px; font-weight: 800; color: var(--celular-titulo); }
+.oferta.premium .oferta__nome { color: var(--acao-dourado); }
+.oferta__extra-txt { min-height: 40px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: var(--texto-corpo); }

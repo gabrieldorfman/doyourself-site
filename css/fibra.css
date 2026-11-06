@@ -395,3 +395,54 @@ a.fb-ups__card:hover { transform: translateY(-3px); border-color: var(--internet
 .fb-secao-curta { padding-block: clamp(40px, 6vw, 72px); }
 .fb-centro { display: flex; justify-content: center; margin-top: 24px; }
 .fb-nota { margin-top: 14px; text-align: center; font-size: 13px; color: var(--texto-terciario); }
+
+/* ---------- Celular: mesmas peças, com a cor da vertical ---------- */
+.tema-cel { --internet-tint: var(--celular-tint); --internet-titulo: var(--celular-titulo); --internet-primario: var(--celular-primario); --internet-hover: var(--celular-hover); --internet-primario-texto: var(--celular-primario-texto); --internet-soft: var(--celular-soft); }
+.fb-pilha__top--cel { background: linear-gradient(150deg, var(--celular-solido, var(--celular-primario)), color-mix(in srgb, var(--celular-primario) 70%, #000)); border-color: transparent; }
+.fb-pilha__top--cel .fb-pilha__spec, .fb-pilha__top--cel .fb-pilha__preco small { color: rgba(255, 255, 255, .85); }
+.fb-pilha__top--cel .fb-pilha__vel, .fb-pilha__top--cel .fb-pilha__preco strong { color: #fff; }
+.fb-pilha__top--cel .fb-pilha__cb { background: rgba(255, 255, 255, .16); color: #fff; }
+.fb-pilha__top--cel .fb-pilha__btn { background: #fff; color: var(--celular-titulo); }
+.fb-pilha__top + .fb-pilha__top { margin-top: 4px; }
+.fb-linhas { display: inline-flex; align-items: center; gap: 12px; margin: 2px auto 8px; }
+.fb-linhas button { width: 40px; height: 40px; border-radius: 99px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); font: inherit; font-size: 20px; font-weight: 800; color: var(--texto-titulo); cursor: pointer; }
+.fb-linhas button:disabled { opacity: .4; cursor: default; }
+.fb-linhas output { min-width: 28px; text-align: center; font-size: 24px; font-weight: 800; color: var(--texto-titulo); }
+.fb-linhas--card { display: flex; justify-content: space-between; margin: 0; padding: 8px 12px; border-radius: 14px; background: var(--fundo-pagina); }
+.fb-linhas--card span { flex: 1; font-size: 14px; font-weight: 800; }
+.fb-preco--premium .fb-linhas--card { background: rgba(255, 255, 255, .06); }
+.fb-preco--premium .fb-linhas button { background: transparent; color: var(--premium-texto); border-color: rgba(255, 255, 255, .25); }
+.fb-preco--premium .fb-linhas output { color: var(--premium-texto); }
+.fb-calc__op--cel { min-height: 46px; }
+.fb-calc__res .fb-linhas { margin-bottom: 10px; }
+/* Ofertas de portabilidade (CNPJ) */
+.fb-porta3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.fb-porta3 > div { display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 24px; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); }
+.fb-porta3 > div.on { border-color: var(--celular-primario); box-shadow: var(--sombra-2); }
+.fb-porta3 b.gb { font-size: 44px; font-weight: 800; letter-spacing: -.03em; line-height: 1; color: var(--celular-titulo); }
+.fb-porta3 b.gb span { font-size: 18px; margin-left: 4px; }
+.fb-porta3 .preco { font-size: 15px; } .fb-porta3 .preco b { font-size: 24px; color: var(--texto-titulo); }
+.fb-porta3 .dy-btn { margin-top: auto; justify-content: center; }
+@media (max-width: 860px) { .fb-porta3 { grid-template-columns: 1fr; } }
+/* Aplicativos */
+.fb-appgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.fb-app { display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 24px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); scroll-margin-top: 100px; font-size: 15px; color: var(--texto-corpo); }
+.fb-app__topo { display: flex; align-items: center; gap: 12px; }
+.fb-app__logo { width: 52px; height: 52px; flex: none; display: grid; place-items: center; border-radius: 14px; overflow: hidden; background: var(--marca-tint); color: var(--marca-titulo); font-weight: 800; font-size: 20px; }
+.fb-app__logo img { width: 100%; height: 100%; object-fit: cover; }
+.fb-app__logo img.yt { object-fit: contain; padding: 6px; background: #fff; }
+.fb-app .dy-h3 { font-size: 19px; }
+.fb-app small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--texto-terciario); }
+.fb-app__onde { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
+.fb-app__onde span { padding: 5px 10px; border-radius: 99px; background: var(--fundo-pagina); font-size: 12px; font-weight: 800; color: var(--texto-titulo); }
+.fb-app__nota { font-size: 13px; color: var(--texto-terciario); }
+.fb-indice { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 28px; }
+.fb-indice a { padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); font-size: 14px; font-weight: 700; color: var(--texto-titulo); }
+.fb-indice a:hover { border-color: var(--marca-outline); }
+
+.fb-dicas--sem-n li::before { content: "✓"; background: var(--ok-fundo); color: var(--ok); }
+@media (max-width: 600px) {
+  .fb-tabela[data-cel-comparar] th:nth-child(5), .fb-tabela[data-cel-comparar] td:nth-child(5) { display: none; }
+  .fb-tabela[data-cel-comparar="cnpj"] th:nth-child(3), .fb-tabela[data-cel-comparar="cnpj"] td:nth-child(3) { display: none; }
+  .fb-tabela[data-cel-comparar="cpf"] th:nth-child(4), .fb-tabela[data-cel-comparar="cpf"] td:nth-child(4) { display: none; }
+}

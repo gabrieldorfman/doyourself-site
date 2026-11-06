@@ -118,8 +118,8 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
           <hr>
           <ul class="detalhes">${det}</ul>
           <hr>
-          <div class="inclusos"><p>Use sem gastar sua internet:</p><div class="inclusos__logos">${apps}</div></div>
-          <a class="link-beneficios" href="/celular">Ver todos os benefícios inclusos&nbsp;&nbsp;→</a>
+          ${p.apps.length ? `<div class="inclusos"><p>Use sem gastar sua internet:</p><div class="inclusos__logos">${apps}</div></div>` : `<div class="inclusos"><p>Já vem no plano:</p><p><b>${(p.extras || [])[0] || ''}</b></p></div>`}
+          <a class="link-beneficios" href="${p.tipo === 'cpf' ? '/celular/cpf/' + p.slug : '/celular/cnpj'}">Ver todos os benefícios inclusos&nbsp;&nbsp;→</a>
         </div>
         <div class="card-plano__acao">
           <h4>Já vem incluso neste plano</h4>
@@ -135,7 +135,7 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
           </div>
           <div class="card-plano__espaco"></div>
           <hr>
-          <p class="resumo-plano"><span>O seu plano:</span><b>${p.num} GB + ligações ilimitadas</b></p>
+          <p class="resumo-plano"><span>O seu plano:</span><b>${p.tipo === 'cpf' ? p.nome + ' · ' + p.num + ' GB' : p.num + ' GB + ligações ilimitadas'}</b></p>
           <div class="preco-plano"><div><b data-preco></b><span>/mês</span></div></div>
           <p class="obs-plano" data-obs></p>
           <div class="faixa-cashback"><span>Cashback de 100%</span><b data-cashback></b></div>
@@ -150,7 +150,9 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
     const total = unit * n;
     el.querySelector('[data-qtd]').textContent = n;
     el.querySelector('[data-preco]').textContent = brl(total);
-    el.querySelector('[data-obs]').innerHTML = `${n} ${n === 1 ? 'linha' : 'linhas'} × ${brl(unit)} por mês<br>${brl(total * 12)} no ano`;
+    el.querySelector('[data-obs]').innerHTML = p.tipo === 'cpf'
+      ? `${n} ${n === 1 ? 'linha' : 'linhas'} × ${brl(unit)} na portabilidade<br>Com número novo: ${brl(centavos(p.precoNova))} por linha`
+      : `${n} ${n === 1 ? 'linha' : 'linhas'} × ${brl(unit)} por mês<br>${brl(total * 12)} no ano`;
     el.querySelector('[data-cashback]').textContent = 'Você recebe ' + brl(cashbackCentavos(total, 100));
     const tipo = el.closest('[data-acordeao]').dataset.tipo || 'cnpj';
     el.querySelector('[data-mei]').hidden = tipo !== 'cnpj';
@@ -289,13 +291,13 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
       const net = tipo === 'internet';
       montar(raiz, net
         ? { planos: DY.planosInternet, padrao: DY.internetPadrao, vertical: 'internet', larguraCard: 936, tarja: tarjaInternet, card: cardInternet, atualizar: atualizarInternet }
-        : { planos: DY.planosCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 936, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
+        : { planos: DY.vitrineCelular, padrao: DY.celularPadrao, vertical: 'celular', larguraCard: 936, tarja: tarjaCelular, card: cardCelular, atualizar: atualizarCelular });
     });
 
     // Celular e tablet: os mesmos cards compactos da contratação, arrastando para o lado
     document.querySelectorAll('[data-vitrine]').forEach((box) => {
       const tipo = box.dataset.vitrine; const net = tipo === 'internet';
-      const lista = net ? DY.planosInternet : DY.planosCelular;
+      const lista = net ? DY.planosInternet : DY.vitrineCelular;
       const destaque = net ? DY.internetPadrao : DY.celularPadrao;
       box.innerHTML = `<div class="ofertas${net ? '' : ' ofertas--cel'}" data-trilho>${lista.map((p) => net ? DY.ofertas.internet(p, { op: 0 }) : DY.ofertas.celular(p)).join('')}</div>${DY.ofertas.dots(lista.length)}`;
       const trilho = box.querySelector('[data-trilho]'); DY.ofertas.ligarDots(trilho);
@@ -328,7 +330,7 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
       const alvo = document.querySelector(`[data-acordeao="${tipo}"]`);
       alvo.dataset.tipo = aba.dataset.tipo;
       if (tipo === 'internet') DY.definirPlanos({ tipo: aba.dataset.tipo });
-      else alvo.atualizarTodos();
+      else DY.definirPlanos({ celular: aba.dataset.tipo }); // CPF = planos controle · CNPJ = empresariais
     });
   });
 })();
