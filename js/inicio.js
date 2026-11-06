@@ -12,7 +12,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     /* ---------- Exemplos calculados com os preços do config (nunca ficam desatualizados) ---------- */
-    const p800 = DY.planosInternet.find((p) => p.id === '800');
+    const p800 = DY.planosInternet.find((p) => p.id === '800') || DY.planosInternet.find((p) => /1000$/.test(p.id)) || DY.planosInternet[0];
     const pInt = centavos(p800.opcoes[0].preco);
     const p30 = DY.planosCelular.find((p) => p.id === '30');
     const pCel = centavos(p30.preco) * 3;
@@ -55,6 +55,7 @@
     /* ---------- Consulta de CEP do topo → página de contratação ---------- */
     const form = $('[data-hero-cep]');
     const inCep = $('#h-cep'), inNum = $('#h-num'), msg = $('[data-hero-msg]');
+    if (form) {
     const marcar = (g, ok, erro) => {
       const c = $(`[data-g="${g}"] .campo`); c.classList.toggle('valido', ok); c.classList.toggle('invalido', !!erro);
       c.querySelector('.campo__ico').innerHTML = ok ? CHECK : XIS;
@@ -74,6 +75,7 @@
       form.querySelector('.consulta-cep__btn').classList.add('indo');
       location.href = DY.config.paginaConversao + '?origem=' + (form.dataset.origem || 'home');
     });
+    }
 
     /* ---------- Simulador de energia ---------- */
     const sim = $('[data-simula]');
@@ -97,6 +99,9 @@
 
     /* ---------- Barra fixa "Consultar meu endereço" (celular) ---------- */
     const barra = $('[data-barra-cep]'); const zap = $('.zap-flutuante');
+    // Páginas sem o formulário do topo (Internet Fibra): a barra aparece depois do hero e leva direto à contratação
+    const topo = form || $('.hero2');
+    if (barra && topo) {
     // Aparece depois que o formulário do topo sai da tela e some perto do fim (CTA final e rodapé já têm o botão)
     let passouTopo = false; const fim = new Set();
     const aplicarBarra = () => {
@@ -108,12 +113,14 @@
     const io = new IntersectionObserver(([en2]) => { passouTopo = !en2.isIntersecting && en2.boundingClientRect.top < 0; aplicarBarra(); }, { threshold: 0 });
     const ioFim = new IntersectionObserver((ents) => { ents.forEach((e) => (e.isIntersecting ? fim.add(e.target) : fim.delete(e.target))); aplicarBarra(); }, { threshold: 0 });
     document.querySelectorAll('.cta2, .rodape').forEach((el) => ioFim.observe(el));
-    io.observe(form);
+    io.observe(topo);
     $('[data-ir-cep]').addEventListener('click', (e) => {
       e.preventDefault();
+      if (!form) { location.href = DY.config.paginaConversao + '?origem=internet' + (document.body.dataset.tipoNet ? '&para=' + document.body.dataset.tipoNet : ''); return; }
       form.scrollIntoView({ block: 'center', behavior: reduzir ? 'auto' : 'smooth' });
       setTimeout(() => inCep.focus({ preventScroll: true }), reduzir ? 0 : 500);
     });
+    }
 
     /* ---------- Conversa do WhatsApp: mensagens aparecem ao rolar ---------- */
     const chat = $('[data-chat]');

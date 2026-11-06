@@ -1,0 +1,397 @@
+/* ============================================================
+   Do Yourself — páginas de Internet Fibra
+   Hub (/internet-fibra) · Segmentadas (/casa, /empresa) · Plano (/casa/1-giga…)
+   Usa os tokens do Design System v2 (tokens.css + dy.css).
+   ============================================================ */
+
+/* ---------- Barra de localização (topo) ---------- */
+.local-barra { border-bottom: 1px solid var(--borda-padrao); background: var(--fundo-elevado); font-size: 14px; color: var(--texto-corpo); }
+.local-barra__in { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 10px; min-height: 42px; padding-block: 6px; text-align: center; }
+.local-barra__pin { width: 17px; height: 17px; flex: none; color: var(--internet-titulo); }
+.local-barra b { color: var(--texto-titulo); font-weight: 800; }
+.local-barra__alterar { display: inline-flex; gap: 5px; align-items: center; padding: 4px 2px; border: 0; background: none; font: inherit; color: var(--texto-corpo); cursor: pointer; }
+.local-barra__alterar u { color: var(--internet-titulo); font-weight: 800; text-underline-offset: 3px; }
+.local-barra__alterar:hover u { text-decoration-thickness: 2px; }
+
+/* Painel "Onde você quer a internet?" */
+.local-modal { width: min(460px, calc(100% - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 0; border-radius: 26px; background: var(--fundo-superficie); color: var(--texto-corpo); box-shadow: var(--sombra-3); }
+.local-modal::backdrop { background: rgba(10, 16, 14, .5); backdrop-filter: blur(2px); }
+.local-modal[open] { animation: lm-in .28s var(--ease); }
+@keyframes lm-in { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+.local-modal__in { display: flex; flex-direction: column; gap: 16px; padding: 26px 24px 22px; }
+.local-modal__topo { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.local-modal__topo .dy-h3 { font-size: 21px; }
+.local-modal__fechar { width: 40px; height: 40px; flex: none; margin: -8px -8px 0 0; border: 0; border-radius: 99px; background: var(--fundo-superficie-alt); color: var(--texto-titulo); font-size: 22px; line-height: 1; cursor: pointer; }
+.local-modal__sub { font-size: 14px; color: var(--texto-terciario); margin-top: -8px; }
+.local-modal form { display: flex; flex-direction: column; gap: 10px; }
+.local-modal__linha { display: flex; gap: 8px; }
+.local-modal__linha > * { min-width: 0; }
+.local-modal label { font-size: 13px; font-weight: 700; color: var(--texto-titulo); }
+.lm-campo { width: 100%; min-height: 50px; padding: 0 14px; border: 1.5px solid var(--borda-padrao); border-radius: 14px; background: var(--fundo-pagina); font: inherit; font-size: 16px; color: var(--texto-titulo); }
+.lm-campo:focus { outline: none; border-color: var(--internet-primario); box-shadow: 0 0 0 3px color-mix(in srgb, var(--internet-primario) 22%, transparent); }
+select.lm-campo { appearance: none; padding-right: 30px; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 17px) 52%, calc(100% - 12px) 52%; background-size: 5px 5px; background-repeat: no-repeat; }
+.lm-uf { flex: 0 0 44%; }
+.lm-btn { flex: none; min-height: 50px; padding: 0 20px; border: 0; border-radius: 99px; background: var(--internet-primario); color: var(--internet-primario-texto); font: inherit; font-weight: 800; cursor: pointer; }
+.lm-btn:hover { background: var(--internet-hover); }
+.lm-btn[disabled] { opacity: .6; cursor: progress; }
+.lm-btn--bloco { width: 100%; }
+.local-modal__ou { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; color: var(--texto-terciario); }
+.local-modal__ou::before, .local-modal__ou::after { content: ""; flex: 1; height: 1px; background: var(--borda-padrao); }
+.local-modal__msg { min-height: 18px; font-size: 13px; color: var(--erro); }
+.local-modal__msg.ok { color: var(--ok); }
+.local-modal__nota { font-size: 12px; line-height: 1.5; color: var(--texto-terciario); }
+.local-modal__link { font-size: 13px; font-weight: 700; color: var(--internet-titulo); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Hero do Hub e das segmentadas ---------- */
+.fb-hero { padding-top: clamp(24px, 4vw, 56px); }
+.fb-seletor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: min(560px, 100%); }
+.fb-seletor a { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 18px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); box-shadow: var(--sombra-1); color: var(--texto-corpo); font-size: 13px; line-height: 1.35; transition: border-color var(--rapido), transform var(--medio) var(--ease); }
+.fb-seletor a:hover { border-color: var(--internet-primario); transform: translateY(-2px); }
+.fb-seletor b { display: block; font-size: 16px; color: var(--texto-titulo); }
+.fb-seletor__ico { width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 12px; background: var(--internet-tint); color: var(--internet-titulo); }
+.fb-seletor__ico svg { width: 22px; height: 22px; }
+.fb-hero__acoes { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.fb-hero__acoes .dy-link { font-weight: 700; }
+.fb-faixa-cnpj { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: var(--internet-tint); color: var(--internet-titulo); font-size: 14px; font-weight: 700; }
+.fb-faixa-cnpj svg { width: 18px; height: 18px; flex: none; }
+@media (max-width: 480px) { .fb-seletor { grid-template-columns: 1fr; } }
+
+/* Chips de atalho para as personas */
+.fb-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.fb-chips a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); font-size: 14px; font-weight: 700; color: var(--texto-titulo); transition: border-color var(--rapido), background var(--rapido); }
+.fb-chips a:hover { border-color: var(--internet-primario); background: var(--internet-tint); }
+
+/* Pilha de planos (hero) */
+.fb-pilha { width: min(440px, 100%); display: flex; flex-direction: column; gap: 8px; }
+.fb-pilha__top { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 22px 22px 20px; border-radius: 24px; background: var(--premium-fundo); border: 1px solid var(--premium-borda); color: var(--premium-texto-suave, var(--premium-texto)); box-shadow: var(--sombra-3); }
+.fb-pilha__selo { align-self: flex-start; padding: 4px 10px; border-radius: 99px; background: var(--acao-dourado); color: var(--acao-dourado-texto); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.fb-pilha__vel { display: flex; align-items: baseline; gap: 8px; color: var(--premium-texto); line-height: 1; }
+.fb-pilha__vel b { font-size: 54px; font-weight: 800; letter-spacing: -.03em; }
+.fb-pilha__vel span { font-size: 20px; font-weight: 800; }
+.fb-pilha__spec { font-size: 14px; color: var(--premium-texto-suave, var(--premium-texto)); }
+.fb-pilha__preco { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.fb-pilha__preco s { display: block; font-size: 12px; opacity: .7; }
+.fb-pilha__preco strong { font-size: 30px; font-weight: 800; color: var(--premium-texto); letter-spacing: -.01em; }
+.fb-pilha__preco small { font-size: 13px; }
+.fb-pilha__cb { padding: 7px 12px; border-radius: 12px; background: color-mix(in srgb, var(--acao-positiva) 22%, transparent); color: #9ff0c8; font-size: 13px; font-weight: 700; }
+.fb-pilha__cb b { color: #fff; }
+.fb-pilha__btn { display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 48px; border-radius: 99px; background: var(--acao-dourado); color: var(--acao-dourado-texto); font-weight: 800; }
+.fb-pilha__btn:hover { filter: brightness(1.05); }
+.fb-pilha__linha { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 18px; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); color: var(--texto-corpo); font-size: 13px; transition: border-color var(--rapido), transform var(--medio) var(--ease); }
+.fb-pilha__linha:hover { border-color: var(--internet-primario); transform: translateX(3px); }
+.fb-pilha__linha .n { display: flex; align-items: baseline; gap: 3px; min-width: 92px; color: var(--internet-titulo); font-weight: 800; }
+.fb-pilha__linha .n b { font-size: 24px; letter-spacing: -.02em; }
+.fb-pilha__linha .p { font-weight: 800; color: var(--texto-titulo); font-size: 15px; white-space: nowrap; }
+.fb-pilha__linha .s { color: var(--internet-titulo); font-weight: 800; }
+.fb-pilha__pe { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 4px 6px 0; font-size: 12px; color: var(--texto-terciario); }
+.fb-pilha__pe a { color: var(--internet-titulo); font-weight: 800; }
+@media (max-width: 1023px) { .fb-pilha { width: 100%; } }
+@media (max-width: 420px) { .fb-pilha__linha { grid-template-columns: auto 1fr auto; } .fb-pilha__linha .s { display: none; } .fb-pilha__linha .n { min-width: 78px; } }
+
+/* ---------- Blocos genéricos ---------- */
+.fb-grade2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.fb-grade2__copy { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+@media (max-width: 900px) { .fb-grade2 { grid-template-columns: 1fr; } }
+.fb-lista { display: flex; flex-direction: column; gap: 10px; }
+.fb-lista li { display: flex; gap: 10px; font-size: 16px; line-height: 1.5; color: var(--texto-corpo); }
+.fb-lista li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 99px; background: var(--ok-fundo) url("../img/icones/check.svg") center / 12px no-repeat; }
+.fb-lista b { color: var(--texto-titulo); }
+.passos3--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 767px) { .passos3--4 { grid-template-columns: 1fr; } }
+.passos3--internet .passo__n { background: var(--internet-tint); color: var(--internet-titulo); }
+@media (min-width: 768px) and (max-width: 1100px) { .passos3--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .passos3--4 .passo::after { display: none; } }
+
+/* Tabela comparativa */
+.fb-tabela { width: 100%; max-width: 980px; margin: 0 auto; overflow-x: auto; border-radius: var(--r-card-p); border: 1px solid var(--borda-padrao); background: var(--fundo-superficie); }
+.fb-tabela table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.fb-tabela th, .fb-tabela td { padding: 14px 16px; text-align: left; vertical-align: top; border-top: 1px solid var(--borda-padrao); }
+.fb-tabela thead th { border-top: 0; font-size: 13px; font-weight: 800; color: var(--texto-terciario); background: var(--fundo-superficie-alt); }
+.fb-tabela tbody th { font-weight: 700; color: var(--texto-titulo); white-space: nowrap; }
+.fb-tabela td { color: var(--texto-corpo); }
+.fb-tabela .dy, .fb-tabela thead .dy { background: color-mix(in srgb, var(--internet-tint) 70%, transparent); color: var(--internet-titulo); font-weight: 700; }
+.fb-tabela thead .dy { color: var(--internet-titulo); }
+@media (max-width: 600px) { .fb-tabela table { font-size: 13px; } .fb-tabela th, .fb-tabela td { padding: 10px; } .fb-tabela tbody th { white-space: normal; } }
+
+/* Diagrama fibra x cabo */
+.fb-caminho { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+.fb-rota { padding: 18px 18px 16px; border-radius: 22px; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); }
+.fb-rota--dy { border-color: var(--internet-primario); box-shadow: 0 10px 30px color-mix(in srgb, var(--internet-primario) 16%, transparent); }
+.fb-rota__tit { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px; font-size: 14px; font-weight: 800; color: var(--texto-titulo); }
+.fb-rota__tit span { font-weight: 700; color: var(--texto-terciario); font-size: 12px; }
+.fb-rota--dy .fb-rota__tit span { color: var(--internet-titulo); }
+.fb-rota svg { display: block; width: 100%; height: auto; }
+.fb-rota .lbl { font: 700 11px var(--fonte); fill: var(--texto-terciario); }
+.fb-rota .fibra { stroke: var(--internet-primario); }
+.fb-rota .cobre { stroke: #b07a3c; }
+.fb-rota .no { fill: var(--fundo-superficie-alt); stroke: var(--borda-padrao); }
+.fb-rota .ico { stroke: var(--texto-titulo); }
+.fb-rota .pulso { stroke: #fff; stroke-dasharray: 6 60; animation: fb-pulso 2.4s linear infinite; }
+@keyframes fb-pulso { to { stroke-dashoffset: -66; } }
+@media (prefers-reduced-motion: reduce) { .fb-rota .pulso { animation: none; display: none; } }
+
+/* Calculadora de cashback */
+.fb-calc { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 18px; max-width: 980px; margin: 0 auto; padding: clamp(18px, 3vw, 28px); border-radius: 28px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); box-shadow: var(--sombra-2); }
+.fb-calc__ops { display: flex; flex-direction: column; gap: 8px; }
+.fb-calc__ops p { font-size: 13px; font-weight: 800; color: var(--texto-terciario); margin-bottom: 2px; }
+.fb-calc__op { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 52px; padding: 0 16px; border-radius: 16px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-pagina); font: inherit; font-size: 15px; color: var(--texto-titulo); text-align: left; cursor: pointer; transition: border-color var(--rapido), background var(--rapido); }
+.fb-calc__op b { font-weight: 800; }
+.fb-calc__op span { color: var(--texto-terciario); font-size: 14px; font-weight: 700; white-space: nowrap; }
+.fb-calc__op[aria-checked="true"] { border-color: var(--internet-primario); background: var(--internet-tint); }
+.fb-calc__res { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 24px; border-radius: 22px; background: var(--marca-tint); border: 1px solid var(--marca-soft); text-align: center; }
+.fb-calc__res small { font-size: 14px; font-weight: 700; color: var(--texto-corpo); }
+.fb-calc__res strong { font-size: clamp(40px, 6vw, 54px); line-height: 1.05; font-weight: 800; color: var(--marca-titulo); letter-spacing: -.02em; }
+.fb-calc__res p { font-size: 13px; color: var(--texto-terciario); }
+@media (max-width: 760px) { .fb-calc { grid-template-columns: 1fr; } }
+
+/* Instalação + suporte (dois painéis) */
+.fb-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fb-painel { display: flex; flex-direction: column; gap: 14px; padding: clamp(22px, 3vw, 32px); border-radius: 28px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); }
+.fb-painel--zap { background: linear-gradient(160deg, #0f2a1d, #133826); border-color: #1d4a33; color: #c6f2dd; }
+.fb-painel--zap .dy-h3, .fb-painel--zap .dy-h2 { color: #fff; }
+.fb-painel--zap .dy-texto { color: #c6f2dd; }
+.fb-painel__ico { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 16px; background: var(--internet-tint); }
+.fb-painel__ico img { width: 28px; height: 28px; }
+.fb-painel--zap .fb-painel__ico { background: rgba(255, 255, 255, .1); }
+.fb-mini { display: grid; gap: 10px; }
+.fb-mini li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 16px; background: var(--fundo-pagina); font-size: 15px; line-height: 1.45; }
+.fb-mini li b { display: block; color: var(--texto-titulo); }
+.fb-mini li img { width: 24px; height: 24px; flex: none; margin-top: 2px; }
+.fb-painel--zap .fb-mini li { background: rgba(255, 255, 255, .06); }
+.fb-painel--zap .fb-mini li b { color: #fff; }
+.fb-24h { display: inline-flex; align-items: baseline; gap: 6px; color: #fff; }
+.fb-24h b { font-size: 64px; font-weight: 800; line-height: .9; letter-spacing: -.04em; }
+.fb-24h span { font-size: 18px; font-weight: 800; }
+.fb-painel--zap .dy-btn { align-self: flex-start; margin-top: auto; }
+@media (max-width: 860px) { .fb-duo { grid-template-columns: 1fr; } }
+
+/* Dois caminhos (Casa / Empresa) */
+.fb-caminhos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.fb-caminho-card { position: relative; display: flex; flex-direction: column; gap: 12px; padding: clamp(24px, 3vw, 36px); border-radius: 28px; overflow: hidden; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); color: var(--texto-corpo); transition: transform var(--medio) var(--ease), border-color var(--rapido), box-shadow var(--medio); }
+.fb-caminho-card:hover { transform: translateY(-4px); border-color: var(--internet-primario); box-shadow: var(--sombra-2); }
+.fb-caminho-card--emp { background: var(--premium-fundo); border-color: var(--premium-borda); color: var(--premium-texto-suave, var(--premium-texto)); }
+.fb-caminho-card--emp .dy-h3 { color: var(--premium-texto); }
+.fb-caminho-card__ico { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 18px; background: var(--internet-tint); color: var(--internet-titulo); }
+.fb-caminho-card--emp .fb-caminho-card__ico { background: rgba(255, 255, 255, .1); color: var(--acao-dourado); }
+.fb-caminho-card__ico svg { width: 28px; height: 28px; }
+.fb-caminho-card .dy-h3 { font-size: clamp(22px, 2.4vw, 28px); }
+.fb-caminho-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.fb-caminho-card__tags span { padding: 5px 10px; border-radius: 99px; background: var(--fundo-pagina); font-size: 12px; font-weight: 700; color: var(--texto-titulo); }
+.fb-caminho-card--emp .fb-caminho-card__tags span { background: rgba(255, 255, 255, .08); color: var(--premium-texto); }
+.fb-caminho-card__ir { margin-top: 6px; font-weight: 800; color: var(--internet-titulo); }
+.fb-caminho-card--emp .fb-caminho-card__ir { color: var(--acao-dourado); }
+@media (max-width: 760px) { .fb-caminhos { grid-template-columns: 1fr; } }
+
+/* ---------- Personas (zig-zag) ---------- */
+.fb-personas { display: flex; flex-direction: column; gap: clamp(48px, 7vw, 96px); }
+.fb-persona { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: center; scroll-margin-top: 90px; }
+.fb-persona:nth-child(even) .fb-persona__vis { order: -1; }
+.fb-persona__copy { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.fb-persona__quem { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--internet-titulo); }
+.fb-persona__quem svg { width: 18px; height: 18px; }
+.fb-ganchos { display: flex; flex-wrap: wrap; gap: 8px; }
+.fb-ganchos li { padding: 7px 12px; border-radius: 99px; background: var(--internet-tint); color: var(--internet-titulo); font-size: 13px; font-weight: 800; }
+.fb-persona__preco { font-size: 15px; color: var(--texto-corpo); }
+.fb-persona__preco b { font-size: 22px; color: var(--texto-titulo); }
+.fb-persona__preco .cb { color: var(--marca-titulo); font-weight: 800; }
+.fb-persona__acoes { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.fb-persona__vis { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 330px; padding: clamp(22px, 3vw, 34px); border-radius: 32px; overflow: hidden; background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--internet-primario) 22%, transparent), transparent 60%), var(--internet-tint); color: var(--internet-titulo); isolation: isolate; }
+.fb-persona__vis::after { content: ""; position: absolute; inset: auto -60px -80px auto; width: 260px; height: 260px; border-radius: 50%; border: 36px solid color-mix(in srgb, var(--internet-primario) 14%, transparent); z-index: -1; }
+.fb-persona__vis--premium { background: radial-gradient(120% 90% at 100% 0%, rgba(232, 190, 92, .25), transparent 60%), var(--premium-fundo); color: var(--premium-texto); }
+.fb-persona__vis--premium::after { border-color: rgba(232, 190, 92, .12); }
+.fb-persona__big { display: flex; align-items: baseline; gap: 8px; line-height: .9; }
+.fb-persona__big b { font-size: clamp(72px, 10vw, 120px); font-weight: 800; letter-spacing: -.05em; }
+.fb-persona__big span { font-size: clamp(20px, 2.4vw, 28px); font-weight: 800; }
+.fb-persona__ilu { position: absolute; top: clamp(22px, 3vw, 34px); right: clamp(22px, 3vw, 34px); width: 76px; height: 76px; display: grid; place-items: center; border-radius: 24px; background: var(--fundo-superficie); color: var(--internet-titulo); box-shadow: var(--sombra-2); }
+.fb-persona__vis--premium .fb-persona__ilu { background: rgba(255, 255, 255, .1); color: var(--acao-dourado); box-shadow: none; }
+.fb-persona__ilu svg { width: 38px; height: 38px; }
+.fb-persona__specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fb-persona__specs span { padding: 8px 12px; border-radius: 12px; background: color-mix(in srgb, var(--fundo-superficie) 80%, transparent); font-size: 13px; font-weight: 800; color: var(--texto-titulo); }
+.fb-persona__vis--premium .fb-persona__specs span { background: rgba(255, 255, 255, .1); color: var(--premium-texto); }
+.fb-persona__stream { display: flex; gap: 8px; margin-top: 14px; }
+.fb-persona__stream img { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
+.fb-persona__stream img.yt { width: 120px; height: 30px; border-radius: 0; object-fit: contain; padding: 6px 10px; background: #fff; border-radius: 10px; height: 44px; box-sizing: border-box; }
+@media (max-width: 900px) { .fb-persona { grid-template-columns: 1fr; } .fb-persona:nth-child(even) .fb-persona__vis { order: 0; } .fb-persona__vis { min-height: 0; } .fb-persona__vis .fb-persona__big b { font-size: 72px; } }
+
+/* Card 2 Giga (nicho) */
+.fb-nicho { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-top: clamp(40px, 6vw, 72px); padding: 24px 28px; border-radius: 26px; background: #101415; color: #d9dee0; }
+.fb-nicho b { color: #fff; font-size: 18px; }
+.fb-nicho p { font-size: 15px; }
+.fb-nicho .dy-btn { background: var(--acao-dourado); color: var(--acao-dourado-texto); border-color: transparent; }
+
+/* Dicas de Wi-Fi */
+.fb-dicas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; counter-reset: d; }
+@media (max-width: 1023px) { .fb-dicas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .fb-dicas { grid-template-columns: 1fr; } }
+.fb-dicas li { counter-increment: d; display: flex; flex-direction: column; gap: 6px; padding: 20px; border-radius: 20px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 14px; color: var(--texto-corpo); }
+.fb-dicas li::before { content: counter(d); width: 32px; height: 32px; display: grid; place-items: center; border-radius: 10px; background: var(--internet-tint); color: var(--internet-titulo); font-weight: 800; }
+.fb-dicas b { font-size: 16px; color: var(--texto-titulo); }
+
+/* Faixa de 3 vantagens */
+.fb-faixa { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.fb-faixa li { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-radius: 20px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 14px; line-height: 1.45; color: var(--texto-corpo); }
+.fb-faixa li img { width: 28px; height: 28px; flex: none; }
+.fb-faixa b { display: block; font-size: 16px; color: var(--texto-titulo); margin-bottom: 2px; }
+@media (max-width: 860px) { .fb-faixa { grid-template-columns: 1fr; } }
+
+/* Comparar planos (fechado por padrão) */
+.fb-comparar { max-width: 980px; margin: 0 auto; border-radius: 22px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); }
+.fb-comparar > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 22px; cursor: pointer; list-style: none; font-weight: 800; font-size: 17px; color: var(--texto-titulo); }
+.fb-comparar > summary::-webkit-details-marker { display: none; }
+.fb-comparar > summary::after { content: "+"; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 99px; background: var(--internet-tint); color: var(--internet-titulo); font-size: 20px; transition: transform var(--rapido); }
+.fb-comparar[open] > summary::after { transform: rotate(45deg); }
+.fb-comparar .fb-tabela { border: 0; border-top: 1px solid var(--borda-padrao); border-radius: 0 0 22px 22px; }
+.fb-comparar td.p { font-weight: 800; color: var(--texto-titulo); white-space: nowrap; }
+.fb-comparar td.cb { font-weight: 800; color: var(--marca-titulo); white-space: nowrap; }
+.fb-comparar td a { font-weight: 800; color: var(--internet-titulo); white-space: nowrap; }
+
+/* Prejuízo de ficar offline (empresa) */
+.fb-prejuizo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.fb-prejuizo li { display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 22px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 15px; color: var(--texto-corpo); }
+.fb-prejuizo li span { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 14px; background: var(--aviso-negativo-fundo); color: var(--acao-negativa-titulo); }
+.fb-prejuizo li svg { width: 24px; height: 24px; }
+.fb-prejuizo b { font-size: 17px; color: var(--texto-titulo); }
+.fb-frase { max-width: 760px; margin: 28px auto 0; text-align: center; font-size: clamp(19px, 2.2vw, 24px); font-weight: 800; color: var(--texto-titulo); }
+@media (max-width: 860px) { .fb-prejuizo { grid-template-columns: 1fr; } }
+
+/* Bloco escuro (WTTX, nota técnica) */
+.fb-escuro { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(24px, 4vw, 56px); align-items: center; padding: clamp(26px, 4vw, 48px); border-radius: 32px; background: #101415; color: #c9d0d3; }
+.fb-escuro .dy-h2, .fb-escuro .dy-h3 { color: #fff; }
+.fb-escuro .dy-eyebrow { color: var(--acao-dourado); }
+.fb-escuro .fb-lista li { color: #c9d0d3; }
+.fb-escuro .fb-lista b { color: #fff; }
+.fb-escuro .fb-lista li::before { background-color: rgba(60, 207, 142, .18); }
+.fb-escuro__acoes { display: flex; flex-wrap: wrap; gap: 10px; }
+.fb-escuro .dy-btn--contorno { color: #fff; border-color: rgba(255, 255, 255, .35); }
+.fb-escuro__aviso { padding: 18px; border-radius: 18px; background: rgba(255, 255, 255, .06); font-size: 14px; line-height: 1.55; }
+.fb-escuro__aviso b { color: #fff; }
+@media (max-width: 860px) { .fb-escuro { grid-template-columns: 1fr; } }
+
+/* Requisitos (empresa) */
+.fb-req { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.fb-req li { display: flex; flex-direction: column; gap: 4px; padding: 20px; border-radius: 20px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 14px; color: var(--texto-corpo); }
+.fb-req b { font-size: 26px; font-weight: 800; color: var(--internet-titulo); letter-spacing: -.02em; }
+.fb-req strong { color: var(--texto-titulo); font-size: 15px; }
+.fb-req--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 860px; margin: 0 auto; }
+@media (max-width: 960px) { .fb-req { grid-template-columns: 1fr 1fr; } .fb-req--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .fb-req--3 { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .fb-req { grid-template-columns: 1fr; } }
+
+/* ---------- Página do plano ---------- */
+.fb-plano-hero .hero2__grade { align-items: start; }
+.fb-specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: min(560px, 100%); }
+.fb-specs li { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-radius: 18px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 13px; line-height: 1.35; color: var(--texto-terciario); }
+.fb-specs li img { width: 28px; height: 28px; flex: none; }
+.fb-specs b { display: block; font-size: 16px; color: var(--texto-titulo); }
+@media (max-width: 420px) { .fb-specs li { padding: 12px; gap: 8px; } .fb-specs b { font-size: 14px; } }
+
+.fb-preco { display: flex; flex-direction: column; gap: 14px; width: min(440px, 100%); padding: 24px; border-radius: 28px; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); box-shadow: var(--sombra-3); }
+.fb-preco--premium { background: var(--premium-fundo); border-color: var(--premium-borda); color: var(--premium-texto-suave, var(--premium-texto)); }
+.fb-preco__topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.fb-preco__selo { padding: 4px 10px; border-radius: 99px; background: var(--internet-tint); color: var(--internet-titulo); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.fb-preco--premium .fb-preco__selo { background: var(--acao-dourado); color: var(--acao-dourado-texto); }
+.fb-preco__wifi { font-size: 12px; font-weight: 800; color: var(--texto-terciario); }
+.fb-preco--premium .fb-preco__wifi { color: var(--acao-dourado); }
+.fb-preco__vel { display: flex; align-items: baseline; gap: 8px; line-height: 1; color: var(--internet-titulo); }
+.fb-preco--premium .fb-preco__vel { color: var(--premium-texto); }
+.fb-preco__vel b { font-size: 56px; font-weight: 800; letter-spacing: -.03em; }
+.fb-preco__vel span { font-size: 20px; font-weight: 800; }
+.fb-preco__ops { display: flex; flex-direction: column; gap: 6px; }
+.fb-preco__ops > p { font-size: 13px; font-weight: 800; }
+.fb-op { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 50px; padding: 6px 12px; border-radius: 14px; border: 1.5px solid var(--borda-padrao); background: var(--fundo-pagina); font: inherit; font-size: 14px; color: var(--texto-titulo); text-align: left; cursor: pointer; }
+.fb-preco--premium .fb-op { background: rgba(255, 255, 255, .05); border-color: rgba(255, 255, 255, .14); color: var(--premium-texto); }
+.fb-op[aria-checked="true"] { border-color: var(--internet-primario); background: var(--internet-tint); }
+.fb-preco--premium .fb-op[aria-checked="true"] { border-color: var(--acao-dourado); background: rgba(232, 190, 92, .12); }
+.fb-op img { width: 30px; height: 30px; border-radius: 8px; object-fit: cover; }
+.fb-op .sem { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: var(--internet-tint); }
+.fb-op .sem img { width: 18px; height: 18px; }
+.fb-op b { font-weight: 800; }
+.fb-op span { font-weight: 800; white-space: nowrap; }
+.fb-preco__valor s { display: block; font-size: 13px; opacity: .7; }
+.fb-preco__valor strong { font-size: 40px; font-weight: 800; letter-spacing: -.02em; color: var(--texto-titulo); }
+.fb-preco--premium .fb-preco__valor strong { color: var(--premium-texto); }
+.fb-preco__valor small { font-size: 14px; }
+.fb-preco__obs { font-size: 13px; }
+.fb-preco__cb { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 16px; background: var(--marca-tint); color: var(--marca-titulo); font-size: 14px; font-weight: 700; }
+.fb-preco__cb b { font-size: 20px; font-weight: 800; }
+.fb-preco--premium .fb-preco__cb { background: rgba(60, 207, 142, .16); color: #9ff0c8; }
+.fb-preco--premium .fb-preco__cb b { color: #fff; }
+.fb-preco .dy-btn { width: 100%; justify-content: center; }
+.fb-preco--premium .dy-btn--primario { background: var(--acao-dourado); color: var(--acao-dourado-texto); border-color: transparent; }
+.fb-preco--premium .dy-btn--contorno { color: var(--premium-texto); border-color: rgba(255, 255, 255, .3); }
+.fb-preco__rodape { font-size: 12px; text-align: center; opacity: .85; }
+.fb-preco__fora { padding: 14px; border-radius: 14px; background: var(--aviso-informativo-fundo); border: 1px solid var(--aviso-informativo-borda); color: var(--texto-corpo); font-size: 14px; }
+.fb-preco__fora a { font-weight: 800; color: var(--internet-titulo); text-decoration: underline; }
+@media (max-width: 1023px) { .fb-preco { width: 100%; } }
+
+/* Benefícios em zig-zag */
+.fb-benef { display: flex; flex-direction: column; gap: clamp(36px, 5vw, 64px); }
+.fb-benef__item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: center; }
+.fb-benef__item:nth-child(even) .fb-benef__vis { order: -1; }
+.fb-benef__copy { display: flex; flex-direction: column; gap: 12px; }
+.fb-benef__vis { display: grid; place-items: center; min-height: 240px; padding: 28px; border-radius: 28px; background: var(--internet-tint); color: var(--internet-titulo); text-align: center; }
+.fb-benef__vis--escuro { background: var(--premium-fundo); color: var(--premium-texto); }
+.fb-benef__grande { font-size: clamp(56px, 8vw, 88px); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.fb-benef__legenda { margin-top: 8px; font-size: 14px; font-weight: 700; opacity: .85; }
+.fb-barras { display: flex; flex-direction: column; gap: 14px; width: min(360px, 100%); text-align: left; }
+.fb-barras div { display: grid; gap: 6px; font-size: 13px; font-weight: 800; }
+.fb-barras i { display: block; height: 16px; border-radius: 99px; background: var(--internet-primario); }
+.fb-barras i.mercado { background: color-mix(in srgb, var(--texto-terciario) 45%, transparent); }
+.fb-apps { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 380px; }
+.fb-apps span { padding: 9px 14px; border-radius: 12px; background: var(--fundo-superficie); color: var(--texto-titulo); font-size: 14px; font-weight: 800; box-shadow: var(--sombra-1); }
+@media (max-width: 900px) { .fb-benef__item { grid-template-columns: 1fr; } .fb-benef__item:nth-child(even) .fb-benef__vis { order: 0; } .fb-benef__vis { min-height: 180px; } }
+
+/* Upsell e cross-sell */
+.fb-ups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.fb-ups__card { display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 24px; background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); color: var(--texto-corpo); font-size: 15px; transition: transform var(--medio) var(--ease), border-color var(--rapido); }
+a.fb-ups__card:hover { transform: translateY(-3px); border-color: var(--internet-primario); }
+.fb-ups__card .dy-h3 { font-size: 20px; }
+.fb-ups__card small { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--internet-titulo); }
+.fb-ups__card .preco { font-size: 15px; } .fb-ups__card .preco b { font-size: 20px; color: var(--texto-titulo); }
+.fb-ups__card .ir { margin-top: auto; padding-top: 6px; font-weight: 800; color: var(--internet-titulo); }
+.fb-ups__card img.logo { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
+.fb-ups__card--escuro { background: #101415; border-color: #101415; color: #c9d0d3; }
+.fb-ups__card--escuro .dy-h3 { color: #fff; } .fb-ups__card--escuro small, .fb-ups__card--escuro .ir { color: var(--acao-dourado); }
+.fb-ups__card--energia small, .fb-ups__card--energia .ir { color: var(--energia-titulo); }
+.fb-ups__card--celular small, .fb-ups__card--celular .ir { color: var(--celular-titulo); }
+.fb-ups__card--energia:hover { border-color: var(--energia-primario) !important; }
+.fb-ups__card--celular:hover { border-color: var(--celular-primario) !important; }
+.fb-sub { margin: clamp(36px, 5vw, 56px) 0 18px; font-size: 14px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--texto-terciario); text-align: center; }
+
+/* Mini-perfis "Para quem é" */
+.fb-quem { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.fb-quem li { display: flex; flex-direction: column; gap: 8px; padding: 24px; border-radius: 22px; background: var(--fundo-superficie); border: 1px solid var(--borda-padrao); font-size: 15px; color: var(--texto-corpo); }
+.fb-quem li span { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 14px; background: var(--internet-tint); color: var(--internet-titulo); }
+.fb-quem li svg { width: 24px; height: 24px; }
+.fb-quem b { font-size: 17px; color: var(--texto-titulo); }
+@media (max-width: 860px) { .fb-quem { grid-template-columns: 1fr; } }
+
+/* Especificações (fechado) */
+.fb-spec-det { max-width: 760px; margin: 28px auto 0; }
+
+/* CTA final escuro */
+.fb-cta-final { padding: clamp(36px, 6vw, 72px) 24px; border-radius: 32px; background: radial-gradient(80% 120% at 0% 0%, rgba(60, 207, 142, .22), transparent 60%), #0f2a1d; color: #c6f2dd; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.fb-cta-final .dy-h2 { color: #fff; }
+.fb-cta-final .dy-lead { color: #c6f2dd; max-width: 620px; }
+.fb-cta-final .cta2__acoes .dy-btn--contorno { color: #fff; border-color: rgba(255, 255, 255, .35); }
+.fb-cta-final .cta2__acoes .dy-btn--primario { background: #3ccf8e; color: #0b2416; border-color: #3ccf8e; }
+.fb-cta-final .cta2__acoes .dy-btn--primario:hover { background: #5be0a4; }
+.fb-cta-final__selos { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; font-size: 14px; font-weight: 700; }
+.fb-cta-final__selos li { display: flex; align-items: center; gap: 6px; }
+.fb-cta-final__selos li::before { content: "✓"; color: #3ccf8e; font-weight: 800; }
+
+/* Barra fixa do plano no celular */
+.fb-barra { position: fixed; z-index: 60; left: 0; right: 0; bottom: 0; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--fundo-superficie); border-top: 1px solid var(--borda-padrao); box-shadow: 0 -8px 24px rgba(0, 0, 0, .08); transform: translateY(110%); transition: transform var(--medio) var(--ease); }
+.fb-barra.on { transform: none; }
+.fb-barra__txt { font-size: 13px; line-height: 1.25; color: var(--texto-corpo); }
+.fb-barra__txt b { display: block; font-size: 17px; color: var(--texto-titulo); }
+.fb-barra .dy-btn { min-height: 46px; padding: 0 20px; white-space: nowrap; }
+@media (max-width: 767px) {
+  .fb-barra { display: flex; }
+  .pg-plano .barra-cep { display: none !important; }
+  .pg-plano .zap-flutuante { bottom: 86px; }
+}
+
+/* ---------- Ajustes de espaçamento entre seções ---------- */
+.fb-secao-curta { padding-block: clamp(40px, 6vw, 72px); }
+.fb-centro { display: flex; justify-content: center; margin-top: 24px; }
+.fb-nota { margin-top: 14px; text-align: center; font-size: 13px; color: var(--texto-terciario); }

@@ -12,7 +12,7 @@ DY.config = {
   whatsapp: '5541995701636',
   whatsappExibicao: '(41) 99570-1636',
   // Página de conversão (passo a passo até o WhatsApp)
-  paginaConversao: 'contratar.html',
+  paginaConversao: '/contratar.html',
   // Supabase — URL do projeto + chave PUBLICÁVEL (anon). Nunca a service_role aqui.
   // Vazio = modo demonstração: o fluxo funciona, o pedido fica só no navegador e a fibra aparece "a confirmar".
   supabaseUrl: '',
@@ -56,8 +56,10 @@ DY.rotas = {
   'energia-cond':    { r: 'Para Condomínios', href: '/energia/condominios', pronta: false, alt: '/energia' },
   'energia-emp':     { r: 'Para Comércios e Empresas', href: '/energia/empresas', pronta: false, alt: '/energia' },
   internet:          { r: 'Internet Fibra', href: '/internet-fibra', pronta: true },
-  'internet-casa':   { r: 'Internet para Casa', href: '/internet-fibra/casa', pronta: false, alt: '/internet-fibra#internet' },
-  'internet-emp':    { r: 'Internet para Empresa', href: '/internet-fibra/empresa', pronta: false, alt: '/internet-fibra#internet' },
+  'internet-casa':   { r: 'Internet para Casa', href: '/internet-fibra/casa', pronta: true },
+  'internet-emp':    { r: 'Internet para Empresa', href: '/internet-fibra/empresa', pronta: true },
+  'internet-2g':     { r: 'Internet 2 Giga', href: '/internet-fibra/casa/2-giga', pronta: false },
+  'internet-wttx':   { r: 'Internet sem fio para empresas', href: '/internet-fibra/empresa/sem-fio', pronta: false, alt: 'whatsapp' },
   'internet-home':   { r: 'Internet para Home Office', href: '/internet-fibra/home-office', pronta: false },
   'internet-gamer':  { r: 'Internet Gamer', href: '/internet-fibra/gamer', pronta: false },
   'internet-stream': { r: 'Internet com Streaming', href: '/internet-fibra/streaming', pronta: false },
@@ -97,7 +99,7 @@ DY.linkRota = (k) => {
   return x.alt || null;
 };
 
-DY.img = (p) => 'img/' + p;
+DY.img = (p) => '/img/' + p;
 
 /* ============================================================
    PLANOS — outubro 2026 (ULTRABOOK até 03/11 · BOOK TBP até 05/11)
@@ -116,7 +118,7 @@ const HBO = (preco, de, resumo) => ({ nome: 'HBO Max', logo: 'hbo-max', preco, d
 
 // Peças reaproveitadas entre os blocos de estados
 const net800 = { id: '800', variante: 'soft', selo: 'OFERTA DO MÊS', num: '800', unidade: 'MEGA',
-  detalhes: detNet('800 Mega', '400 Mega', 6), apps: ['aya-books', 'youtube-premium'], tituloAcao: 'Já vem incluso no seu plano',
+  detalhes: detNet('800 Mega', '400 Mega', 5), apps: ['aya-books', 'youtube-premium'], tituloAcao: 'Já vem incluso no seu plano',
   opcoes: [{ nome: 'YouTube Premium', logo: 'youtube-premium', preco: 129.99, de: 169.99, incluso: 'sem custo extra', resumo: '800 Mb + YouTube Premium' }], opcaoPadrao: 0, de: 169.99, tarja: { streaming: ['youtube-premium'] } };
 const net1000 = { id: '1000', variante: 'premium', selo: 'PREMIUM', num: '1000', unidade: 'MEGA',
   detalhes: detNet('1000 Mega', '500 Mega', 6, true), apps: ['aya-books', 'aya-bancah', 'paramount-44'], tituloAcao: 'Personalize o seu plano',
@@ -144,6 +146,8 @@ DY.catalogo = {
   },
 };
 // Plano que abre em destaque em cada lista (a oferta foco)
+/* Página de cada plano de internet para casa (id do catálogo → endereço) */
+DY.paginaPlano = { 500: '/internet-fibra/casa/500-mega', 600: '/internet-fibra/casa/600-mega', 800: '/internet-fibra/casa/800-mega', 1000: '/internet-fibra/casa/1-giga' };
 DY.padraoInternet = (lista) => Math.max(0, lista.findIndex((p) => p.selo === 'OFERTA DO MÊS'));
 
 /* Bloco de preço de internet pelo estado: CE, RN e SC · SP · demais (inclui PR) */
@@ -212,8 +216,8 @@ DY.logos = {
    Tudo em centavos inteiros para não errar no ponto flutuante.
    Cashback TRUNCA no centavo (regras-de-cashback §2.3). */
 DY.centavos = (reais) => Math.round(reais * 100);
-// Cashback arredondado para cima no centavo (ex.: 50% de R$ 149,99 = R$ 75,00) — a mesma regra em todo o site
-DY.cashbackCentavos = (baseCentavos, pct) => Math.ceil((baseCentavos * pct) / 100 - 1e-9);
+// Cashback TRUNCADO no centavo (Regras Do Yourself 1.x: 50% de R$ 129,99 = R$ 64,99) — a mesma regra em todo o site
+DY.cashbackCentavos = (baseCentavos, pct) => Math.floor((baseCentavos * pct) / 100 + 1e-9);
 DY.brl = (centavos) => 'R$ ' + (centavos / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /* Valor em reais, como a pessoa digita: "800" → 800 · "1500" → 1.500 · "1500,5" → 1.500,5 */

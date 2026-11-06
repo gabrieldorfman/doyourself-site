@@ -89,7 +89,7 @@
         const abrir = !p.classList.contains('aberta');
         p.classList.toggle('aberta', abrir);
         btn.setAttribute('aria-expanded', abrir);
-        const ico = btn.querySelector('img'); if (ico) ico.src = 'img/icones/faq-' + (abrir ? 'aberta' : 'fechada') + '.svg';
+        const ico = btn.querySelector('img'); if (ico) ico.src = '/img/icones/faq-' + (abrir ? 'aberta' : 'fechada') + '.svg';
       });
     }
 
