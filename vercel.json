@@ -27,5 +27,22 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/celular/cpf",
+      "destination": "/celular",
+      "permanent": false
+    },
+    {
+      "source": "/celular/cpf/:plano",
+      "destination": "/celular",
+      "permanent": false
+    },
+    {
+      "source": "/celular/cnpj",
+      "destination": "/celular",
+      "permanent": false
+    }
   ]
 }

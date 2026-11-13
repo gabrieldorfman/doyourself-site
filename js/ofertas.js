@@ -58,7 +58,7 @@
     const ic = (k) => img('icones/' + p.detalhes[k][0]);
     const gb = DY.celGB(p, porta); const preco = DY.celPreco(p, porta);
     const cpf = p.tipo === 'cpf';
-    const terceira = cpf ? '<b>SMS ilimitados</b> e roaming nacional' : p.soPorta ? '<b>Só para quem traz o número</b>' : '<b>1ª mensalidade grátis</b>';
+    const terceira = cpf ? '<b>SMS ilimitados</b> e roaming nacional' : p.soPorta ? '<b>Só para quem traz o número</b> de outro CNPJ' : '<b>Roaming nacional</b> sem custo';
     const det = `<li${attrDica('Dados móveis', gb + ' GB')}><img src="${ic(0)}" alt=""><span><b>${gb} GB</b> <i class="dica-rot">de internet por mês</i></span></li><li><img src="${ic(1)}" alt=""><span>${p.minutos ? `<b>${p.minutos} minutos</b> para todo o Brasil` : '<b>Ligações ilimitadas</b> para todo o Brasil'}</span></li><li><img src="${ic(4)}" alt=""><span>${terceira}</span></li>`;
     const apps = p.apps.length ? `<div class="oferta__apps" title="Apps que não gastam a sua internet">${p.apps.map((k) => `<img src="${img(logos[k].src)}" alt="${logos[k].alt}">`).join('')}</div>` : `<p class="oferta__extra-txt">${(p.extras || [])[0] || ''}</p>`;
     const titulo = cpf ? `<p class="oferta__nome">${p.nome}</p>` : '';

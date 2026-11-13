@@ -11,8 +11,8 @@
   const R = (v) => brl(centavos(v));
   const lista = (tipo) => (tipo === 'cpf' ? DY.celularCpf : tipo === 'porta' ? DY.celularPorta : DY.planosCnpj);
   const achar = (tipo, id) => lista(tipo).find((p) => p.id === id);
-  const conversao = (p, { linhas = 1, porta = true } = {}) => DY.config.paginaConversao + '?' + new URLSearchParams({ origem: 'celular', plano: p.id, linhas, para: p.tipo, ...(p.tipo === 'cpf' && !porta ? { numero: 'novo' } : {}) });
-  const linkPlano = (p) => (p.tipo === 'cpf' ? '/celular/cpf/' + p.slug : conversao(p));
+  const conversao = (p, { linhas = 1, porta = true } = {}) => DY.config.paginaConversao + '?' + new URLSearchParams({ origem: 'celular', plano: p.id, linhas, para: 'cnpj' });
+  const linkPlano = (p) => DY.paginaCelular(p);
   const zap = (t) => DY.linkWhatsApp(t);
 
   /* ---------- Pilhas do topo ---------- */
@@ -43,7 +43,7 @@
     el.innerHTML = `<a class="fb-pilha__top fb-pilha__top--cel" href="${linkPlano(top)}">
         <span class="fb-pilha__selo">${tipo === 'cpf' ? 'Oferta do mês' : 'Mais vendido para empresas'}</span>
         <p class="fb-pilha__vel"><b>${top.gb}</b><span>GB</span></p>
-        <p class="fb-pilha__spec">${tipo === 'cpf' ? `${top.nome} · ligações e SMS ilimitados` : '1ª mensalidade grátis · WhatsApp, redes sociais e Waze sem gastar a internet'}</p>
+        <p class="fb-pilha__spec">${tipo === 'cpf' ? `${top.nome} · ligações e SMS ilimitados` : 'Ligações ilimitadas · WhatsApp, redes sociais e Waze sem gastar a internet'}</p>
         <div class="fb-pilha__preco"><div><strong>${R(top.preco)}</strong><small>${tipo === 'cpf' ? '/mês na portabilidade' : '/mês por linha'}</small></div><span class="fb-pilha__cb">💸 <b>${R(top.preco)}</b> de volta no PIX</span></div>
         <span class="fb-pilha__btn">${tipo === 'cpf' ? 'Ver o plano ' + top.nome : 'Quero o plano de ' + top.gb + ' GB'} <span aria-hidden="true">→</span></span>
       </a>
@@ -55,6 +55,7 @@
   function precoPersona(el) {
     const [tipo, id] = el.dataset.celPreco.split(':'); const p = achar(tipo, id); if (!p) return;
     const obs = tipo === 'cpf' ? 'na portabilidade' : 'por linha';
+    if (el.dataset.formato === 'so-preco') { el.textContent = R(p.preco); return; }
     el.innerHTML = el.dataset.formato === 'curto' ? `<b>${R(p.preco)}</b>/mês ${obs}` : `<b>${R(p.preco)}</b>/mês ${obs} · <span class="cb">${R(p.preco)} de volta no PIX</span>`;
   }
 
@@ -65,7 +66,7 @@
       el.innerHTML = `<table><thead><tr><th>Plano</th><th>Trazendo o número</th><th>Número novo</th><th>Ligações</th><th>Cashback</th><th></th></tr></thead><tbody>${DY.celularCpf.map((p) => `<tr><th scope="row">${p.nome}</th><td class="p">${p.gb} GB · ${R(p.preco)}</td><td>${p.gbNova} GB · ${R(p.precoNova)}</td><td>${p.minutos ? p.minutos + ' minutos' : 'Ilimitadas'}</td><td class="cb">100% do mês</td><td><a href="${linkPlano(p)}">Ver plano →</a></td></tr>`).join('')}</tbody></table>`;
       return;
     }
-    el.innerHTML = `<table><thead><tr><th>Plano</th><th>Internet</th><th>Sem gastar a internet</th><th>Por linha</th><th>Cashback</th><th></th></tr></thead><tbody>${lista(tipo).map((p) => `<tr><th scope="row">${p.gb} GB</th><td>${p.plano} GB + ${p.bonus} GB de bônus</td><td>${p.apps.includes('facebook') ? 'WhatsApp, redes sociais e Waze' : 'WhatsApp, Messenger e Waze'}</td><td class="p">${R(p.preco)}</td><td class="cb">${R(p.preco)}</td><td><a href="${conversao(p)}">Escolher →</a></td></tr>`).join('')}</tbody></table>`;
+    el.innerHTML = `<table><thead><tr><th>Plano</th><th>Internet</th><th>Sem gastar a internet</th><th>Por linha</th><th>Cashback</th><th></th></tr></thead><tbody>${lista(tipo).map((p) => `<tr><th scope="row">${p.gb} GB</th><td>${p.plano} GB + ${p.bonus} GB de bônus</td><td>${p.apps.includes('facebook') ? 'WhatsApp, redes sociais e Waze' : 'WhatsApp, Messenger e Waze'}</td><td class="p">${R(p.preco)}</td><td class="cb">${R(p.preco)}</td><td><a href="${linkPlano(p)}">Ver plano →</a></td></tr>`).join('')}</tbody></table>`;
   }
 
   /* ---------- Calculadora de cashback (plano × linhas) ---------- */
@@ -91,9 +92,28 @@
   /* ---------- Página de cada plano controle ---------- */
   const pg = document.querySelector('[data-cel-pg]');
   const est = { porta: new URLSearchParams(location.search).get('numero') !== 'novo', linhas: 1 };
+  function cartaoCnpj(box, p) {
+    const max = 20; const total = centavos(p.preco) * est.linhas;
+    const prem = p.variante === 'premium';
+    box.className = 'fb-preco fb-preco--cel' + (prem ? ' fb-preco--premium' : '');
+    box.innerHTML = `<div class="fb-preco__topo"><span class="fb-preco__selo">${p.selo === 'OFERTA DO MÊS' ? 'O mais escolhido' : 'CNPJ e MEI'}</span><span class="fb-preco__wifi">${p.plano} GB + ${p.bonus} GB de bônus</span></div>
+      <p class="fb-preco__vel"><b>${p.gb}</b><span>GB por mês</span></p>
+      <div class="fb-preco__valor"><strong>${R(p.preco)}</strong><small>/mês por linha</small><p class="fb-preco__obs">no débito automático</p></div>
+      <div class="fb-linhas fb-linhas--card"><span>Quantas linhas?</span><button type="button" data-n="-1" aria-label="Tirar uma linha"${est.linhas <= 1 ? ' disabled' : ''}>−</button><output aria-live="polite">${est.linhas}</output><button type="button" data-n="1" aria-label="Adicionar uma linha"${est.linhas >= max ? ' disabled' : ''}>+</button></div>
+      <div class="fb-preco__cb"><span>Volta para você no PIX</span><b>${brl(cashbackCentavos(total, 100))}</b></div>
+      <a class="dy-btn dy-btn--primario dy-btn--g" href="${conversao(p, est)}">Quero o plano de ${p.gb} GB <span class="seta-dir" aria-hidden="true">→</span></a>
+      <a class="dy-btn dy-btn--contorno" href="${zap(`Oi! Vim pela página do plano de ${p.gb} GB e quero tirar uma dúvida.`)}" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
+      <p class="fb-preco__rodape">Número novo ou portabilidade grátis · Fidelidade de 24 meses</p>`;
+    box.onclick = (e) => { const m = e.target.closest('[data-n]'); if (m) { est.linhas = Math.max(1, Math.min(max, est.linhas + +m.dataset.n)); cartao(); } };
+    $$('[data-plano-cb]').forEach((el) => (el.textContent = brl(cashbackCentavos(total, 100))));
+    $$('[data-plano-cta]').forEach((el) => (el.href = conversao(p, est)));
+    const barra = document.querySelector('[data-fb-barra]');
+    if (barra) { barra.hidden = false; barra.querySelector('[data-barra-txt]').innerHTML = `<b>${R(p.preco)}/mês</b>${R(p.preco)} de volta no PIX`; barra.querySelector('a').href = conversao(p, est); }
+  }
   function cartao() {
     const box = document.querySelector('[data-preco-card]'); if (!box || !pg) return;
-    const p = achar('cpf', pg.dataset.celPg); if (!p) return;
+    const p = achar('cnpj', pg.dataset.celPg); if (!p) return;
+    if (p) return cartaoCnpj(box, p);
     const preco = DY.celPreco(p, est.porta); const gb = DY.celGB(p, est.porta); const total = centavos(preco) * est.linhas;
     const prem = p.variante === 'premium';
     box.className = 'fb-preco fb-preco--cel' + (prem ? ' fb-preco--premium' : '');

@@ -58,15 +58,15 @@ DY.rotas = {
   internet:          { r: 'Internet Fibra', href: '/internet-fibra', pronta: true },
   'internet-casa':   { r: 'Internet para Casa', href: '/internet-fibra/casa', pronta: true },
   'internet-emp':    { r: 'Internet para Empresa', href: '/internet-fibra/empresa', pronta: true },
-  'internet-2g':     { r: 'Internet 2 Giga', href: '/internet-fibra/casa/2-giga', pronta: false },
   'internet-wttx':   { r: 'Internet sem fio para empresas', href: '/internet-fibra/empresa/sem-fio', pronta: false, alt: 'whatsapp' },
   'internet-home':   { r: 'Internet para Home Office', href: '/internet-fibra/home-office', pronta: false },
   'internet-gamer':  { r: 'Internet Gamer', href: '/internet-fibra/gamer', pronta: false },
   'internet-stream': { r: 'Internet com Streaming', href: '/internet-fibra/streaming', pronta: false },
   'internet-wifi6':  { r: 'Wi-Fi 6', href: '/internet-fibra/wifi-6', pronta: false },
   celular:           { r: 'Planos de Celular', href: '/celular', pronta: true },
-  'celular-cpf':     { r: 'Planos para CPF', href: '/celular/cpf', pronta: true },
-  'celular-cnpj':    { r: 'Planos para CNPJ (Empresas)', href: '/celular/cnpj', pronta: true },
+  'celular-planos':  { r: 'Comparar os planos', href: '/celular#planos', pronta: true },
+  'celular-porta':   { r: 'Portabilidade', href: '/celular#portabilidade', pronta: true },
+  'internet-2g':     { r: 'Internet 2 Giga', href: '/internet-fibra/casa/2-giga', pronta: true },
   apps:              { r: 'Aplicativos inclusos', href: '/aplicativos', pronta: true },
   'app-entrar':      { r: 'Como entrar nos aplicativos', href: '/aplicativos#como-entrar', pronta: true },
   'app-globoplay':   { r: 'Globoplay', href: '/aplicativos#globoplay', pronta: true },
@@ -87,8 +87,8 @@ DY.rotas = {
 DY.menu = [
   ['inicio'], ['combo'], ['energia'],
   // [rótulo, subitens, página principal (clique no rótulo leva para ela)]
-  ['Internet', ['internet', 'internet-casa', 'internet-emp'], 'internet'],
-  ['Celular', ['celular', 'celular-cpf', 'celular-cnpj'], 'celular'],
+  ['Internet', ['internet', 'internet-casa', 'internet-emp', 'internet-2g'], 'internet'],
+  ['Celular', ['celular', 'celular-planos', 'celular-porta'], 'celular'],
   ['Aplicativos', ['apps', 'app-entrar', 'app-globoplay', 'app-hbo', 'app-paramount', 'app-youtube'], 'apps'],
   ['Sobre', ['sobre', 'contato', 'suporte', 'biometria', 'parceiros'], 'sobre'],
   ['blog'],
@@ -149,6 +149,9 @@ DY.catalogo = {
 };
 // Plano que abre em destaque em cada lista (a oferta foco)
 /* Página de cada plano de internet para casa (id do catálogo → endereço) */
+/* 2 Giga: página própria, fora do acordeão (pedido pelo WhatsApp) */
+DY.doisGiga = { preco: 369.99, de: 399.99 };
+DY.paginaCelular = (p) => (p.soPorta ? '/celular#portabilidade' : '/celular/' + p.id + '-gb');
 DY.paginaPlano = { 500: '/internet-fibra/casa/500-mega', 600: '/internet-fibra/casa/600-mega', 800: '/internet-fibra/casa/800-mega', 1000: '/internet-fibra/casa/1-giga' };
 DY.padraoInternet = (lista) => Math.max(0, lista.findIndex((p) => p.selo === 'OFERTA DO MÊS'));
 
@@ -177,18 +180,8 @@ const detCel = (p, prem) => {
 };
 const cel = (o) => { const p = { unidade: 'GB', num: String(o.gb), ...o }; p.detalhes = detCel(p, p.variante === 'premium'); return p; };
 
-// CPF — planos controle. gb/preco = portabilidade · gbNova/precoNova = número novo ou migração
-DY.celularCpf = [
-  cel({ tipo: 'cpf', id: 'aplus', nome: 'Controle A Plus', slug: 'a-plus', selo: 'ENTRADA', variante: 'branco', gb: 27, gbNova: 19, preco: 46.99, precoNova: 46.99, minutos: 550, apps: ['messenger'],
-    extras: ['550 minutos de ligação', 'Roaming no Chile sem custo', 'Messenger sem gastar a internet', 'Cartão de TODOS'] }),
-  cel({ tipo: 'cpf', id: 'controle', nome: 'Controle', slug: 'controle', selo: 'OFERTA DO MÊS', variante: 'soft', gb: 45, gbNova: 35, preco: 49.99, precoNova: 58.99, apps: [],
-    extras: ['Deezer Premium grátis por 3 meses', 'Ligações e SMS ilimitados', 'Audiolivros, estudos e revistas', 'Cartão de TODOS'] }),
-  cel({ tipo: 'cpf', id: 'redes', nome: 'Controle Redes Sociais', slug: 'redes-sociais', selo: 'REDES SOCIAIS', variante: 'tint', gb: 46, gbNova: 26, preco: 59.99, precoNova: 64.99, apps: ['facebook', 'instagram', 'messenger'],
-    extras: ['Facebook, Instagram, X e Messenger sem gastar a internet', 'Ligações e SMS ilimitados', 'Jornais e revistas', 'Cartão de TODOS'] }),
-  cel({ tipo: 'cpf', id: 'premium', nome: 'Controle Premium', slug: 'premium', selo: 'MAIS INTERNET', variante: 'premium', gb: 55, gbNova: 45, preco: 74.99, precoNova: 84.99, apps: ['facebook', 'instagram', 'messenger'],
-    extras: ['5 GB só para redes sociais', 'Roaming no Chile sem custo', 'Ligações e SMS ilimitados', 'Cartão de TODOS'] }),
-];
-DY.celularCpf.forEach((p) => (p.cashback = 100));
+// Celular para CPF saiu do portfólio (decisão de 13/11/2026): só planos empresariais, para CNPJ e MEI.
+DY.celularCpf = [];
 
 // CNPJ — planos empresariais (preço por linha). prsc = Paraná e Santa Catarina
 const EMP = [
@@ -196,17 +189,17 @@ const EMP = [
   ['12', 2, 10, 44.99, 39.99, 'BÁSICO', 'branco', ZERO_BASICO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Monitor de uso']],
   ['30', 10, 20, 52.99, 52.99, 'ESSENCIAL', 'tint', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso']],
   ['40', 20, 20, 64.99, 64.99, 'ESSENCIAL+', 'tint', ZERO_COMPLETO, ['Nuvem para arquivos', 'Jornais e revistas', 'Audiolivros', 'Cursos de idiomas', 'Antivírus', 'Monitor de uso']],
-  ['50', 30, 20, 69.99, 69.99, 'OFERTA DO MÊS', 'soft', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Clube de Vantagens', 'Proteção contra golpes']],
-  ['80', 30, 50, 79.99, 79.99, 'MAIS INTERNET', 'tint', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Clube de Vantagens', 'Proteção contra golpes']],
-  ['100', 50, 50, 99.99, 99.99, 'PREMIUM', 'premium', ZERO_COMPLETO, ['Nuvem para arquivos', 'Jornais e revistas', 'Audiolivros', 'Cursos de idiomas', 'Antivírus', 'Monitor de uso', 'Clube de Vantagens']],
-  ['150', 100, 50, 149.99, 149.99, 'PREMIUM', 'premium', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Jornais e revistas', 'Audiolivros', 'Monitor de uso', 'Clube de Vantagens', 'Proteção contra golpes']],
+  ['50', 30, 20, 69.99, 69.99, 'OFERTA DO MÊS', 'soft', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Proteção contra golpes']],
+  ['80', 30, 50, 79.99, 79.99, 'MAIS INTERNET', 'tint', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Proteção contra golpes']],
+  ['100', 50, 50, 99.99, 99.99, 'PREMIUM', 'premium', ZERO_COMPLETO, ['Nuvem para arquivos', 'Jornais e revistas', 'Audiolivros', 'Cursos de idiomas', 'Antivírus', 'Monitor de uso']],
+  ['150', 100, 50, 149.99, 149.99, 'PREMIUM', 'premium', ZERO_COMPLETO, ['Nuvem para arquivos', 'Cursos de idiomas', 'Jornais e revistas', 'Audiolivros', 'Monitor de uso', 'Proteção contra golpes']],
 ];
 const PORTA = [
   ['p21', 21, 1, 20, 39.99, 'SÓ PORTABILIDADE', 'branco', ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros']],
-  ['p40', 40, 20, 20, 50.99, 'SÓ PORTABILIDADE', 'tint', ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Clube de Vantagens', 'Proteção contra golpes']],
-  ['p70', 70, 20, 50, 59.99, 'SÓ PORTABILIDADE', 'soft', ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Clube de Vantagens', 'Proteção contra golpes']],
+  ['p40', 40, 20, 20, 50.99, 'SÓ PORTABILIDADE', 'tint', ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Proteção contra golpes']],
+  ['p70', 70, 20, 50, 59.99, 'SÓ PORTABILIDADE', 'soft', ['Nuvem para arquivos', 'Cursos de idiomas', 'Audiolivros', 'Jornais e revistas', 'Monitor de uso', 'Proteção contra golpes']],
 ];
-DY.celularCnpj = (prsc) => EMP.map(([id, plano, bonus, a, b, selo, variante, apps, servicos]) => cel({ tipo: 'cnpj', id, nome: `Empresa ${id} GB`, gb: plano + bonus, plano, bonus, preco: prsc ? a : b, selo, variante, apps, servicos, cashback: 100 }));
+DY.celularCnpj = (prsc) => EMP.map(([id, plano, bonus, a, b, selo, variante, apps, servicos]) => cel({ tipo: 'cnpj', id, nome: `Plano de ${id} GB`, gb: plano + bonus, plano, bonus, preco: prsc ? a : b, selo, variante, apps, servicos, cashback: 100 }));
 DY.celularPorta = PORTA.map(([id, gb, plano, bonus, preco, selo, variante, servicos]) => cel({ tipo: 'cnpj', id, nome: `Portabilidade ${gb} GB`, gb, plano, bonus, preco, selo, variante, apps: ZERO_COMPLETO, servicos, soPorta: true, cashback: 100 }));
 /* Preço e internet de um plano de celular (CPF: depende de trazer o número ou não) */
 DY.celPreco = (p, porta = true) => (!porta && p.precoNova ? p.precoNova : p.preco);
@@ -219,7 +212,7 @@ const VITRINE_CNPJ = ['12', '30', '50', '100'];
 DY.definirPlanos = ({ uf, tipo, celular } = {}) => {
   if (uf && DY.UFS[uf]) DY.uf = uf;
   if (tipo) DY.tipoInternet = tipo === 'empresa' ? 'empresa' : 'casa';
-  if (celular) DY.tipoCelular = celular === 'cpf' ? 'cpf' : 'cnpj';
+  DY.tipoCelular = 'cnpj'; // só CNPJ e MEI
   DY.planosInternet = DY.catalogo[DY.tipoInternet][DY.blocoInternet(DY.uf)];
   DY.internetPadrao = DY.padraoInternet(DY.planosInternet);
   DY.planosCnpj = DY.celularCnpj(['PR', 'SC'].includes(DY.uf));
