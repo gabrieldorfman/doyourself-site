@@ -30,6 +30,7 @@
   let modal = null;
   function montarModal() {
     if (modal) return modal;
+    const ufs = Object.entries(DY.UFS).sort((x, y) => x[1].localeCompare(y[1], 'pt-BR')).map(([s, n]) => `<option value="${s}">${n}</option>`).join('');
     modal = document.createElement('dialog');
     modal.className = 'local-modal';
     modal.setAttribute('aria-labelledby', 'lm-titulo');
@@ -41,12 +42,14 @@
         <div class="local-modal__linha"><input class="lm-campo" id="lm-cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9"><button class="lm-btn" type="submit">Ver ofertas</button></div>
         <a class="local-modal__link" href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" rel="noopener">Não sei meu CEP</a>
       </form>
-      <div class="local-modal__ou">ou digite a cidade</div>
-      <div class="lm-busca">
-        <label for="lm-cid">Cidade</label>
-        <input class="lm-campo" id="lm-cid" role="combobox" aria-expanded="false" aria-controls="lm-lista" aria-autocomplete="list" autocomplete="off" placeholder="Comece a digitar: sao bento…">
-        <div class="lm-lista" id="lm-lista" role="listbox"></div>
-      </div>
+      <div class="local-modal__ou">ou ache pela cidade</div>
+      <form data-lm-cidade novalidate>
+        <div class="local-modal__linha">
+          <div class="lm-uf"><label for="lm-uf">Estado</label><select class="lm-campo" id="lm-uf"><option value="">Escolha</option>${ufs}</select></div>
+          <div style="flex:1"><label for="lm-cid">Cidade</label><input class="lm-campo" id="lm-cid" list="lm-cidades" autocomplete="address-level2" placeholder="Digite a cidade"><datalist id="lm-cidades"></datalist></div>
+        </div>
+        <button class="lm-btn lm-btn--bloco" type="submit">Ver ofertas da cidade</button>
+      </form>
       <p class="local-modal__msg" data-lm-msg role="status"></p>
       <p class="local-modal__nota">Usamos a sua localização aproximada só para mostrar os preços da região. A cobertura da fibra é confirmada pelo CEP e pelo número do imóvel, na hora do pedido.</p>
     </div>`;
@@ -68,40 +71,31 @@
       aplicar(r.uf, r.cidade);
     });
 
-    // Busca de cidade: sem acento, sem maiúscula e sem escolher o estado antes ("sao bento" → São Bento do Sul - SC)
-    const cid = modal.querySelector('#lm-cid'); const lst = modal.querySelector('#lm-lista');
-    let ativo = -1; let achados = [];
-    const pintar = () => {
-      const termo = semAcento(cid.value.trim());
-      if (termo.length < 2) { lst.innerHTML = ''; cid.setAttribute('aria-expanded', 'false'); return; }
-      if (!municipios) { lst.innerHTML = '<p>Carregando as cidades…</p>'; return; }
-      const comeca = [], contem = [];
-      for (const m of municipios) { const i = m.n.indexOf(termo); if (i === 0) comeca.push(m); else if (i > 0) contem.push(m); if (comeca.length >= 8) break; }
-      // primeiro as do estado em que a pessoa está, depois por tamanho do nome
-      const ordem = (x, y) => (y.uf === DY.uf) - (x.uf === DY.uf) || x.nome.length - y.nome.length;
-      achados = [...comeca.sort(ordem), ...contem.sort(ordem)].slice(0, 8); ativo = achados.length ? 0 : -1;
-      lst.innerHTML = achados.length ? achados.map((m, k) => { const i = m.n.indexOf(termo); return `<button type="button" role="option" aria-selected="${k === ativo}" data-k="${k}"><b>${esc(m.nome.slice(0, i))}<mark>${esc(m.nome.slice(i, i + termo.length))}</mark>${esc(m.nome.slice(i + termo.length))}</b><span>${m.uf}</span></button>`; }).join('') : '<p>Não achamos essa cidade. Confira o nome ou use o CEP.</p>';
-      cid.setAttribute('aria-expanded', 'true');
-    };
-    cid.addEventListener('input', pintar);
-    cid.addEventListener('focus', () => { carregarMunicipios().then(pintar); });
-    cid.addEventListener('keydown', (e) => {
-      if (!achados.length) return;
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); ativo = (ativo + (e.key === 'ArrowDown' ? 1 : -1) + achados.length) % achados.length; [...lst.children].forEach((b, k) => b.setAttribute('aria-selected', k === ativo)); lst.children[ativo].scrollIntoView({ block: 'nearest' }); }
-      if (e.key === 'Enter') { e.preventDefault(); const m = achados[ativo]; if (m) aplicar(m.uf, m.nome); }
+    const uf = modal.querySelector('#lm-uf'); const cid = modal.querySelector('#lm-cid');
+    uf.addEventListener('change', () => carregarCidades(uf.value));
+    modal.querySelector('[data-lm-cidade]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!uf.value) { msg.className = 'local-modal__msg'; msg.textContent = 'Escolha o estado.'; uf.focus(); return; }
+      const nomes = cidades[uf.value] || [];
+      const digitado = cid.value.trim();
+      const certo = nomes.find((n) => n.localeCompare(digitado, 'pt-BR', { sensitivity: 'base' }) === 0);
+      if (!digitado) { msg.className = 'local-modal__msg'; msg.textContent = 'Digite a cidade.'; cid.focus(); return; }
+      if (nomes.length && !certo) { msg.className = 'local-modal__msg'; msg.textContent = 'Não achamos essa cidade em ' + DY.UFS[uf.value] + '. Escolha uma da lista.'; cid.focus(); return; }
+      aplicar(uf.value, certo || digitado);
     });
-    lst.addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { const m = achados[+b.dataset.k]; aplicar(m.uf, m.nome); } });
     return modal;
   }
-  const semAcento = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  let municipios = null, carregando = null;
-  function carregarMunicipios() {
-    if (municipios) return Promise.resolve();
-    if (!carregando) carregando = fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?view=nivelado')
-      .then((r) => r.json())
-      .then((l) => { municipios = l.map((m) => ({ nome: m['municipio-nome'], uf: m['UF-sigla'], n: semAcento(m['municipio-nome']) })); })
-      .catch(() => { municipios = []; carregando = null; });
-    return carregando;
+  const cidades = {};
+  async function carregarCidades(uf) {
+    const dl = modal.querySelector('#lm-cidades'); dl.innerHTML = '';
+    if (!uf) return;
+    if (!cidades[uf]) {
+      try {
+        const r = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
+        cidades[uf] = (await r.json()).map((m) => m.nome);
+      } catch (e) { cidades[uf] = []; }
+    }
+    dl.innerHTML = cidades[uf].map((n) => `<option value="${esc(n)}">`).join('');
   }
   async function buscarCep(cep) {
     const tentar = async (url, mapa) => { try { const r = await fetch(url); if (!r.ok) return null; return mapa(await r.json()); } catch (e) { return null; } };
@@ -116,7 +110,8 @@
   }
   function abrirModal() {
     montarModal();
-    modal.querySelector('#lm-cid').value = ''; modal.querySelector('#lm-lista').innerHTML = ''; carregarMunicipios();
+    const uf = modal.querySelector('#lm-uf'); uf.value = DY.uf; carregarCidades(DY.uf);
+    modal.querySelector('#lm-cid').value = DY.cidade || '';
     modal.querySelector('[data-lm-msg]').textContent = '';
     modal.showModal();
     modal.querySelector('#lm-cep').focus();
@@ -185,22 +180,6 @@
     const box = document.querySelector('[data-preco-card]'); if (!box) return;
     const id = pg.dataset.planoPg; const p = achar('casa', id);
     const nome = pg.dataset.nome;
-    if (id === '2000') { // 2 Giga: fora do catálogo por região; o pedido é confirmado no WhatsApp
-      const g = DY.doisGiga; const z = zap('Oi! Vim pela página do 2 Giga e quero saber se tem no meu endereço.');
-      box.className = 'fb-preco fb-preco--premium';
-      box.innerHTML = `<div class="fb-preco__topo"><span class="fb-preco__selo">${pg.dataset.selo}</span><span class="fb-preco__wifi">Wi-Fi 7</span></div>
-        <p class="fb-preco__vel"><b>2</b><span>Giga</span></p>
-        <div class="fb-preco__valor"><strong>${brl(centavos(g.preco))}</strong><small>/mês</small><p class="fb-preco__obs">no débito automático, com HBO Max, Paramount+, Globoplay e Looke inclusos</p></div>
-        <div class="fb-preco__cb"><span>Volta para você no PIX</span><b>${cb(g.preco)}</b></div>
-        <a class="dy-btn dy-btn--primario dy-btn--g" href="${z}" target="_blank" rel="noopener">Quero o 2 Giga <span class="seta-dir" aria-hidden="true">→</span></a>
-        <p class="fb-preco__rodape">A disponibilidade do 2 Giga é confirmada pelo WhatsApp, com o seu CEP e número.</p>`;
-      document.querySelectorAll('[data-plano-preco]').forEach((el) => (el.textContent = brl(centavos(g.preco))));
-      document.querySelectorAll('[data-plano-cb]').forEach((el) => (el.textContent = cb(g.preco)));
-      document.querySelectorAll('[data-plano-cta], [data-fb-barra] a').forEach((el) => { el.href = z; el.target = '_blank'; });
-      const barra = document.querySelector('[data-fb-barra]');
-      if (barra) { barra.hidden = false; barra.querySelector('[data-barra-txt]').innerHTML = `<b>${brl(centavos(g.preco))}/mês</b>${cb(g.preco)} de volta no PIX`; }
-      return;
-    }
     if (!p) {
       box.className = 'fb-preco';
       box.innerHTML = `<p class="fb-preco__vel"><b>${id}</b><span>Mega</span></p><p class="fb-preco__fora">O plano de ${nome} não está disponível em <b>${esc(DY.textoLocal())}</b>. <a href="/internet-fibra/casa#comparar">Ver os planos da sua região</a> ou <button type="button" class="dy-link" data-local-alterar>trocar a cidade</button>.</p>`;

@@ -119,7 +119,7 @@ const CHECK_CP = '<svg viewBox="0 0 14 14"><path d="M2 7.5 5.5 11 12 3.5" fill="
           <ul class="detalhes">${det}</ul>
           <hr>
           ${p.apps.length ? `<div class="inclusos"><p>Use sem gastar sua internet:</p><div class="inclusos__logos">${apps}</div></div>` : `<div class="inclusos"><p>Já vem no plano:</p><p><b>${(p.extras || [])[0] || ''}</b></p></div>`}
-          <a class="link-beneficios" href="${DY.paginaCelular(p)}">Ver todos os benefícios inclusos&nbsp;&nbsp;→</a>
+          <a class="link-beneficios" href="${p.tipo === 'cpf' ? '/celular/cpf/' + p.slug : '/celular/cnpj'}">Ver todos os benefícios inclusos&nbsp;&nbsp;→</a>
         </div>
         <div class="card-plano__acao">
           <h4>Já vem incluso neste plano</h4>

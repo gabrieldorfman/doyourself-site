@@ -28,7 +28,7 @@
     esc: { internet: undefined, celular: undefined, energia: undefined },
     rasc: { internet: null, celular: null, energia: null },   // seleção em andamento na tela do produto
     // casa/empresa e CPF/CNPJ: o cliente escolhe em cada produto (só vem marcado quando a página de origem já disse)
-    para: { internet: ['casa', 'empresa'].includes(q.get('para')) ? q.get('para') : (origem === 'internet' && q.get('plano') ? 'casa' : ''), celular: 'cnpj', energia: '' },
+    para: { internet: ['casa', 'empresa'].includes(q.get('para')) ? q.get('para') : (origem === 'internet' && q.get('plano') ? 'casa' : ''), celular: ['cpf', 'cnpj'].includes(q.get('para')) ? q.get('para') : '', energia: '' },
     contato: { nome: '', telefone: '' }, cad: { email: '', cpf: '', cnpj: '', consent: false },
     pag: { tipo: '', banco: '' },
     sel: [],   // serviços marcados na tela "Disponível no seu endereço"
@@ -444,7 +444,7 @@
         itens: ['Wi-Fi incluso', 'Instalação gratuita', 'Streaming em alguns planos'],
         cb: `Volta <b>50% do valor do plano</b>: de ${brl(cashbackCentavos(Math.min(...precosNet), 50))} a <b>${brl(cashbackCentavos(Math.max(...precosNet), 50))}</b>` },
       celular: { tit: 'Plano de Celular', ico: 'hero-celular-5g.svg', preco: `${gMin} a ${gMax} GB · a partir de <b>${brl(cMin)}/mês</b> por linha`,
-        itens: ['Ligações ilimitadas para todo o Brasil', 'WhatsApp e Waze sem gastar a internet', 'Para CNPJ e MEI, no celular de sempre'],
+        itens: ['Ligações ilimitadas para todo o Brasil', 'Portabilidade grátis', 'Planos controle (CPF) e empresariais (CNPJ)'],
         cb: `Volta <b>100% do valor do plano</b>: ${brl(cMin)} a <b>${brl(cMax)}</b> por linha` },
     };
   }
@@ -523,7 +523,7 @@
         ? ['Escolha sua internet', 'Fibra óptica com Wi-Fi e instalação grátis. <b>50% da mensalidade volta para você.</b>']
         : ['Quer internet fibra também?', ''],
       celular: primeiro
-        ? ['Escolha seu plano de celular', 'Planos empresariais para CNPJ e MEI. <b>100% de um mês das linhas volta para você.</b>']
+        ? ['Escolha seu plano de celular', 'Planos controle ou empresariais, com o seu número. <b>100% das linhas volta para você.</b>']
         : ['Quer incluir celular?', 'Ligações ilimitadas e 5G. <b>100% das linhas volta para você.</b>'],
       energia: primeiro
         ? ['Quanto vem sua conta de luz?', 'Até 20% menos na conta, sem obra e sem placas. <b>10% da nova conta volta para você.</b>']
@@ -562,6 +562,7 @@
   const PERGUNTA = {
     // CPF mostra os planos residenciais; CNPJ, os empresariais (plano de CPF não vai para CNPJ)
     internet: ['A internet vai ficar no seu CPF ou no CNPJ?', [['casa', 'CPF', 'Casa ou apartamento', 'pessoa'], ['empresa', 'CNPJ', 'Empresa ou comércio', 'predio']]],
+    celular: ['As linhas vão ficar no seu CPF ou no CNPJ?', [['cpf', 'CPF', 'Para você e a sua família', 'pessoa'], ['cnpj', 'CNPJ', 'Empresa ou comércio', 'predio']]],
     energia: ['A sua conta de luz hoje está no CPF ou no CNPJ?', [['cpf', 'CPF', 'Casa ou apartamento', 'pessoa'], ['cnpj', 'CNPJ', 'Condomínio, empresa ou comércio', 'predio']]],
   };
   const ICO_QUEM = {
@@ -569,8 +570,6 @@
     predio: '<svg viewBox="0 0 24 24"><path d="M4 21V5.5L12 3v18M12 8.5l8 2.5v10M2.5 21h19M7 8h2M7 11.5h2M7 15h2M15 13.5h2M15 17h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
   function htmlQuem(prod) {
-    // Celular: só planos empresariais (CNPJ e MEI) — não há escolha, só o aviso
-    if (prod === 'celular') return '<div class="ct-aviso-cnpj"><b>Planos para CNPJ e MEI.</b> A linha fica no nome da empresa e funciona normalmente no seu celular pessoal. Portabilidade: só de números que já estão em um CNPJ.</div>';
     const [tit, ops] = PERGUNTA[prod]; const v = st.para[prod];
     return `<div class="ct-quem${v ? ' ct-quem--ok' : ''}"><p class="ct-quem__tit" id="q-${prod}">${tit}</p>
       <div class="ct-quem__ops" role="radiogroup" aria-labelledby="q-${prod}" data-para="${prod}">${ops.map(([k, a, b, ico]) => `<button type="button" class="ct-quem__op" role="radio" aria-checked="${v === k}" data-v="${k}"><span class="ct-quem__marca" aria-hidden="true"></span><span class="ct-quem__ico" aria-hidden="true">${ICO_QUEM[ico]}</span><b>${a}</b><small>${b}</small></button>`).join('')}</div></div>`;
@@ -581,7 +580,7 @@
       internet: st.para.internet === 'empresa'
         ? [['instalacao.svg', 'Instalação grátis'], ['lista-wifi.svg', '100% fibra óptica'], ['modem.svg', 'Wi-Fi incluso']]
         : [['instalacao.svg', 'Instalação grátis'], ['dif-tela.svg', 'Streaming incluso'], ['lista-wifi.svg', '100% fibra óptica']],
-      celular: [['ligacoes.svg', 'Ligações ilimitadas'], ['dados-moveis.svg', 'WhatsApp e Waze sem gastar a internet'], ['tecnologias.svg', 'Roaming nacional']],
+      celular: [['ligacoes.svg', 'Ligações ilimitadas'], ['portabilidade.svg', 'Portabilidade grátis'], ['dados-moveis.svg', 'Apps sem gastar a internet']],
     }[prod];
     return `<ul class="energia-beneficios beneficios--${prod}">${B.map(([i, t]) => `<li><img src="${img('icones/' + i)}" alt="">${t}</li>`).join('')}</ul>`;
   }
@@ -696,7 +695,7 @@
         <div class="linhas__ctrl"><button type="button" data-l="-1" aria-label="Tirar uma linha">−</button><output aria-live="polite" aria-labelledby="lbl-linhas" data-l-qtd>${n}</output><button type="button" data-l="1" aria-label="Adicionar uma linha">+</button></div>
         <p class="linhas__total" data-l-total>Escolha um plano acima para ver o total.</p>
         <small data-l-nota></small>
-        <div class="porta"><img src="${img('icones/portabilidade.svg')}" alt=""><span><b>Portabilidade grátis, de CNPJ para CNPJ</b>Dá para trazer números que já estão em um CNPJ. Número que hoje está no seu CPF não pode vir: nesse caso, a linha vem com um número novo.</span></div>
+        <div class="porta"><img src="${img('icones/portabilidade.svg')}" alt=""><span><b>Portabilidade grátis</b>Traga o número que você já usa, de qualquer operadora, sem pagar nada. A gente cuida do pedido por você.</span></div>
       </div>`;
   }
   const celPorta = () => st.para.celular !== 'cpf' || st.porta;

@@ -888,6 +888,3 @@ button.disp-item.disp-item--on:hover .disp-quero { background: var(--marca-prima
 .ct-porta button small { font-size: 12px; line-height: 1.35; }
 .ct-porta button[aria-checked="true"] { border-color: var(--celular-primario); background: var(--celular-tint); }
 @media (max-width: 520px) { .ct-porta { grid-template-columns: 1fr; } }
-
-.ct-aviso-cnpj { margin: 4px 0 10px; padding: 14px 16px; border-radius: 16px; background: var(--celular-tint); border: 1px solid var(--celular-soft, var(--borda-padrao)); font-size: 14px; line-height: 1.5; color: var(--texto-corpo); }
-.ct-aviso-cnpj b { color: var(--celular-titulo); }
