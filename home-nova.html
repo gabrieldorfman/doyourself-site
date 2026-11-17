@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="pt-BR" data-type="service" data-radius="soft" data-buttons="solid" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Do Yourself: internet fibra, celular e energia com cashback</title>
+<meta name="description" content="Planos de internet fibra, celular e energia solar por assinatura, contratados pelo site, com parte do valor de volta no PIX e atendimento no WhatsApp 24 horas.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Do Yourself: internet fibra, celular e energia com cashback">
+<meta property="og:description" content="Consulte o seu CEP e receba parte do valor de volta no PIX.">
+<meta property="og:image" content="/img/og-doyourself.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/img/marca/dy-selo-verde.svg" type="image/svg+xml">
+<meta name="theme-color" content="#f4f3ee">
+<meta name="site-kind" content="other">
+<meta name="page-type" content="service">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/system.css">
+<link rel="stylesheet" href="/assets/ui/cards.css">
+<link rel="stylesheet" href="/assets/motion/motion.css">
+<link rel="stylesheet" href="/assets/layout/layout.css">
+<style>
+:root {
+  --p-bg: #f4f3ee; --p-surface: #ffffff; --p-ink: #1f1f1f; --p-muted: #676766;
+  --p-accent: #40745c; --p-accent-ink: #f4f3ee; --p-action: #40745c; --p-action-ink: #f4f3ee;
+  --p-inv-bg: #1f1f1f; --p-inv-surface: #2b2b2b; --p-inv-ink: #f4f3ee; --p-inv-muted: #9b9b98;
+  --p-inv-accent: #40745c; --p-inv-accent-ink: #f4f3ee; --p-inv-action: #40745c; --p-inv-action-ink: #f4f3ee;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-text: "Manrope", system-ui, sans-serif;
+  --display-weight: 400;
+  --display-tracking: -0.035em;
+  --display-tracking-xl: -0.045em;
+  --ly-scale: 0.97;
+}
+/* page CSS: the logo, the price rows and the region picker */
+.nav__logo img { display: block; height: 34px; width: auto; }
+.footer--dark .nav__logo img { height: 44px; }
+.rows .rows__name small, .rows .rows__value small { display: block; font-weight: 400; color: var(--muted); font-size: var(--t-small); }
+.rows a.rows__name { color: inherit; text-decoration: none; }
+.rows a.rows__name:hover { text-decoration: underline; text-underline-offset: 4px; }
+.regiao { display: grid; gap: var(--s-3); margin-top: var(--s-6); max-width: 410px; }
+.regiao label { font-size: var(--t-small); font-weight: 500; }
+.regiao select { height: 48px; padding: 0 var(--s-4); font: 400 16px/1 var(--font-text); color: var(--ink); background: var(--p-surface); border: 1px solid var(--line); border-radius: var(--r-sm); }
+.regiao__tipo { display: flex; gap: var(--s-2); }
+.regiao__tipo button { flex: 1; height: 44px; font: 500 15px/1 var(--font-text); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: var(--r-sm); cursor: pointer; }
+.regiao__tipo button[aria-pressed="true"] { background: var(--ink); color: var(--p-bg); border-color: var(--ink); }
+.nota { margin-top: var(--s-5); font-size: var(--t-small); color: var(--muted); max-width: 46ch; }
+.rows .preco { white-space: nowrap; font-weight: 500; }
+[data-planos] .rows__value small { white-space: nowrap; }
+[data-planos] .rows__value .cb { color: var(--p-accent); font-weight: 500; }
+[data-planos] .rows__value { max-width: none; }
+@media (min-width: 1024px) { [data-planos] > li { padding-block: var(--s-6); } }
+.close__media img { object-position: 50% 22%; }
+@media (max-width: 1023px) { main .section > .wrap > .frame--photo { aspect-ratio: 4 / 3; height: auto; margin-top: var(--s-7); } }
+</style>
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="/assets/moments/moments.js">
+<link rel="modulepreload" href="/assets/moments/lib.js">
+<link rel="modulepreload" href="/assets/moments/photo-chapters/moment.js">
+<script src="/js/config.js"></script>
+</head>
+<body>
+<!-- type: service (site-kind other)
+     deal: hero split, nav nav-mega, close close-photo, footer footer-dark, rhythm surface-pairs, buttons solid, mark: o logo da Do Yourself
+     type: Manrope (pedido do cliente; está entre as do kit), cores da marca (start.mjs brand)
+     moments: photo-chapters em #como-funciona
+     fotos: geradas no Magnific (Mystic 2.5), versão de teste em 1024 px -->
+
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Pular para o conteúdo</a>
+    <a class="nav__logo" href="/" aria-label="Do Yourself, página inicial"><img src="/img/marca/dy-lockup-menu-claro.svg" alt="Do Yourself" width="178" height="34"></a>
+    <nav class="nav__links" aria-label="Principal">
+      <div class="nav__item">
+        <a class="nav__link" href="#planos">Internet <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <div class="menu-col span-3">
+              <p class="t-label">Internet fibra</p>
+              <a href="/internet-fibra/casa">Para casa<span>Planos com streaming incluso</span></a>
+              <a href="/internet-fibra/empresa">Para empresa<span>Planos no CNPJ</span></a>
+              <a href="#planos">Preços do seu estado<span>Do 500 ao 2000 Mega</span></a>
+            </div>
+            <div class="menu-col span-3">
+              <p class="t-label">Planos para casa</p>
+              <a href="/internet-fibra/casa/600-mega">600 Mega<span>Com Paramount+ ou Globoplay</span></a>
+              <a href="/internet-fibra/casa/800-mega">800 Mega<span>Com YouTube Premium</span></a>
+              <a href="/internet-fibra/casa/1-giga">1000 Mega<span>NoPing grátis por 6 meses</span></a>
+            </div>
+            <a class="menu-card span-3 start-10" href="#como-funciona">
+              <div class="panel"><img class="frame__img" src="/img/v2/passo-instalacao.webp" alt="Técnico ligando o cabo de fibra no modem, na sala de um apartamento"></div>
+              <span class="t-card">Instalação grátis</span>
+              <span class="t-small muted">Em até 48 horas depois do pedido</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="/celular">Celular</a></div>
+      <div class="nav__item"><a class="nav__link" href="/energia">Energia</a></div>
+      <div class="nav__item"><a class="nav__link" href="#como-funciona">Como funciona</a></div>
+      <div class="nav__item"><a class="nav__link" href="#duvidas">Dúvidas</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="/contratar?origem=home">Consultar meu CEP</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Abrir o menu">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero hero--split" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-5">
+        <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>Atendimento no WhatsApp, 24 horas</p>
+        <h1 id="hero-h">Fibra, celular e energia com cashback no PIX</h1>
+        <p class="hero__lead">Consulte o seu CEP, escolha um, dois ou os três serviços e receba parte do valor de volta: 50% na internet, 100% no celular e 10% na conta de luz.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/contratar?origem=home">Consultar meu CEP<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+          <a class="btn btn--secondary" data-whats="Olá! Vim pelo site da Do Yourself e quero saber dos planos." href="https://wa.me/5541995701636">Falar no WhatsApp</a>
+        </div>
+      </div>
+      <div class="hero__media span-6 start-7">
+        <img src="/img/v2/casa-sala.webp" alt="Mulher sorrindo para o celular no sofá, com o filho no notebook e o modem Wi-Fi ao lado" style="--ly-pos: 50% 40%" width="644" height="800" fetchpriority="high">
+        <div class="ly-float">
+          <div class="ly-float__row"><span class="ly-live">Oferta do mês</span><span>1000 Mega</span></div>
+          <div class="ly-float__title">R$ 99,99 por mês e R$ 49,99 de volta no PIX</div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="servicos" aria-labelledby="servicos-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <div class="section-head">
+          <h2 id="servicos-h">Internet, celular e energia no mesmo pedido</h2>
+          <p>Contrate só um ou junte os três. O cashback de cada serviço é somado e pago uma vez, no PIX.</p>
+        </div>
+        <ul class="rows">
+          <li><a class="rows__name" href="/internet-fibra">Internet fibra<small>Instalação grátis em até 48 horas</small></a><span class="rows__value" data-preco-min="internet">a partir de R$ 89,99</span></li>
+          <li><a class="rows__name" href="/celular">Planos de celular<small>Para CPF e CNPJ, com portabilidade grátis</small></a><span class="rows__value" data-preco-min="celular">a partir de R$ 39,99</span></li>
+          <li><a class="rows__name" href="/energia">Energia solar por assinatura<small>Sem obra e sem placa no telhado</small></a><span class="rows__value">até 20% menos na conta</span></li>
+        </ul>
+        <p style="margin-top: var(--s-6)"><a class="link" href="/combo">Ver como funciona o combo</a></p>
+      </div>
+      <div class="frame frame--photo span-6 start-7">
+        <img class="frame__img" src="/img/v2/rua-noite.webp" alt="Rua residencial à noite, com casas iluminadas e os cabos nos postes" loading="lazy" width="1024" height="523" style="object-position: 40% 50%">
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="planos" aria-labelledby="planos-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <div class="section-head">
+          <h2 id="planos-h">Planos de internet fibra. <span class="muted" data-uf-nome>Preços do Paraná.</span></h2>
+          <p>O preço muda por estado. Escolha o seu e se a internet é para casa ou para a empresa.</p>
+        </div>
+        <div class="regiao">
+          <label for="uf">Estado</label>
+          <select id="uf" name="uf"></select>
+          <div class="regiao__tipo" role="group" aria-label="Internet para">
+            <button type="button" data-tipo="casa" aria-pressed="true">Para casa</button>
+            <button type="button" data-tipo="empresa" aria-pressed="false">Para empresa</button>
+          </div>
+        </div>
+        <p class="nota" data-nota>Valores no débito em conta. No boleto ou no PIX, R$ 10 a mais por mês. Cashback de 50% de uma mensalidade.</p>
+      </div>
+      <div class="span-6 start-7">
+        <ul class="rows" data-planos aria-live="polite"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="como-funciona" data-moment="photo-chapters" aria-labelledby="como-h">
+    <div class="wrap mo-ph">
+      <div class="mo-ph__head"><h2 id="como-h">Como funciona a contratação</h2><p>Tudo pelo celular. Você fala com a gente no WhatsApp só se quiser.</p></div>
+      <ol class="mo-ph__list">
+        <li class="mo-ph__ch">
+          <figure class="mo-ph__pic"><img src="/img/v2/passo-consulta.webp" alt="Homem consultando planos no notebook, na mesa da cozinha" width="1024" height="572"></figure>
+          <h3>Consulte o seu CEP</h3>
+          <p>Digite o CEP e o número da casa. O site mostra os planos que chegam no seu endereço, com o preço da sua região.</p>
+        </li>
+        <li class="mo-ph__ch">
+          <figure class="mo-ph__pic"><img src="/img/v2/passo-instalacao.webp" alt="Técnico ligando o cabo de fibra no modem enquanto a moradora acompanha" width="1024" height="572"></figure>
+          <h3>Instalação grátis em até 48 horas</h3>
+          <p>Um técnico liga a fibra e o modem Wi-Fi sem custo. Os streamings do plano podem ser ativados no mesmo dia.</p>
+        </li>
+        <li class="mo-ph__ch">
+          <figure class="mo-ph__pic"><img src="/img/v2/passo-cashback.webp" alt="Mulher sorrindo para o celular na varanda do apartamento, no fim da tarde" width="1024" height="572"></figure>
+          <h3>Cashback no seu PIX</h3>
+          <p>Com o contrato concluído, mandamos a sua parte em até 7 dias, uma única vez. Na internet, é metade de uma mensalidade.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="fibra" aria-labelledby="fibra-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <h2 id="fibra-h">Fibra até o modem, sem trecho de cobre</h2>
+        <p class="t-lead" style="margin-top: var(--s-5)">A fibra óptica vai do poste até dentro da sua casa. O sinal fica estável, e o upload é metade da velocidade do plano.</p>
+        <ul class="rows rows--spec" style="margin-top: var(--s-5)">
+          <li><span class="rows__name">Velocidade</span><span class="rows__value">testada na instalação</span></li>
+          <li><span class="rows__name">Upload</span><span class="rows__value">50% do plano</span></li>
+          <li><span class="rows__name">Franquia</span><span class="rows__value">nenhuma, uso livre</span></li>
+          <li><span class="rows__name">Modem Wi-Fi</span><span class="rows__value">incluso, sem custo</span></li>
+        </ul>
+        <p style="margin-top: var(--s-6)"><a class="link" href="/internet-fibra/casa">Ver os planos para casa</a></p>
+      </div>
+      <div class="frame frame--photo span-6 start-7">
+        <img class="frame__img" src="/img/v2/cabo-modem.webp" alt="Cabo de rede verde conectado na parte de trás de um modem branco" loading="lazy" width="1024" height="775">
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="streaming" aria-labelledby="streaming-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <h2 id="streaming-h">Streaming incluso no preço do plano</h2>
+        <ul class="rows" style="margin-top: var(--s-6)">
+          <li><span class="rows__name">YouTube Premium<small>Sem anúncios, com YouTube Music</small></span><span class="rows__value">800 Mega</span></li>
+          <li><span class="rows__name">Paramount+<small>Filmes, séries e desenhos</small></span><span class="rows__value">600 e 1000 Mega</span></li>
+          <li><span class="rows__name">Globoplay<small>Novelas e TV Globo ao vivo</small></span><span class="rows__value">600 Mega</span></li>
+          <li><span class="rows__name">HBO Max<small>Séries da HBO, Warner e DC</small></span><span class="rows__value">1000 Mega</span></li>
+          <li><span class="rows__name">Os quatro e o Looke<small>No plano com Wi-Fi 7</small></span><span class="rows__value">2000 Mega</span></li>
+        </ul>
+        <p class="nota">Globoplay e HBO Max vêm na versão com anúncios. Se quiser outra versão, a troca é feita no app e paga à parte.</p>
+      </div>
+      <div class="frame frame--photo span-6 start-7">
+        <img class="frame__img" src="/img/v2/futebol-sala.webp" alt="Família no sofá comemorando um gol na TV da sala, à noite" loading="lazy" width="1024" height="775">
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="duvidas" aria-labelledby="duvidas-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <h2 id="duvidas-h">Perguntas sobre a internet</h2>
+        <p style="margin-top: var(--s-4)">Não achou a sua? A gente responde no WhatsApp, a qualquer hora.</p>
+        <p style="margin-top: var(--s-5)"><a class="link" data-whats="Olá! Tenho uma dúvida sobre a internet fibra." href="https://wa.me/5541995701636">Perguntar no WhatsApp</a></p>
+      </div>
+      <div class="faq span-6 start-7">
+        <div class="faq__item"><h3>A instalação tem custo?</h3><p>Não. A instalação e o modem Wi-Fi são grátis, e o técnico instala em até 48 horas.</p></div>
+        <div class="faq__item"><h3>Tem fidelidade?</h3><p>Sim. No CPF são 12 meses; no CNPJ, 24. Quem cancela antes paga uma multa proporcional ao tempo que falta.</p></div>
+        <div class="faq__item"><h3>E se eu pagar no boleto ou no PIX?</h3><p>O plano fica R$ 10 mais caro por mês. No débito em conta vale o menor preço, com Banco do Brasil, Bradesco, C6, Inter, Itaú, Nubank ou Santander.</p></div>
+        <div class="faq__item"><h3>Posso mudar de endereço?</h3><p>Pode, sem custo. A gente confere antes se a fibra chega no endereço novo.</p></div>
+        <div class="faq__item"><h3>Vocês têm IP fixo?</h3><p>Não. Todos os planos usam IP dinâmico, que funciona com jogos, streaming e a VPN do trabalho sem configurar nada.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing footer--dark ground-inverse" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--photo">
+      <div class="section-head--split">
+        <div><h2 id="close-h">Veja os planos do seu endereço</h2><p class="t-lead">Você só precisa do CEP e do número da casa.</p></div>
+        <a class="btn btn--primary" href="/contratar?origem=home">Consultar meu CEP<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <div class="close__media"><img src="/img/v2/padaria-whatsapp.webp" alt="Dona de padaria sorrindo atrás do balcão com o celular na mão" loading="lazy" width="1024" height="775"></div>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="/" aria-label="Do Yourself, página inicial"><img src="/img/marca/dy-lockup-menu-escuro.svg" alt="Do Yourself" width="230" height="44"></a>
+          <p class="footer__lede">Internet fibra, celular e energia solar por assinatura, com cashback no PIX.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Internet</h3><ul><li><a href="/internet-fibra/casa">Para casa</a></li><li><a href="/internet-fibra/empresa">Para empresa</a></li><li><a href="#planos">Preços</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Celular</h3><ul><li><a href="/celular/cpf">Para você</a></li><li><a href="/celular/cnpj">Para empresa</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Energia</h3><ul><li><a href="/energia">Energia solar</a></li><li><a href="/combo">Combo</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Do Yourself</h3><ul><li><a href="/sobre">Sobre</a></li><li><a href="/aplicativos">Aplicativos</a></li><li><a data-whats="Olá! Vim pelo site da Do Yourself." href="https://wa.me/5541995701636">WhatsApp</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>&copy; 2026 Do Yourself</span>
+        <span class="credits">Imagens criadas com Magnific</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="Ações rápidas">
+  <a class="btn btn--primary" href="/contratar?origem=home">Consultar meu CEP</a>
+</nav>
+
+<script>
+/* Preços pelo estado: usa o catálogo de js/config.js (ofertas de novembro de 2026) */
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const centavos = (v) => Math.round(v * 100);
+  const sel = $('#uf'), lista = $('[data-planos]'), nomeUf = $('[data-uf-nome]'), nota = $('[data-nota]');
+  let tipo = 'casa';
+  // WhatsApp com mensagem pronta
+  document.querySelectorAll('[data-whats]').forEach((a) => { a.href = DY.linkWhatsApp(a.dataset.whats); });
+  Object.entries(DY.UFS).sort((a, b) => a[1].localeCompare(b[1], 'pt-BR')).forEach(([uf, nome]) => sel.add(new Option(nome, uf)));
+  const det = (p) => {
+    const up = (p.detalhes.find((d) => d[1] === 'Upload') || [])[2];
+    const o = p.opcoes[0];
+    if (p.id === '1000') return 'Upload de ' + up + ', NoPing grátis por 6 meses';
+    if (p.id === '2000') return 'Wi-Fi 7, HBO Max, Paramount+, Globoplay e Looke';
+    if (p.id === '800') return 'Upload de ' + up + ', YouTube Premium incluso';
+    if (p.id === '600') return 'Upload de ' + up + ', com Paramount+ no mesmo preço';
+    if (p.nota) return p.nota;
+    return 'Upload de ' + up;
+  };
+  function desenhar() {
+    sel.value = DY.uf;
+    const da = ['BA', 'PB'].includes(DY.uf) ? 'da' : ['AL', 'GO', 'MG', 'PE', 'RO', 'RR', 'SC', 'SP', 'SE'].includes(DY.uf) ? 'de' : 'do';
+    nomeUf.textContent = 'Preços ' + da + ' ' + DY.UFS[DY.uf] + '.';
+    const cnpj = tipo === 'empresa';
+    nota.textContent = 'Valores no débito em conta. No boleto ou no PIX, R$ 10 a mais por mês.' + (cnpj ? ' Planos para CNPJ não têm streaming.' : '') + ' Cashback de 50% de uma mensalidade.';
+    lista.innerHTML = '';
+    DY.planosInternet.forEach((p) => {
+      const o = p.opcoes[0];
+      const c = centavos(o.preco);
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.className = 'rows__name';
+      a.href = '/contratar?origem=internet&para=' + tipo + '&plano=' + encodeURIComponent(p.id) + '&opcao=' + encodeURIComponent(o.nome);
+      a.innerHTML = p.num + ' Mega<small></small>';
+      a.querySelector('small').textContent = det(p);
+      const v = document.createElement('span');
+      v.className = 'rows__value';
+      v.innerHTML = '<span class="preco"></span><small>por mês</small><small class="cb"></small>';
+      v.querySelector('.preco').textContent = DY.brl(c);
+      v.querySelector('.cb').textContent = DY.brl(DY.cashbackCentavos(c, 50)) + ' de volta';
+      li.append(a, v);
+      lista.append(li);
+    });
+    // menor preço do estado, na lista de serviços
+    const min = Math.min(...DY.catalogo.casa[DY.blocoInternet(DY.uf)].map((p) => p.opcoes[0].preco));
+    const el = $('[data-preco-min="internet"]'); if (el) el.textContent = 'a partir de ' + DY.brl(centavos(min));
+  }
+  sel.addEventListener('change', () => { try { localStorage.setItem('dy_local', JSON.stringify({ uf: sel.value, cidade: '' })); } catch (e) {} DY.definirPlanos({ uf: sel.value }); desenhar(); });
+  document.querySelectorAll('[data-tipo]').forEach((b) => b.addEventListener('click', () => {
+    tipo = b.dataset.tipo;
+    document.querySelectorAll('[data-tipo]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    DY.definirPlanos({ tipo }); desenhar();
+  }));
+  document.addEventListener('dy:planos', desenhar);
+  desenhar();
+})();
+</script>
+<script type="module" src="/assets/system.js"></script>
+<script type="module" src="/assets/motion/motion.js"></script>
+<script type="module" src="/assets/layout/layout.js"></script>
+</body>
+</html>

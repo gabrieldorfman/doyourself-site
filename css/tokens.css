@@ -1,0 +1,219 @@
+/* ============================================================
+   Do Yourself — tokens de cor
+   Fonte: Figma o7h1kWH3N1d3LFECVLtz03 · coleção "Do Yourself / Cor"
+   Modo Claro (41:0) em :root · Modo Escuro (41:1) em [data-tema="escuro"]
+   Nenhum hex solto no resto do CSS: tudo passa por estas variáveis.
+   ============================================================ */
+
+:root {
+  /* Marca */
+  --marca-simbolo: #16c172;
+  --marca-wordmark: #1f1f1f;
+  --marca-primario: #40745c;
+  --marca-primario-texto: #ffffff;
+  --marca-solido: #16c172;
+  --marca-hover: #35604d;
+  --marca-icone: #0c8650;
+  --marca-outline: #40745c;
+  --marca-soft: #c6f2dd;
+  --marca-soft-texto: #064a2d;
+  --marca-tint: #e8faf1;
+  --marca-titulo: #0c8650;
+
+  /* Estrutura */
+  --fundo-pagina: #f4f3ee;
+  --fundo-superficie: #ffffff;
+  --fundo-superficie-alt: #f7f8fa;
+  --fundo-elevado: #f6f5f1;
+  --fundo-nao-incluso: #c5c0b4;
+  --fundo-rodape: #1f1f1f;
+  --borda-padrao: #e7e4dc;
+
+  /* Texto */
+  --texto-titulo: #1f1f1f;
+  --texto-padrao: #1f1f1f;
+  --texto-corpo: #4b5360;
+  --texto-corpo-forte: #444444;
+  --texto-secundario: #676767;
+  --texto-terciario: #5f5f5f;
+  --texto-desativado: #c5c0b4;
+  --texto-ink: #0a0b0e;
+  --texto-sobre-solido: #ffffff;
+  --texto-sobre-claro: #17181a;
+
+  /* Energia */
+  --energia-primario: #ff852b;
+  --energia-primario-texto: #17181a;
+  --energia-solido: #ff852b;
+  --energia-hover: #f5a45b;
+  --energia-icone: #d67c0c;
+  --energia-outline: #d96310;
+  --energia-soft: #f9dcb2;
+  --energia-soft-texto: #a1490c;
+  --energia-tint: #fdf1e0;
+  --energia-titulo: #ef7a11;
+
+  /* Internet */
+  --internet-primario: #377ab4;
+  --internet-primario-texto: #ffffff;
+  --internet-solido: #387bb6;
+  --internet-hover: #5a97cd;
+  --internet-icone: #3c7cb8;
+  --internet-outline: #245888;
+  --internet-soft: #c2e0ff;
+  --internet-soft-texto: #245888;
+  --internet-tint: #e6f0f9;
+  --internet-titulo: #285b8c;
+
+  /* Celular */
+  --celular-primario: #188752;
+  --celular-primario-texto: #ffffff;
+  --celular-solido: #188a54;
+  --celular-hover: #2bb673;
+  --celular-icone: #188a54;
+  --celular-outline: #12643d;
+  --celular-soft: #c1e0d1;
+  --celular-soft-texto: #12643d;
+  --celular-tint: #e8f5e9;
+  --celular-titulo: #12643d;
+
+  /* Ações */
+  --acao-dourado: #f5b400;
+  --acao-dourado-texto: #1a1a2e;
+  --acao-atencao: #9d660b;
+  --acao-positiva: #188a54;
+  --acao-positiva-texto: #188a54;
+  --acao-negativa: #c94f4f;
+  --acao-negativa-titulo: #c0392b;
+
+  /* Premium */
+  --premium-fundo: #14181f;
+  --premium-superficie: #232a35;
+  --premium-borda: #3a4250;
+  --premium-acento: #d8b15f;
+  --premium-texto: #f5f1e8;
+  --premium-texto-suave: #b9b3a6;
+
+  /* Avisos */
+  --aviso-informativo-fundo: #fff8e0;
+  --aviso-informativo-borda: #f0d878;
+  --aviso-positivo-fundo: #e8f5e9;
+  --aviso-positivo-borda: #27ae60;
+  --aviso-negativo-fundo: #fff0f0;
+  --aviso-negativo-borda: #f5c6c6;
+  --aviso-dica-fundo: #ffffff;
+  --aviso-dica-borda: #e7e4dc;
+
+  /* Mockup do WhatsApp */
+  --mockup-wa-fundo: #ece5dd;
+  --mockup-wa-topo: #f0f2f5;
+  --mockup-wa-enviado: #d9fdd3;
+  --mockup-wa-recebido: #ffffff;
+  --mockup-wa-texto: #111b21;
+  --mockup-wa-apoio: #667781;
+
+  /* Aplicativos */
+  --app-whatsapp: #25d366;
+  --app-paramount: #0064ff;
+  --app-globoplay: #e60014;
+  --app-hbomax: #9b00ff;
+  --app-youtube: #ff0033;
+  --app-aya-books: #29b0b3;
+  --app-aya-bancah: #0eadcf;
+
+  color-scheme: light;
+}
+
+[data-tema="escuro"] {
+  --marca-wordmark: #ffffff;
+  --marca-primario: #b5ffdc;
+  --marca-primario-texto: #17181a;
+  --marca-hover: #8fe9c2;
+  --marca-icone: #2fcb86;
+  --marca-outline: #b5ffdc;
+  --marca-soft: #064a2d;
+  --marca-soft-texto: #95e7c0;
+  --marca-tint: #16261e;
+  --marca-titulo: #5dd9a0;
+
+  --fundo-pagina: #1f1f1f;
+  --fundo-superficie: #2a2a2a;
+  --fundo-superficie-alt: #333333;
+  --fundo-elevado: #333333;
+  --fundo-nao-incluso: #4a4a4a;
+  --borda-padrao: #3a4048;
+
+  --texto-titulo: #ffffff;
+  --texto-padrao: #ecf0f7;
+  --texto-corpo: #9aa0a6;
+  --texto-corpo-forte: #ecf0f7;
+  --texto-secundario: #8b919a;
+  --texto-terciario: #9aa0a6;
+  --texto-desativado: #6e7681;
+  --texto-ink: #ffffff;
+
+  --energia-primario: #f9dcb2;
+  --energia-solido: #f5a45b;
+  --energia-hover: #ffe0c2;
+  --energia-icone: #ef9a2b;
+  --energia-outline: #f5a45b;
+  --energia-soft: #7c3a00;
+  --energia-soft-texto: #ffe0c2;
+  --energia-tint: #33241a;
+  --energia-titulo: #f5a45b;
+
+  --internet-primario: #c2e0ff;
+  --internet-primario-texto: #17181a;
+  --internet-solido: #3c7cb8;
+  --internet-hover: #e6f0f9;
+  --internet-icone: #c2e0ff;
+  --internet-outline: #c2e0ff;
+  --internet-soft: #183550;
+  --internet-soft-texto: #c2e0ff;
+  --internet-tint: #1e2a38;
+  --internet-titulo: #c2e0ff;
+
+  --celular-primario: #96d9ba;
+  --celular-primario-texto: #17181a;
+  --celular-hover: #c1e0d1;
+  --celular-outline: #5ccf99;
+  --celular-soft: #093e25;
+  --celular-soft-texto: #5ccf99;
+  --celular-tint: #1b3025;
+  --celular-titulo: #5ccf99;
+
+  --acao-atencao: #f5b400;
+  --acao-positiva-texto: #5ccf99;
+  --acao-negativa: #d02726;
+  --acao-negativa-titulo: #d02726;
+
+  --premium-fundo: #0b0e13;
+  --premium-superficie: #1a2029;
+  --premium-borda: #2a313c;
+  --premium-acento: #e3c378;
+
+  --aviso-informativo-fundo: #443814;
+  --aviso-informativo-borda: #ffd166;
+  --aviso-positivo-fundo: #16281d;
+  --aviso-positivo-borda: #188a54;
+  --aviso-negativo-fundo: #2e1618;
+  --aviso-negativo-borda: #d02726;
+  --aviso-dica-fundo: #5a5f66;
+  --aviso-dica-borda: #7c8693;
+
+  --mockup-wa-fundo: #0b141a;
+  --mockup-wa-topo: #202c33;
+  --mockup-wa-enviado: #005c4b;
+  --mockup-wa-recebido: #1f2c34;
+  --mockup-wa-texto: #e9edef;
+  --mockup-wa-apoio: #8696a0;
+
+  --app-paramount: #a0b8ff;
+  --app-globoplay: #ffb3b8;
+  --app-hbomax: #d5a0ff;
+  --app-youtube: #ff9e9e;
+  --app-aya-books: #6fd6d8;
+  --app-aya-bancah: #5fd3ea;
+
+  color-scheme: dark;
+}

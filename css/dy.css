@@ -1,0 +1,213 @@
+/* ============================================================
+   Do Yourself — Design System v2 (out/2026)
+   Carregar DEPOIS de tokens.css e base.css.
+   · Tipografia: Manrope em tudo (sai a Alata) — sans arredondada, leitura fácil
+   · Raios generosos: campos 16px, cards 20–24px, botões em pílula
+   · Mobile primeiro: corpo de 17px no celular, alvo de toque mínimo de 48px
+   ============================================================ */
+
+:root {
+  --fonte: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Escala tipográfica (mobile → desktop via clamp) */
+  --t-display: clamp(34px, 6.2vw, 60px);
+  --t-h1: clamp(28px, 4.6vw, 44px);
+  --t-h2: clamp(26px, 3.6vw, 38px);
+  --t-h3: clamp(19px, 2vw, 22px);
+  --t-corpo-g: clamp(17px, 1.4vw, 19px);
+  --t-corpo: 17px;
+  --t-apoio: 15px;
+  --t-mini: 13px;
+
+  /* Espaço (base 4) */
+  --e-1: 4px; --e-2: 8px; --e-3: 12px; --e-4: 16px; --e-5: 20px; --e-6: 24px; --e-8: 32px; --e-10: 40px; --e-12: 48px; --e-16: 64px; --e-20: 80px;
+  --secao: clamp(56px, 8vw, 112px);
+
+  /* Raios */
+  --r-campo: 16px; --r-card: 24px; --r-card-p: 18px; --r-chip: 12px; --r-pilula: 999px;
+
+  /* Sombras */
+  --sombra-1: 0 1px 2px rgba(20, 24, 31, .06), 0 2px 8px rgba(20, 24, 31, .05);
+  --sombra-2: 0 6px 24px rgba(20, 24, 31, .09);
+  --sombra-3: 0 18px 48px rgba(20, 24, 31, .14);
+
+  /* Movimento */
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --rapido: .18s; --medio: .32s; --lento: .55s;
+
+  /* Validação */
+  --ok: var(--acao-positiva);
+  --ok-fundo: var(--aviso-positivo-fundo);
+  --erro: var(--acao-negativa-titulo);
+  --erro-fundo: var(--aviso-negativo-fundo);
+}
+[data-tema="escuro"] { --ok: #3ccf8e; --erro: #ff6b6b; --sombra-1: 0 1px 2px rgba(0,0,0,.4); --sombra-2: 0 6px 24px rgba(0,0,0,.35); --sombra-3: 0 18px 48px rgba(0,0,0,.5); }
+
+body { font-family: var(--fonte); font-size: var(--t-corpo); line-height: 1.6; }
+@media (min-width: 768px) { body { font-size: 16px; } }
+
+/* A Alata sai do sistema: tudo que a usava herda a Manrope */
+.rotulo, .btn, .aba, .btn-plano, .btn-ajuda, .cta-final__eyebrow, .simulador__titulo, .n-faixa__eyebrow, .exemplo small { font-family: var(--fonte) !important; }
+.btn { font-weight: 700; border-radius: var(--r-pilula); }
+.rotulo { font-weight: 700; letter-spacing: .6px; font-size: 12px; }
+
+/* ---------- Tipografia ---------- */
+.dy-display { font-weight: 800; font-size: var(--t-display); line-height: 1.06; letter-spacing: -.02em; color: var(--texto-titulo); }
+.dy-h1 { font-weight: 800; font-size: var(--t-h1); line-height: 1.12; letter-spacing: -.015em; color: var(--texto-titulo); }
+.dy-h2 { font-weight: 800; font-size: var(--t-h2); line-height: 1.15; letter-spacing: -.01em; color: var(--texto-titulo); }
+.dy-h3 { font-weight: 700; font-size: var(--t-h3); line-height: 1.3; color: var(--texto-titulo); }
+.dy-lead { font-size: var(--t-corpo-g); line-height: 1.6; color: var(--texto-corpo); }
+.dy-lead strong, .dy-texto strong { color: var(--texto-corpo-forte); font-weight: 700; }
+.dy-texto { font-size: var(--t-corpo); line-height: 1.65; color: var(--texto-corpo); }
+.dy-apoio { font-size: var(--t-apoio); line-height: 1.55; color: var(--texto-terciario); }
+.dy-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--marca-titulo); }
+.dy-eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--marca-solido); box-shadow: 0 0 0 4px var(--marca-tint); }
+.dy-eyebrow--internet { color: var(--internet-titulo); } .dy-eyebrow--internet::before { background: var(--internet-solido); box-shadow: 0 0 0 4px var(--internet-tint); }
+.dy-eyebrow--celular { color: var(--celular-titulo); } .dy-eyebrow--celular::before { background: var(--celular-solido); box-shadow: 0 0 0 4px var(--celular-tint); }
+.dy-eyebrow--energia { color: var(--energia-soft-texto); } .dy-eyebrow--energia::before { background: var(--energia-solido); box-shadow: 0 0 0 4px var(--energia-tint); }
+.dy-eyebrow--combo { color: var(--acao-atencao); } .dy-eyebrow--combo::before { background: var(--acao-dourado); box-shadow: 0 0 0 4px var(--aviso-informativo-fundo); }
+.realce { color: var(--marca-titulo); }
+
+/* ---------- Botões v2 (pílula, 52px; 56px no CTA principal) ---------- */
+.dy-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px;
+  border-radius: var(--r-pilula); border: 2px solid transparent; font: 700 16px/1.2 var(--fonte); text-align: center;
+  transition: background-color var(--rapido) ease, color var(--rapido) ease, border-color var(--rapido) ease, transform var(--rapido) ease, box-shadow var(--medio) ease, opacity var(--rapido) ease;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.dy-btn:active:not(:disabled) { transform: scale(.98); }
+.dy-btn--g { min-height: 58px; padding: 0 32px; font-size: 17px; }
+.dy-btn--bloco { width: 100%; }
+.dy-btn--primario { background: var(--marca-primario); color: var(--marca-primario-texto); }
+.dy-btn--primario:hover:not(:disabled) { background: var(--marca-hover); box-shadow: 0 8px 22px rgba(12, 134, 80, .25); }
+.dy-btn--contorno { border-color: var(--marca-outline); color: var(--marca-titulo); background: transparent; }
+.dy-btn--contorno:hover:not(:disabled) { background: var(--marca-tint); }
+.dy-btn--whatsapp { background: var(--app-whatsapp); color: #0b2e1a; }
+.dy-btn--whatsapp:hover:not(:disabled) { box-shadow: 0 8px 22px rgba(37, 211, 102, .35); }
+.dy-btn--fantasma { background: transparent; color: var(--texto-corpo); padding: 0 18px; }
+.dy-btn--fantasma:hover:not(:disabled) { background: var(--fundo-superficie-alt); color: var(--texto-titulo); }
+.dy-btn:disabled, .dy-btn[aria-disabled="true"] { background: var(--borda-padrao); color: var(--texto-terciario); border-color: transparent; cursor: not-allowed; box-shadow: none; }
+.dy-btn .seta-dir { transition: transform var(--rapido) ease; }
+.dy-btn:hover:not(:disabled) .seta-dir { transform: translateX(3px); }
+.dy-btn img { flex: none; }
+.dy-btn .spinner { display: none; width: 18px; height: 18px; border-radius: 99px; border: 2.5px solid currentColor; border-right-color: transparent; animation: girar .7s linear infinite; }
+.dy-btn.carregando .spinner { display: inline-block; }
+.dy-btn.carregando .seta-dir { display: none; }
+@keyframes girar { to { transform: rotate(360deg); } }
+.dy-link { font-weight: 700; color: var(--marca-titulo); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.dy-link:hover { color: var(--marca-hover); }
+
+/* ---------- Campo com rótulo flutuante e validação ----------
+   Estrutura: <div class="campo"><input placeholder=" "><label>…</label><span class="campo__ico"></span></div>
+              <p class="campo__msg"></p>
+   Estados: .valido (contorno verde + ✓) · .invalido (contorno vermelho + ✕ + mensagem) · .travado (preenchido pelo sistema) */
+.campo-grupo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.campo {
+  position: relative; display: flex; align-items: center; min-height: 64px; border-radius: var(--r-campo);
+  background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao);
+  transition: border-color var(--rapido) ease, box-shadow var(--rapido) ease, background-color var(--rapido) ease;
+}
+.campo:hover { border-color: var(--texto-desativado); }
+.campo:focus-within { border-color: var(--marca-outline); box-shadow: 0 0 0 4px var(--marca-tint); }
+.campo input, .campo select, .campo textarea {
+  width: 100%; min-width: 0; height: 64px; padding: 26px 48px 8px 18px; border: 0; outline: 0; background: transparent;
+  font: 600 17px/1.2 var(--fonte); color: var(--texto-titulo); border-radius: var(--r-campo); -webkit-appearance: none; appearance: none;
+}
+.campo select { cursor: pointer; padding-right: 52px; }
+.campo label {
+  position: absolute; left: 18px; top: 50%; transform: translateY(-50%); transform-origin: left center; pointer-events: none;
+  font-weight: 500; font-size: 16px; color: var(--texto-secundario); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 64px);
+  transition: transform var(--rapido) var(--ease), top var(--rapido) var(--ease), font-size var(--rapido) var(--ease), color var(--rapido) ease;
+}
+.campo input:focus + label, .campo input:not(:placeholder-shown) + label,
+.campo select + label, .campo.preenchido label { top: 18px; font-size: 12.5px; font-weight: 600; letter-spacing: .01em; }
+.campo:focus-within label { color: var(--marca-titulo); }
+.campo input::placeholder { color: transparent; }
+.campo input:focus::placeholder { color: var(--texto-desativado); }
+.campo__ico { position: absolute; right: 16px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 99px; display: grid; place-items: center; opacity: 0; transform: scale(.5); transition: opacity var(--rapido) ease, transform var(--medio) var(--ease); pointer-events: none; }
+.campo__ico svg { width: 13px; height: 13px; }
+.campo--select::after { content: ""; position: absolute; right: 20px; top: 50%; width: 9px; height: 9px; margin-top: -7px; border-right: 2px solid var(--texto-terciario); border-bottom: 2px solid var(--texto-terciario); transform: rotate(45deg); pointer-events: none; transition: opacity var(--rapido); }
+.campo--select.valido::after { opacity: 0; }
+
+.campo.valido { border-color: var(--ok); }
+.campo.valido:focus-within { box-shadow: 0 0 0 4px var(--ok-fundo); }
+.campo.valido .campo__ico { opacity: 1; transform: none; background: var(--ok); color: #fff; }
+.campo.invalido { border-color: var(--erro); background: var(--erro-fundo); }
+.campo.invalido:focus-within { box-shadow: 0 0 0 4px var(--erro-fundo); }
+.campo.invalido label { color: var(--erro) !important; }
+.campo.invalido .campo__ico { opacity: 1; transform: none; background: var(--erro); color: #fff; }
+.campo.travado { background: var(--fundo-superficie-alt); }
+.campo.travado input { color: var(--texto-corpo-forte); }
+.campo.carregando .campo__ico { opacity: 1; transform: none; background: none; border: 2.5px solid var(--marca-outline); border-right-color: transparent; animation: girar .7s linear infinite; }
+.campo.carregando .campo__ico svg { display: none; }
+.campo__msg { min-height: 0; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--erro); padding-left: 6px; }
+.campo__msg:empty { display: none; }
+.campo__msg.dica { color: var(--texto-terciario); font-weight: 500; }
+.campo-grupo.tremer .campo { animation: tremer .32s ease; }
+@keyframes tremer { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+/* Moeda: prefixo R$ fixo */
+.campo--moeda input { padding-left: 50px; }
+.campo--moeda::before { content: "R$"; position: absolute; left: 18px; bottom: 12px; font-weight: 700; font-size: 17px; color: var(--texto-terciario); opacity: 0; transition: opacity var(--rapido); }
+.campo--moeda:focus-within::before, .campo--moeda.preenchido::before { opacity: 1; }
+
+/* ---------- Opção selecionável (radio/checkbox em cartão) ---------- */
+.escolha {
+  position: relative; display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px 18px; border-radius: var(--r-card-p);
+  background: var(--fundo-superficie); border: 1.5px solid var(--borda-padrao); text-align: left; cursor: pointer;
+  transition: border-color var(--rapido) ease, background-color var(--rapido) ease, box-shadow var(--medio) ease, transform var(--rapido) ease;
+}
+.escolha:hover { border-color: var(--marca-outline); }
+.escolha:active { transform: scale(.995); }
+.escolha[aria-checked="true"], .escolha.marcada { border: 2px solid var(--ok); padding: 15.5px 17.5px; background: var(--ok-fundo); box-shadow: var(--sombra-1); }
+.escolha__marca { flex: none; width: 24px; height: 24px; border-radius: 8px; border: 2px solid var(--texto-desativado); display: grid; place-items: center; color: transparent; transition: background-color var(--rapido), border-color var(--rapido), color var(--rapido); }
+.escolha--radio .escolha__marca { border-radius: 99px; }
+.escolha[aria-checked="true"] .escolha__marca { background: var(--ok); border-color: var(--ok); color: #fff; }
+.escolha__marca svg { width: 13px; height: 13px; }
+
+/* Chips (escolhas rápidas) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-op { min-height: 44px; padding: 0 18px; border-radius: var(--r-pilula); border: 1.5px solid var(--borda-padrao); background: var(--fundo-superficie); font-weight: 700; font-size: 15px; color: var(--texto-corpo-forte); transition: all var(--rapido) ease; }
+.chip-op:hover { border-color: var(--marca-outline); }
+.chip-op[aria-pressed="true"], .chip-op[aria-checked="true"] { background: var(--marca-soft); border-color: var(--marca-outline); color: var(--marca-soft-texto); }
+
+/* Segmentado (Sim / Não) */
+.segmento { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; padding: 6px; border-radius: var(--r-campo); background: var(--fundo-superficie-alt); border: 1px solid var(--borda-padrao); }
+.segmento button { min-height: 48px; border-radius: 12px; font-weight: 700; font-size: 15px; color: var(--texto-corpo); transition: background-color var(--rapido), color var(--rapido), box-shadow var(--rapido); }
+.segmento button[aria-checked="true"] { background: var(--fundo-superficie); color: var(--texto-titulo); box-shadow: var(--sombra-1); }
+
+/* ---------- Avisos ---------- */
+.aviso { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px; font-size: 15px; line-height: 1.5; border: 1px solid; }
+.aviso--info { background: var(--aviso-informativo-fundo); border-color: var(--aviso-informativo-borda); color: var(--texto-corpo-forte); }
+.aviso--ok { background: var(--aviso-positivo-fundo); border-color: var(--aviso-positivo-borda); color: var(--texto-corpo-forte); }
+.aviso--neutro { background: var(--fundo-superficie-alt); border-color: var(--borda-padrao); color: var(--texto-corpo); }
+.aviso img, .aviso svg { flex: none; width: 20px; height: 20px; margin-top: 1px; }
+
+/* Selo de cashback */
+.selo-cb { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--r-pilula); background: var(--marca-soft); color: var(--marca-soft-texto); font-weight: 800; font-size: 13px; white-space: nowrap; }
+.selo-cb::before { content: ""; width: 14px; height: 14px; flex: none; background: currentColor; -webkit-mask: url(../img/icones/cofrinho.svg) center/contain no-repeat; mask: url(../img/icones/cofrinho.svg) center/contain no-repeat; }
+
+/* ---------- WhatsApp flutuante ---------- */
+.zap-flutuante { position: fixed; right: 18px; bottom: 18px; z-index: 45; width: 58px; height: 58px; border-radius: 99px; background: var(--app-whatsapp); display: grid; place-items: center; box-shadow: 0 10px 28px rgba(37, 211, 102, .4); transition: transform var(--medio) var(--ease), opacity var(--medio); }
+.zap-flutuante:hover { transform: scale(1.06); }
+.zap-flutuante img { width: 30px; height: 30px; }
+.zap-flutuante.subir { transform: translateY(-76px); }
+
+/* ---------- Revelar ao rolar ---------- */
+.surgir { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); transition-delay: var(--atraso, 0s); }
+.surgir.visivel { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .surgir { opacity: 1; transform: none; } }
+
+/* ---------- Rodapé: versão desktop mais centralizada (pedido do Gabriel) ---------- */
+.rodape__inner { width: min(1360px, 100% - 2 * var(--gutter)); }
+@media (min-width: 1024px) {
+  .rodape__main { gap: 56px; }
+  .rodape__nav { flex: 1; justify-content: space-between; gap: 28px; }
+  .rodape__col { min-width: 0; flex: 1 1 0; max-width: 190px; }
+  .rodape__cta { width: 280px; }
+}
+@media (min-width: 1366px) { .rodape__nav { gap: 40px; } }
+.rodape__col-lista a, .rodape__col-lista span { font-size: 13px; }
+
+/* Header: logo menor no celular para sobrar espaço */
+@media (max-width: 380px) { .header__logo { width: 168px; } }
