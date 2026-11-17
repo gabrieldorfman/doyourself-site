@@ -118,42 +118,51 @@ const PARA = (preco, de, resumo, logo = 'paramount') => ({ nome: 'Paramount+', l
 const GLOBO = (preco, de, resumo) => ({ nome: 'GloboPlay', logo: 'globoplay', preco, de, resumo });
 const HBO = (preco, de, resumo) => ({ nome: 'HBO Max', logo: 'hbo-max', preco, de, resumo });
 
-// Peças reaproveitadas entre os blocos de estados
-const net800 = { id: '800', variante: 'soft', selo: 'OFERTA DO MÊS', num: '800', unidade: 'MEGA',
-  detalhes: detNet('800 Mega', '400 Mega', 5), apps: ['aya-books', 'youtube-premium'], tituloAcao: 'Já vem incluso no seu plano',
-  opcoes: [{ nome: 'YouTube Premium', logo: 'youtube-premium', preco: 129.99, de: 169.99, incluso: 'sem custo extra', resumo: '800 Mb + YouTube Premium' }], opcaoPadrao: 0, de: 169.99, tarja: { streaming: ['youtube-premium'] } };
-const net1000 = { id: '1000', variante: 'premium', selo: 'PREMIUM', num: '1000', unidade: 'MEGA',
-  detalhes: detNet('1000 Mega', '500 Mega', 6, true), apps: ['aya-books', 'aya-bancah', 'paramount-44'], tituloAcao: 'Personalize o seu plano',
-  opcoes: [SO(129.99, 189.99, '1000 Mb'), PARA(149.99, 199.99, '1000 Mb + Paramount+', 'paramount-44'), HBO(159.99, 219.99, '1000 Mb + HBO Max')], opcaoPadrao: 0, de: 189.99, tarja: { streaming: ['paramount', 'hbo-max'] } };
-const net600 = (preco, selo = 'ESSENCIAL', variante = 'tint', soComStreaming = false) => ({ id: '600', variante, selo, num: '600', unidade: 'MEGA',
-  detalhes: detNet('600 Mega', '300 Mega', 5), apps: ['aya-books', 'aya-bancah', 'paramount'], tituloAcao: 'Personalize o seu plano',
-  opcoes: [...(soComStreaming ? [] : [SO(preco, 149.99, '600 Mb')]), PARA(109.99, 149.99, '600 Mb + Paramount+'), GLOBO(119.99, 159.99, '600 Mb + GloboPlay')], opcaoPadrao: 0, de: 149.99, tarja: { streaming: ['paramount', 'globoplay'] } });
+// Peças reaproveitadas entre os blocos de estados (base: ofertas de NOVEMBRO/2026, válidas até 01/12/2026)
+// Valores no débito em conta; no boleto ou PIX, R$ 10,00 a mais por mês.
+const W56 = '6 ou 5', W67 = '6 ou 7';
+const net800 = { id: '800', variante: 'soft', selo: 'COM YOUTUBE PREMIUM', num: '800', unidade: 'MEGA',
+  detalhes: detNet('800 Mega', '400 Mega', W56), apps: ['aya-books', 'youtube-premium'], tituloAcao: 'Já vem incluso no seu plano',
+  opcoes: [{ nome: 'YouTube Premium', logo: 'youtube-premium', preco: 129.99, de: 169.99, incluso: 'sem custo extra', resumo: '800 Mega + YouTube Premium' }], opcaoPadrao: 0, de: 169.99, tarja: { streaming: ['youtube-premium'] } };
+const net1000 = { id: '1000', variante: 'premium', selo: 'OFERTA DO MÊS', num: '1000', unidade: 'MEGA',
+  detalhes: detNet('1000 Mega', '500 Mega', W67, true), apps: ['aya-books', 'aya-bancah', 'paramount-44'], tituloAcao: 'Personalize o seu plano',
+  opcoes: [{ ...SO(99.99, 189.99, '1000 Mega + NoPing'), nome: 'Somente Internet' }, PARA(149.99, 199.99, '1000 Mega + Paramount+', 'paramount-44'), HBO(159.99, 219.99, '1000 Mega + HBO Max')], opcaoPadrao: 0, de: 189.99, tarja: { streaming: ['paramount', 'hbo-max'] } };
+const net600 = { id: '600', variante: 'tint', selo: 'ESSENCIAL', num: '600', unidade: 'MEGA',
+  detalhes: detNet('600 Mega', '300 Mega', W56), apps: ['aya-books', 'aya-bancah', 'paramount'], tituloAcao: 'Personalize o seu plano',
+  opcoes: [SO(109.99, 149.99, '600 Mega'), PARA(109.99, 149.99, '600 Mega + Paramount+'), GLOBO(119.99, 159.99, '600 Mega + GloboPlay')], opcaoPadrao: 0, de: 149.99, tarja: { streaming: ['paramount', 'globoplay'] } };
+const net2000 = { id: '2000', variante: 'premium', selo: 'WI-FI 7', num: '2000', unidade: 'MEGA',
+  detalhes: detNet('2000 Mega', '1000 Mega', 7, true), apps: ['aya-books', 'aya-bancah', 'hbo-max', 'paramount', 'globoplay'], tituloAcao: 'Já vem incluso no seu plano',
+  opcoes: [{ nome: 'HBO Max, Paramount+, GloboPlay e Looke', logo: 'hbo-max', preco: 369.99, de: 419.99, incluso: 'quatro streamings', resumo: '2000 Mega + 4 streamings' }], opcaoPadrao: 0, de: 419.99, tarja: { streaming: ['hbo-max', 'paramount', 'globoplay'] } };
 const netSimples = (id, preco, de, up, wifi, selo, variante, extra) => ({ id, variante, selo, num: id.replace(/^e/, ''), unidade: 'MEGA',
   ...(extra ? { nota: extra } : {}),
-  detalhes: detNet(id.replace(/^e/, '') === '1000' ? '1000 Mega' : id.replace(/^e/, '') + ' Mega', up, wifi, variante === 'premium'), apps: ['aya-books', 'aya-bancah'],
-  tituloAcao: 'Este plano inclui', opcoes: [SO(preco, de, id.replace(/^e/, '') + ' Mb')], opcaoPadrao: 0, de, tarja: { streaming: null } });
+  detalhes: detNet(id.replace(/^e/, '') + ' Mega', up, wifi, variante === 'premium'), apps: ['aya-books', 'aya-bancah'],
+  tituloAcao: 'Este plano inclui', opcoes: [SO(preco, de, id.replace(/^e/, '') + ' Mega')], opcaoPadrao: 0, de, tarja: { streaming: null } });
+const TAXA_CNPJ = 'Taxa de habilitação de R$ 960, isenta com 24 meses de contrato';
 
 DY.catalogo = {
   // Internet para a sua casa (CPF)
   casa: {
-    tbr: [netSimples('500', 89.99, 129.99, '250 Mega', 5, 'BÁSICO', 'branco'), net600(99.99), net800, net1000],
-    norte: [net600(79.99, 'OFERTA REGIONAL', 'branco'), net800, { ...net1000, variante: 'tint', detalhes: detNet('1000 Mega', '500 Mega', 6) }],
-    sp: [netSimples('400', 79.99, 119.99, '200 Mega', 5, 'BÁSICO', 'branco'), net600(0, 'ESSENCIAL', 'tint', true), net800, net1000],
+    tbr: [netSimples('500', 89.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), net600, net800, net1000, net2000],
+    norte: [netSimples('500', 79.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), net600, net800, net1000, net2000],
+    ce: [netSimples('300', 49.99, 99.99, '150 Mega', W56, 'SÓ NO CEARÁ', 'branco'), netSimples('500', 79.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), net600, net800, net1000, net2000],
+    sp: [netSimples('400', 79.99, 119.99, '200 Mega', W56, 'BÁSICO', 'branco'), netSimples('500', 99.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), net600, net800, net1000, net2000],
   },
-  // Internet para a sua empresa (CNPJ) — sem streaming
+  // Internet para a sua empresa (CNPJ) — sem streaming e sem bônus no celular
   empresa: {
-    tbr: [netSimples('e500', 89.99, 129.99, '250 Mega', 5, 'BÁSICO', 'branco'), netSimples('e600', 99.99, 149.99, '300 Mega', 5, 'ESSENCIAL', 'tint'), netSimples('e1000', 99.99, 189.99, '500 Mega', 6, 'OFERTA DO MÊS', 'premium')],
-    norte: [netSimples('e600', 79.99, 149.99, '300 Mega', 5, 'OFERTA REGIONAL', 'branco'), netSimples('e1000', 99.99, 189.99, '500 Mega', 6, 'OFERTA DO MÊS', 'premium')],
-    sp: [netSimples('e400', 79.99, 119.99, '200 Mega', 5, 'BÁSICO', 'branco'), netSimples('e500', 99.99, 129.99, '250 Mega', 5, 'ESSENCIAL', 'tint'), netSimples('e700', 109.99, 149.99, '350 Mega', 5, 'MAIS VELOCIDADE', 'soft', '100 Mega de bônus inclusos por 12 meses'), netSimples('e1000', 99.99, 189.99, '500 Mega', 6, 'OFERTA DO MÊS', 'premium')],
+    tbr: [netSimples('e500', 89.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), netSimples('e600', 109.99, 149.99, '300 Mega', W56, 'ESSENCIAL', 'tint'), netSimples('e1000', 99.99, 189.99, '500 Mega', W67, 'OFERTA DO MÊS', 'premium', TAXA_CNPJ)],
+    norte: [netSimples('e500', 79.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), netSimples('e600', 109.99, 149.99, '300 Mega', W56, 'ESSENCIAL', 'tint'), netSimples('e1000', 99.99, 189.99, '500 Mega', W67, 'OFERTA DO MÊS', 'premium', TAXA_CNPJ)],
+    ce: [netSimples('e300', 49.99, 99.99, '150 Mega', W56, 'SÓ NO CEARÁ', 'branco'), netSimples('e500', 79.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), netSimples('e600', 109.99, 149.99, '300 Mega', W56, 'ESSENCIAL', 'tint'), netSimples('e1000', 99.99, 189.99, '500 Mega', W67, 'OFERTA DO MÊS', 'premium', TAXA_CNPJ)],
+    sp: [netSimples('e400', 79.99, 119.99, '200 Mega', W56, 'BÁSICO', 'branco'), netSimples('e500', 99.99, 129.99, '250 Mega', W56, 'BÁSICO', 'branco'), netSimples('e600', 109.99, 149.99, '300 Mega', W56, 'ESSENCIAL', 'tint'), netSimples('e1000', 99.99, 189.99, '500 Mega', W67, 'OFERTA DO MÊS', 'premium', TAXA_CNPJ)],
   },
 };
 // Plano que abre em destaque em cada lista (a oferta foco)
 /* Página de cada plano de internet para casa (id do catálogo → endereço) */
 DY.paginaPlano = { 500: '/internet-fibra/casa/500-mega', 600: '/internet-fibra/casa/600-mega', 800: '/internet-fibra/casa/800-mega', 1000: '/internet-fibra/casa/1-giga' };
+DY.boletoPix = 10; // boleto ou PIX: R$ 10,00 a mais por mês
 DY.padraoInternet = (lista) => Math.max(0, lista.findIndex((p) => p.selo === 'OFERTA DO MÊS'));
 
 /* Bloco de preço de internet pelo estado: CE, RN e SC · SP · demais (inclui PR) */
-DY.blocoInternet = (uf) => (['CE', 'RN', 'SC'].includes(uf) ? 'norte' : uf === 'SP' ? 'sp' : 'tbr');
+DY.blocoInternet = (uf) => (uf === 'CE' ? 'ce' : ['RN', 'SC'].includes(uf) ? 'norte' : uf === 'SP' ? 'sp' : 'tbr');
 DY.UFS = { AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas', BA: 'Bahia', CE: 'Ceará', DF: 'Distrito Federal', ES: 'Espírito Santo', GO: 'Goiás', MA: 'Maranhão', MT: 'Mato Grosso', MS: 'Mato Grosso do Sul', MG: 'Minas Gerais', PA: 'Pará', PB: 'Paraíba', PR: 'Paraná', PE: 'Pernambuco', PI: 'Piauí', RJ: 'Rio de Janeiro', RN: 'Rio Grande do Norte', RS: 'Rio Grande do Sul', RO: 'Rondônia', RR: 'Roraima', SC: 'Santa Catarina', SP: 'São Paulo', SE: 'Sergipe', TO: 'Tocantins' };
 
 /* ============================================================
